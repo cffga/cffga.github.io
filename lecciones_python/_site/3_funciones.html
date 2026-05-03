@@ -8,7 +8,7 @@
 
 <meta name="author" content="Carlos Flores">
 
-<title>Operadores y secuencias – Python</title>
+<title>Funciones – Python</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -111,6 +111,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -319,14 +348,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#operadores-de-comparación-y-operadores-lógicos" id="toc-operadores-de-comparación-y-operadores-lógicos" class="nav-link active" data-scroll-target="#operadores-de-comparación-y-operadores-lógicos">Operadores de comparación y operadores lógicos</a></li>
-  <li><a href="#secuencias-en-python" id="toc-secuencias-en-python" class="nav-link" data-scroll-target="#secuencias-en-python">Secuencias en Python</a>
-  <ul class="collapse">
-  <li><a href="#listas-list" id="toc-listas-list" class="nav-link" data-scroll-target="#listas-list">Listas <code>list</code></a></li>
-  <li><a href="#tuplas-tuple" id="toc-tuplas-tuple" class="nav-link" data-scroll-target="#tuplas-tuple">Tuplas <code>tuple</code></a></li>
-  <li><a href="#cadenas-str" id="toc-cadenas-str" class="nav-link" data-scroll-target="#cadenas-str">Cadenas <code>str</code></a></li>
-  </ul></li>
-  <li><a href="#lo-que-toda-secuencia-puede-hacer" id="toc-lo-que-toda-secuencia-puede-hacer" class="nav-link" data-scroll-target="#lo-que-toda-secuencia-puede-hacer">Lo que toda secuencia puede hacer</a></li>
+  <li><a href="#funciones-propias" id="toc-funciones-propias" class="nav-link active" data-scroll-target="#funciones-propias">Funciones propias</a></li>
+  <li><a href="#cómo-explorar-funciones-y-encontrar-más" id="toc-cómo-explorar-funciones-y-encontrar-más" class="nav-link" data-scroll-target="#cómo-explorar-funciones-y-encontrar-más">Cómo explorar funciones y encontrar más</a></li>
   </ul>
 </nav>
     </div>
@@ -336,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Operadores y secuencias</h1>
+<h1 class="title">Funciones</h1>
 </div>
 
 
@@ -359,183 +382,157 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="operadores-de-comparación-y-operadores-lógicos" class="level2">
-<h2 class="anchored" data-anchor-id="operadores-de-comparación-y-operadores-lógicos">Operadores de comparación y operadores lógicos</h2>
-<p>En la lección anterior usamos Python principalmente como una calculadora. Sin embargo, programar no consiste solo en hacer cuentas. También implica responder preguntas y, a partir de ellas, tomar decisiones. Por ejemplo, comprobar si un número es mayor que otro, si dos cantidades coinciden o si se cumple cierta condición.</p>
-<p>Para abordar esta cuestión, Python dispone de los <em>operadores de comparación</em> y los <em>operadores lógicos</em>. Por ahora nos centraremos en los primeros.</p>
-<p>Los operadores de comparación pueden entenderse de forma muy natural como una manera de hacer preguntas. Cada vez que comparas dos expresiones, en realidad estás formulando una pregunta sobre ellas. Por ejemplo, al escribir una comparación, es como si preguntaras “¿estos números son iguales?”, “¿uno es mayor que el otro?” o “¿son distintos?”. La respuesta que Python produce siempre es de tipo <code>True</code> (Verdadero) o <code>False</code> (Falso), que puedes interpretar simplemente como “sí” o “no”. A este tipo de respuestas se les denomina <em>valores booleanos</em>.</p>
-<p>El primer operador de comparación que veremos es <code>==</code>, y se utiliza para preguntar si dos valores son iguales. Es importante no confundirlo con <code>=</code>, que no compara, sino que asigna un valor a una variable. Por su parte, el operador <code>!=</code> permite formular la pregunta contraria y verificar si dos valores son distintos. Por ejemplo:</p>
-<div id="665e1de7" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>temperatura_actual <span class="op">=</span> <span class="dv">22</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>temperatura_limite <span class="op">=</span> <span class="dv">22</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>temperatura_actual <span class="op">==</span> temperatura_limite  <span class="co"># ¿Son iguales?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>True</code></pre>
+<p>En las lecciones anteriores aprendimos a guardar valores en variables y a agruparlos en secuencias. Falta, sin embargo, una pieza clave, una forma de nombrar no solo datos, sino también <em>procesos</em>. En matemáticas, esa idea aparece en el concepto de <em>función</em>, entendido como una regla o proceso que a partir de un valor dado produce cierto resultado. La notación <span class="math inline">\(f(x) = x^2\)</span> expresa esa regla de manera precisa, la función se llama <span class="math inline">\(f\)</span>, recibe el valor <span class="math inline">\(x\)</span> y el resultado que produce es su cuadrado <span class="math inline">\(x^2\)</span>. Lo esencial no es un cálculo particular, sino la idea de un procedimiento que actúa <em>siempre de la misma forma</em> sobre los datos o valores que recibe.</p>
+<p>Python retoma esta misma noción. Una <em>función</em> es un bloque de código con nombre que puede recibir datos y producir un resultado. La forma de escribirlo incluso es análoga, en lugar de <span class="math inline">\(f(x)\)</span> se usa <code>función(dato)</code>.</p>
+<p>Python incluye de fábrica un conjunto de funciones listas para usar, sin necesidad de instalar nada. Se llaman funciones <em>built-in</em>, y cubren las operaciones más comunes. Una de ellas es la función <code>len()</code>, que recibe una secuencia y devuelve cuántos elementos tiene.</p>
+<div id="00c21850" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>temperaturas <span class="op">=</span> [<span class="fl">23.5</span>, <span class="fl">24.0</span>, <span class="fl">22.8</span>, <span class="fl">19.0</span>]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(temperaturas)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>4</code></pre>
 </div>
 </div>
-<p>Los otros operadores de comparación son: <code>&gt;</code> (mayor que), <code>&lt;</code> (menor que), <code>&gt;=</code> (mayor o igual que) y <code>&lt;=</code> (menor o igual que). Funcionan exactamente como en matemáticas, y todos devuelven un booleano. Por ejemplo:</p>
-<div id="6d880b35" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">22</span> <span class="op">&gt;</span> <span class="dv">30</span>    <span class="co"># ¿22 es mayor que 30?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>False</code></pre>
+<div id="8c8fab24" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(<span class="st">"Python"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>6</code></pre>
 </div>
 </div>
-<div id="c5b8c1ef" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">22</span> <span class="op">&lt;=</span> <span class="dv">22</span>   <span class="co"># ¿22 es menor o igual que 22?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>True</code></pre>
+<p>De manera análoga, <code>min()</code> y <code>max()</code> devuelven el menor y el mayor de los elementos de una secuencia. También aceptan varios valores separados por comas, sin necesidad de envolverlos en una lista.</p>
+<div id="5650b896" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">min</span>(temperaturas)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="59">
+<pre><code>19.0</code></pre>
 </div>
 </div>
-<p>En muchas situaciones, una sola comparación no es suficiente. En la vida cotidiana combinamos varias condiciones en una misma idea: “¿hace más de 20 grados <em>y</em> menos de 30?” o “¿es de noche <em>o</em> está nublado?”. Para formular ese tipo de condiciones compuestas, Python ofrece los <em>operadores lógicos</em>: <code>and</code>, <code>or</code> y <code>not</code>.</p>
-<p>El operador <code>and</code> combina dos condiciones y devuelve <code>True</code> únicamente cuando ambas son verdaderas al mismo tiempo. Si alguna falla, el resultado es <code>False</code>. Puede entenderse como el operador que <em>exige que todo se cumpla simultáneamente</em>.</p>
-<div id="dc7e1220" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> <span class="dv">25</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">&gt;</span> <span class="dv">20</span> <span class="kw">and</span> temp <span class="op">&lt;</span> <span class="dv">30</span>  <span class="co"># ¿Está entre 20 y 30?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>True</code></pre>
+<div id="559f8bcf" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">max</span>(<span class="fl">23.5</span>, <span class="fl">24.0</span>, <span class="fl">22.8</span>)  <span class="co"># También acepta valores directos, sin lista</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<pre><code>24.0</code></pre>
 </div>
 </div>
-<div id="e225afd0" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>temp <span class="op">&gt;</span> <span class="dv">20</span> <span class="kw">and</span> temp <span class="op">&lt;</span> <span class="dv">24</span>  <span class="co"># temp &gt; 20 es True, pero temp &lt; 24 es False</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>False</code></pre>
+<p>La función <code>round()</code> recibe un número decimal y devuelve su aproximación entera más cercana.</p>
+<div id="2f1ebd62" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(<span class="fl">3.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="61">
+<pre><code>4</code></pre>
 </div>
 </div>
-<p><code>or</code> es más permisivo, devuelve <code>True</code> con que una sola de las dos condiciones sea verdadera. Solo produce <code>False</code> cuando ambas fallan al mismo tiempo.</p>
-<div id="b055e532" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>temp <span class="op">&lt;</span> <span class="dv">10</span> <span class="kw">or</span> temp <span class="op">&gt;</span> <span class="dv">20</span>  <span class="co"># temp &lt; 10 es False, pero temp &gt; 20 es True</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>True</code></pre>
+<p>Existe una función que merece una mención especial porque se comporta de forma distinta a las anteriores: <code>print()</code>. Mientras que <code>len()</code>, <code>min()</code>, <code>max()</code> y <code>round()</code> calculan un valor y lo <em>devuelven</em> (es decir, producen un resultado que puede guardarse en una variable o usarse en una expresión), <code>print()</code> no devuelve ningún valor útil. Su propósito es simplemente mostrar información en pantalla, hacer visible algo para la persona que está ejecutando el programa. Por eso, aunque se le pueda pasar cualquier valor, no tiene sentido guardar su resultado en una variable.</p>
+<div id="9606fcff" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Hola, mundo!"</span>) <span class="co"># Muestra un mensaje en pantalla, pero no devuelve nada útil</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hola, mundo!</code></pre>
 </div>
 </div>
-<div id="89c3db64" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>temp <span class="op">&lt;</span> <span class="dv">10</span> <span class="kw">or</span> temp <span class="op">&gt;</span> <span class="dv">30</span>  <span class="co"># Ambas condiciones son False</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>False</code></pre>
+<section id="funciones-propias" class="level2">
+<h2 class="anchored" data-anchor-id="funciones-propias">Funciones propias</h2>
+<p>Las funciones built-in permiten resolver muchas tareas comunes. Sin embargo, los ejemplos que vimos antes son solo una pequeña muestra, ya que Python incluye muchas más funciones predefinidas de las que es posible abarcar en una primera introducción. No es necesario conocerlas todas desde el inicio. Más adelante, al final del notebook, veremos con más detalle cómo buscarlas y explorarlas.</p>
+<p>Aun así, ese conjunto no cubre todo. Tarde o temprano aparecerán tareas más específicas para las que no existe una función ya hecha. En esos casos, Python permite crear funciones propias.</p>
+<p>Para crear una nueva función se comienza escribiendo la palabra <code>def</code>, seguida del nombre que le daremos a la función y unos paréntesis, finalizando con dos puntos <code>:</code>. Dentro de esos paréntesis se escriben los <em>parámetros</em>, que son los nombres que recibirán los datos de entrada. Por ejemplo, si queremos una función que convierta temperaturas de Celsius a Fahrenheit, podemos comenzar así:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convertir_a_fahrenheit(celsius):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Aquí, <code>convertir_a_fahrenheit</code> es el nombre de la función y <code>celsius</code> es el parámetro (la función se comportaría igual si en lugar de <code>celsius</code> usáramos simplemente la letra <code>x</code> como nombre del parámetro).</p>
+<p>En la línea siguiente, desplazado hacia la derecha, aparece el <em>cuerpo de la función</em>, que corresponde a las instrucciones que se ejecutarán cuando la función se use. Este desplazamiento suele aplicarse automáticamente en muchos editores o entornos de programación; si no es el caso, debe hacerse manualmente, generalmente utilizando la tecla Tab.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convertir_a_fahrenheit(celsius):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    resultado <span class="op">=</span> (celsius <span class="op">*</span> <span class="dv">9</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span> <span class="dv">32</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ese desplazamiento se llama <em>indentación</em>, y es la forma en que Python distingue qué líneas pertenecen a la función y cuáles quedan fuera de ella.</p>
+<p>Dentro del cuerpo, la palabra clave <code>return</code> cumple un papel central: indica el valor que la función <em>entrega</em>. Sin <code>return</code>, la función ejecuta sus instrucciones pero no produce ningún resultado aprovechable, es como hacer un cálculo en un papel que nadie puede leer. Con <code>return</code>, el resultado queda disponible, puede guardarse en una variable, usarse en una expresión o pasarse como argumento a otra función.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convertir_a_fahrenheit(celsius):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    resultado <span class="op">=</span> (celsius <span class="op">*</span> <span class="dv">9</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span> <span class="dv">32</span>    <span class="co"># dentro de la función: indentado</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> resultado                    <span class="co"># el valor que la función entrega</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"esto no es parte de la función"</span>) <span class="co"># sin indentar: fuera de la función</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Esta separación entre interior y exterior tiene una consecuencia importante. Las variables que se crean dentro del cuerpo de la función son locales, lo que significa que solo existen mientras la función se está ejecutando. Cuando la función termina, esas variables desaparecen y no pueden utilizarse fuera de ella. En este caso, <code>resultado</code> solo existe dentro de <code>convertir_a_fahrenheit</code>. Esto permite que distintas funciones usen los mismos nombres sin interferir entre sí, lo que ayuda a mantener el código ordenado y predecible.</p>
+<p>Probemos ahora nuestra nueva función:</p>
+<div id="6d1051b8" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convertir_a_fahrenheit(celsius):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    resultado <span class="op">=</span> (celsius <span class="op">*</span> <span class="dv">9</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span> <span class="dv">32</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> resultado</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>convertir_a_fahrenheit(<span class="dv">0</span>) <span class="co"># aquí usamos nuestra función evaluada en 0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="63">
+<pre><code>32.0</code></pre>
 </div>
 </div>
-<p>Finalmente, <code>not</code> es un operador de negación que invierte el valor de una condición. Si la condición es <code>True</code>, <code>not</code> la convierte en <code>False</code>, y viceversa.</p>
-<div id="aeb7fbef" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">not</span> temp <span class="op">&gt;</span> <span class="dv">20</span>  <span class="co"># temp &gt; 20 es True, así que not lo convierte en False</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>False</code></pre>
+<p>Al llamar a la función se le pasan valores concretos entre paréntesis (en este caso, el número <code>0</code>). Esos valores concretos se llaman <em>argumentos</em>, y se distinguen de los parámetros en que los parámetros son los nombres declarados en la definición, mientras que los argumentos son los valores reales con los que se ejecuta la función.</p>
+<p>Una función puede recibir más de un parámetro, separados por comas, en directa correspondencia con la notación <span class="math inline">\(f(x, y)\)</span>. Al llamarla, los argumentos se asignan a los parámetros en el mismo orden: el primero al primero, el segundo al segundo. Por esa razón se les llama <em>argumentos posicionales</em>. Por ejemplo, si queremos una función que divida dos números, podemos escribirla así:</p>
+<div id="6ec4173e" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dividir(dividendo, divisor):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dividendo <span class="op">/</span> divisor</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>dividir(<span class="dv">10</span>, <span class="dv">2</span>)    <span class="co"># aquí dividendo=10 y divisor=2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<pre><code>5.0</code></pre>
 </div>
 </div>
-<p>Con la capacidad de comparar valores, surge de forma natural una nueva necesidad: ¿qué sucede cuando no trabajamos con un dato suelto, sino con varios al mismo tiempo? ¿Cómo los organizamos? Eso nos lleva al siguiente concepto.</p>
+<div id="2fc06dea" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dividir(<span class="dv">2</span>, <span class="dv">10</span>) <span class="co"># aquí dividendo=2 y divisor=10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<pre><code>0.2</code></pre>
+</div>
+</div>
+<p>es importante respetar el orden de los argumentos, porque si se invierte el resultado será distinto. En este caso, <code>dividir(10, 2)</code> devuelve <code>5.0</code>, mientras que <code>dividir(2, 10)</code> devuelve <code>0.2</code>.</p>
+<p>En esencia, crear una función es darle un nombre a un proceso para poder reutilizarlo. Este hábito (identificar las operaciones que se repiten y convertirlas en funciones) es uno de los más importantes al empezar a programar. El código se vuelve más claro, más ordenado y más fácil de modificar. Además, esta forma de pensar será la base para trabajar con estructuras más complejas que veremos más adelante.</p>
+<p>Ahora bien, para usar una función con eficacia no basta con saber llamarla: también conviene saber qué parámetros acepta, cuáles son obligatorios y cuáles tienen un valor por defecto. Esa información está siempre disponible.</p>
 </section>
-<section id="secuencias-en-python" class="level2">
-<h2 class="anchored" data-anchor-id="secuencias-en-python">Secuencias en Python</h2>
-<p>Cuando programamos, frecuentemente necesitamos manejar no solo un dato suelto, sino varios simultáneamente, como una lista de temperaturas registradas a lo largo del día, las letras que forman una palabra, o las coordenadas de un punto en el espacio. Para mantener esos datos organizados y accesibles, Python ofrece el concepto de <em>secuencia</em>: una estructura que agrupa elementos en un orden fijo, donde cada uno ocupa una posición numerada.</p>
-<p>En esta lección veremos tres tipos de secuencias: listas, tuplas y cadenas.</p>
-<section id="listas-list" class="level3">
-<h3 class="anchored" data-anchor-id="listas-list">Listas <code>list</code></h3>
-<p>Una <em>lista</em> es la secuencia más flexible. Su contenido puede modificarse libremente después de crearla: se pueden cambiar elementos, añadir nuevos o eliminar los existentes. Se definen usando corchetes <code>[ ]</code>, separando por comas los datos que la conforman. Por ejemplo:</p>
-<div id="ae0fc8a7" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>temperaturas <span class="op">=</span> [<span class="fl">23.5</span>, <span class="fl">24.0</span>, <span class="fl">22.8</span>, <span class="dv">17</span>, <span class="fl">19.4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Conviene usar una lista cuando se sabe que los datos son <em>dinámicos</em>, es decir, cuando se espera que cambien: mediciones que se acumulan, resultados que se procesan, elementos que el usuario puede agregar o quitar. La flexibilidad de la lista responde exactamente a esa necesidad.</p>
-</section>
-<section id="tuplas-tuple" class="level3">
-<h3 class="anchored" data-anchor-id="tuplas-tuple">Tuplas <code>tuple</code></h3>
-<p>Una <em>tupla</em> funciona como una lista en casi todo, con una diferencia fundamental: una vez creada, no puede modificarse. Se definen usando paréntesis <code>()</code>. Por ejemplo:</p>
-<div id="ec1002be" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>punto_geodesico <span class="op">=</span> (<span class="fl">19.4326</span>, <span class="op">-</span><span class="fl">99.1332</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Usar una tupla es una forma de comunicar “estos datos no deben cambiar”. Las coordenadas de una ciudad, la fecha de nacimiento de una persona o los extremos de un intervalo matemático son valores estables por naturaleza, y representarlos con una tupla no solo los protege de modificaciones accidentales, sino que comunica esa intención a quien lea el código.</p>
-</section>
-<section id="cadenas-str" class="level3">
-<h3 class="anchored" data-anchor-id="cadenas-str">Cadenas <code>str</code></h3>
-<p>Una <em>cadena</em> es, en el fondo, una secuencia de caracteres de texto. Al igual que las tuplas, las cadenas son inmutables. Se definen encerrando el texto entre comillas dobles o simples.</p>
-<div id="1fb51578" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>nombre <span class="op">=</span> <span class="st">'Carlos'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Lo importante es que Python trata todo lo que esté dentro de las comillas como texto puro. Eso significa que <code>"42"</code> no es el número cuarenta y dos, es un <code>"4"</code> seguido de un <code>"2"</code>, dos caracteres con los que no se puede hacer aritmética. Del mismo modo, <code>"hola mundo"</code> tiene diez caracteres, no nueve: el espacio también ocupa una posición en la secuencia.</p>
-<p>Ahora que los tres tipos están claros, tiene sentido hablar de lo que todos comparten.</p>
-</section>
-</section>
-<section id="lo-que-toda-secuencia-puede-hacer" class="level2">
-<h2 class="anchored" data-anchor-id="lo-que-toda-secuencia-puede-hacer">Lo que toda secuencia puede hacer</h2>
-<p>Más allá de sus diferencias, las tres secuencias comparten un conjunto de operaciones fundamentales. Una de las más importantes es la <em>indexación</em>, es decir, el hecho de que cada elemento ocupa una posición numerada, llamada <em>índice</em>, que comienza en <code>0</code> (y no en <code>1</code>, como podría esperarse). Para acceder a un elemento, basta con escribir el nombre de la secuencia seguido del índice entre corchetes.</p>
-<div id="f772c744" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>temperaturas[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>22.8</code></pre>
+<section id="cómo-explorar-funciones-y-encontrar-más" class="level2">
+<h2 class="anchored" data-anchor-id="cómo-explorar-funciones-y-encontrar-más">Cómo explorar funciones y encontrar más</h2>
+<p>Las funciones que hemos visto (<code>len()</code>, <code>min()</code>, <code>max()</code>, <code>round()</code>, <code>print()</code>) son solo una muestra pequeña de las funciones built-in de Python. En realidad el lenguaje incluye muchas más, y conocerlas todas de memoria no es ni posible ni necesario. Lo importante es saber <em>cómo encontrar</em> lo que se necesita cuando se necesita.</p>
+<p>La herramienta más inmediata está dentro del propio notebook: la función <code>help()</code>. Pasándole como argumento el nombre de otra función, Python muestra su documentación básica: qué parámetros acepta, qué valor devuelve y una breve descripción de su comportamiento.</p>
+<p>Por ejemplo, al ejecutar <code>help(round)</code> se muestra lo siguiente:</p>
+<pre><code>round(number, ndigits=None)
+Round a number to a given precision in decimal digits.
+
+The return value is an integer if ndigits is omitted or None. Otherwise the return value has the same type as the number. ndigits may be negative.</code></pre>
+<p>La salida de <code>help(round)</code> puede parecer densa a primera vista, pero casi siempre sigue la misma estructura. Primero aparece la <em>firma de la función</em>, que es su nombre seguido de los parámetros que acepta y el orden en que deben introducirse. Después viene una descripción de lo que hace y, a veces, detalles adicionales sobre su comportamiento.</p>
+<p>La firma también muestra qué parámetros son obligatorios y cuáles son opcionales. Cuando un parámetro aparece con un <code>=</code>, como <code>ndigits=None</code> en el caso de <code>round()</code>, significa que tiene un valor por defecto y puede omitirse (si no se proporciona, Python usa el valor que aparece después del <code>=</code>).</p>
+<p>En el caso de <code>round()</code>, la firma nos dice que acepta dos parámetros: en la primera posición <code>number</code>, el número que queremos redondear, y en la segunda <code>ndigits</code>, el número de decimales que queremos conservar. Como <code>ndigits</code> tiene valor por defecto <code>None</code>, podemos simplemente llamar a <code>round(número)</code> y Python redondeará al entero más cercano. Si escribimos <code>round(número, 2)</code>, conservará dos cifras decimales:</p>
+<div id="7108a7cb" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(<span class="fl">22.8673</span>, <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="66">
+<pre><code>22.87</code></pre>
 </div>
 </div>
-<div id="2f717590" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>punto_geodesico[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<pre><code>19.4326</code></pre>
+<p>Vale la pena hacer lo mismo con <code>print()</code>, que acepta más opciones de las que hemos usado hasta ahora. Al ejecutar <code>help(print)</code> se obtiene:</p>
+<pre><code>print(*args, sep=' ', end='\n', file=None, flush=False)
+Prints the values to a stream, or to sys.stdout by default.
+
+sep string inserted between values, default a space. end string appended after the last value, default a newline. file a file-like object (stream); defaults to the current sys.stdout. flush whether to forcibly flush the stream.</code></pre>
+<p>La firma de <code>print()</code> revela algo interesante: todos sus parámetros opcionales tienen nombre (<code>sep</code>, <code>end</code>, <code>file</code>, <code>flush</code>). Esto conecta directamente con una característica del lenguaje que ya está implícita en lo que hemos visto: Python permite pasar argumentos usando explícitamente el nombre del parámetro al que corresponden, con la sintaxis <code>nombre_del_parámetro=valor</code>. A estos se les llaman <em>argumentos por nombre</em> o <em>keyword arguments</em>.</p>
+<p>La ventaja es clara: con keyword arguments, el orden deja de importar, porque cada valor llega directamente al parámetro que le corresponde, sin ambigüedad. Por ejemplo:</p>
+<div id="ae7316f8" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dividir(dividendo<span class="op">=</span><span class="dv">10</span>, divisor<span class="op">=</span><span class="dv">2</span>)    <span class="co"># explícito: no depende del orden</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="67">
+<pre><code>5.0</code></pre>
 </div>
 </div>
-<div id="87d68b5e" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>nombre[<span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<pre><code>'l'</code></pre>
+<div id="5ee019b8" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dividir(divisor<span class="op">=</span><span class="dv">2</span>, dividendo<span class="op">=</span><span class="dv">10</span>)    <span class="co"># el orden cambió, el resultado no</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="68">
+<pre><code>5.0</code></pre>
 </div>
 </div>
-<div id="de5edeb2" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">"Hola mundo"</span>[<span class="dv">4</span>] <span class="co"># Aquí el espacio tiene indice 4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
-<pre><code>' '</code></pre>
+<p>Los keyword arguments son especialmente útiles cuando una función tiene varios parámetros opcionales y el orden no es obvio a primera vista. Con <code>print()</code>, por ejemplo, permiten modificar comportamientos específicos sin tener que recordar en qué posición va cada parámetro. Por ejemplo, si queremos cambiar el separador entre los valores que imprimimos, podemos usar <code>sep</code> sin preocuparnos por el orden de los demás parámetros:</p>
+<div id="4cf59d05" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"manzana"</span>, <span class="st">"pera"</span>, <span class="st">"uva"</span>, sep<span class="op">=</span><span class="st">" | "</span>)    <span class="co"># sep es keyword argument</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>manzana | pera | uva</code></pre>
 </div>
 </div>
-<p>Python también permite contar desde el final usando índices negativos: <code>secuencia[-1]</code> es siempre el último elemento, <code>secuencia[-2]</code> el penúltimo, y así sucesivamente. Es una convención práctica que evita tener que conocer la longitud exacta de la secuencia.</p>
-<p>Además de acceder a elementos individuales, las secuencias permiten extraer porciones completas mediante el <em>slicing</em> o rebanado. La sintaxis <code>secuencia[inicio:fin]</code> devuelve todos los elementos desde la posición <code>inicio</code> hasta justo antes de <code>fin</code>, sin incluirla.</p>
-<div id="87f21d5b" class="cell" data-execution_count="16">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>nombre[<span class="dv">0</span>:<span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
-<pre><code>'Carlo'</code></pre>
+<p>Siguiendo con <code>print()</code>, hay algo más que conviene conocer: los <em>f-strings</em>. Son una forma de construir cadenas que mezclan texto fijo con valores de variables, todo en una sola línea. Se escriben poniendo una <code>f</code> antes de las comillas de apertura, y cualquier variable o expresión que se quiera insertar se encierra entre llaves <code>{}</code>. Por ejemplo, si queremos imprimir un mensaje que incluya el resultado de una operación, podemos hacerlo así:</p>
+<div id="db3ed928" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ciudad <span class="op">=</span> <span class="st">"Ciudad de México"</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> <span class="fl">23.5</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"La temperatura en </span><span class="sc">{</span>ciudad<span class="sc">}</span><span class="ss"> es de </span><span class="sc">{</span>temp<span class="sc">}</span><span class="ss"> grados."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>La temperatura en Ciudad de México es de 23.5 grados.</code></pre>
 </div>
 </div>
-<div id="821eadd5" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>temperaturas[<span class="dv">1</span>:<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
-<pre><code>[24.0, 22.8, 17]</code></pre>
-</div>
-</div>
-<p>La tercera operación compartida es el operador de pertenencia <code>in</code>, que responde a la pregunta “¿este elemento está dentro de la secuencia?”. Devuelve <code>True</code> o <code>False</code>, los mismos booleanos que ya conocemos de la sección anterior. Aquí se ve por primera vez cómo las ideas se conectan: lo que aprendimos sobre comparaciones sirve directamente para trabajar con secuencias.</p>
-<div id="ca9ed5a3" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">"P"</span> <span class="kw">in</span> <span class="st">"Python"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
-<pre><code>True</code></pre>
-</div>
-</div>
-<div id="c173dc30" class="cell" data-execution_count="19">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">"p"</span> <span class="kw">in</span> <span class="st">"Python"</span> <span class="co"># Devuelve false pues es minúscula</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
-<pre><code>False</code></pre>
-</div>
-</div>
-<div id="90e25aef" class="cell" data-execution_count="20">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="dv">17</span> <span class="kw">in</span> temperaturas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>True</code></pre>
-</div>
-</div>
-<p>Hasta aquí, todos los ejemplos han usado colecciones de un solo tipo de dato. En la práctica, sin embargo, las listas y las tuplas pueden mezclar cualquier tipo de elemento, incluso otras secuencias. Esto se llama <em>anidamiento</em>: una secuencia que contiene a otra, lo que permite representar estructuras más complejas con las mismas herramientas que ya conocemos.</p>
-<div id="eeaeef35" class="cell" data-execution_count="21">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Una lista que mezcla números, cadenas, tuplas y listas</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>registro <span class="op">=</span> [<span class="dv">42</span>, <span class="st">"temperatura"</span>, [<span class="fl">23.5</span>, <span class="fl">24.0</span>, <span class="fl">22.8</span>], (<span class="dv">3</span>, <span class="st">"hola"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="c3344ec3" class="cell" data-execution_count="22">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>registro[<span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="22">
-<pre><code>(3, 'hola')</code></pre>
-</div>
-</div>
-<p>En los ejemplos anteriores nos hemos limitado a <em>leer</em> los valores que contiene una secuencia. Esto nos lleva a una pregunta natural: ¿qué sucede cuando necesitamos <em>modificar</em> uno de esos valores? La respuesta depende del tipo de secuencia.</p>
-<p>Como ya vimos, las listas son mutables: su contenido puede cambiar después de crearlas. Las tuplas y las cadenas, en cambio, son inmutables. La edición directa de elementos, por tanto, solo es posible en listas, y se hace usando la misma notación de índice que ya conocemos, ahora en el lado izquierdo de una asignación:</p>
-<div id="d8c6c5ce" class="cell" data-execution_count="23">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>temperaturas <span class="op">=</span> [<span class="fl">23.5</span>, <span class="fl">24.0</span>, <span class="fl">22.8</span>]</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>temperaturas[<span class="dv">1</span>] <span class="op">=</span> <span class="fl">19.0</span>  <span class="co"># Reemplazamos el segundo valor</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>temperaturas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
-<pre><code>[23.5, 19.0, 22.8]</code></pre>
-</div>
-</div>
-<p>Con esto hemos cubierto las tres secuencias y las operaciones que todas comparten. El siguiente paso natural es preguntarse: ¿cómo le decimos a Python que haga algo con cada elemento de una secuencia, uno por uno? Esa capacidad (la de actuar de forma repetida sobre una colección) es uno de los poderes más importantes de la programación, y se introduce en las lecciones que siguen.</p>
+<p>Para explorar más allá de lo que <code>help()</code> muestra, la fuente más completa es la documentación oficial de Python en <a href="https://docs.python.org">docs.python.org</a>. La sección <em>Built-in Functions</em> lista todas las funciones disponibles con ejemplos y explicaciones detalladas. Es un buen lugar al que volver cuando se necesita saber si ya existe una función que haga algo antes de intentar escribirla desde cero.</p>
+<p>En la práctica, la forma más rápida de resolver una duda concreta no es leer la documentación de arriba a abajo, sino buscar directamente. Una búsqueda como “python redondear número a 2 decimales” o “python cómo saber si un elemento está en una lista” lleva casi siempre a resultados útiles, frecuentemente en <em>Stack Overflow</em>, un sitio donde programadores publican preguntas y respuestas técnicas.</p>
+<p>Una alternativa cada vez más útil es consultar a un asistente de inteligencia artificial como Claude o ChatGPT. A diferencia de una búsqueda que devuelve una lista de páginas, una IA puede responder preguntas concretas en lenguaje natural, adaptar los ejemplos al contexto en que se está trabajando, o explicar un error que apareció al ejecutar una celda. Como cualquier herramienta, tiene limitaciones (a veces produce respuestas incorrectas con aparente seguridad), así que conviene verificar lo que sugiere ejecutando el código que proponga. Pero para aprender, explorar y desbloquear problemas concretos, es un recurso valioso.</p>
+<p>Con el tiempo la secuencia se vuelve natural: si se conoce el nombre de la función, <code>help()</code> resuelve la duda en segundos; si se necesita explorar qué existe, la documentación oficial es el lugar; si se tiene una tarea concreta pero no se sabe cómo resolverla, una búsqueda bien formulada o una pregunta a una IA es el camino más directo. Ninguna de estas herramientas excluye a las otras: los programadores las usan todas, con frecuencia en la misma sesión de trabajo.</p>
+<p>En la siguiente lección daremos un paso importante: dejaremos de trabajar solo con las secuencias que Python ya conoce y ampliaremos el catálogo de estructuras disponibles. Cada nueva estructura responde a un tipo de problema distinto, y elegir la adecuada es parte esencial de pensar como programador.</p>
 
 
 </section>

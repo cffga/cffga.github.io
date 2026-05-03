@@ -1,0 +1,190 @@
+---
+title: "Funciones"
+author: "Carlos Flores"
+format: html
+---
+
+En las lecciones anteriores aprendimos a guardar valores en variables y a agruparlos en secuencias. Falta, sin embargo, una pieza clave, una forma de nombrar no solo datos, sino también *procesos*. En matemáticas, esa idea aparece en el concepto de *función*, entendido como una regla o proceso que a partir de un valor dado produce cierto resultado. La notación $f(x) = x^2$ expresa esa regla de manera precisa, la función se llama $f$, recibe el valor $x$ y el resultado que produce es su cuadrado $x^2$. Lo esencial no es un cálculo particular, sino la idea de un procedimiento que actúa *siempre de la misma forma* sobre los datos o valores que recibe.
+
+Python retoma esta misma noción. Una *función* es un bloque de código con nombre que puede recibir datos y producir un resultado. La forma de escribirlo incluso es análoga, en lugar de $f(x)$ se usa `función(dato)`.
+
+Python incluye de fábrica un conjunto de funciones listas para usar, sin necesidad de instalar nada. Se llaman funciones *built-in*, y cubren las operaciones más comunes. Una de ellas es la función `len()`, que recibe una secuencia y devuelve cuántos elementos tiene.
+
+
+```{python}
+temperaturas = [23.5, 24.0, 22.8, 19.0]
+len(temperaturas)
+```
+
+
+```{python}
+len("Python")
+```
+
+De manera análoga, `min()` y `max()` devuelven el menor y el mayor de los elementos de una secuencia. También aceptan varios valores separados por comas, sin necesidad de envolverlos en una lista.
+
+
+```{python}
+min(temperaturas)
+```
+
+
+```{python}
+max(23.5, 24.0, 22.8)  # También acepta valores directos, sin lista
+```
+
+La función `round()` recibe un número decimal y devuelve su aproximación entera más cercana.
+
+
+```{python}
+round(3.7)
+```
+
+Existe una función que merece una mención especial porque se comporta de forma distinta a las anteriores: `print()`. Mientras que `len()`, `min()`, `max()` y `round()` calculan un valor y lo *devuelven* (es decir, producen un resultado que puede guardarse en una variable o usarse en una expresión), `print()` no devuelve ningún valor útil. Su propósito es simplemente mostrar información en pantalla, hacer visible algo para la persona que está ejecutando el programa. Por eso, aunque se le pueda pasar cualquier valor, no tiene sentido guardar su resultado en una variable.
+
+
+```{python}
+print("Hola, mundo!") # Muestra un mensaje en pantalla, pero no devuelve nada útil
+```
+
+## Funciones propias
+
+Las funciones built-in permiten resolver muchas tareas comunes. Sin embargo, los ejemplos que vimos antes son solo una pequeña muestra, ya que Python incluye muchas más funciones predefinidas de las que es posible abarcar en una primera introducción. No es necesario conocerlas todas desde el inicio. Más adelante, al final del notebook, veremos con más detalle cómo buscarlas y explorarlas.
+
+Aun así, ese conjunto no cubre todo. Tarde o temprano aparecerán tareas más específicas para las que no existe una función ya hecha. En esos casos, Python permite crear funciones propias.
+
+Para crear una nueva función se comienza escribiendo la palabra `def`, seguida del nombre que le daremos a la función y unos paréntesis, finalizando con dos puntos `:`. Dentro de esos paréntesis se escriben los *parámetros*, que son los nombres que recibirán los datos de entrada. Por ejemplo, si queremos una función que convierta temperaturas de Celsius a Fahrenheit, podemos comenzar así:
+
+```python
+def convertir_a_fahrenheit(celsius):
+```
+
+Aquí, `convertir_a_fahrenheit` es el nombre de la función y `celsius` es el parámetro (la función se comportaría igual si en lugar de `celsius` usáramos simplemente la letra `x` como nombre del parámetro).
+
+En la línea siguiente, desplazado hacia la derecha, aparece el *cuerpo de la función*, que corresponde a las instrucciones que se ejecutarán cuando la función se use. Este desplazamiento suele aplicarse automáticamente en muchos editores o entornos de programación; si no es el caso, debe hacerse manualmente, generalmente utilizando la tecla Tab.
+
+```python
+def convertir_a_fahrenheit(celsius):
+    resultado = (celsius * 9/5) + 32
+```
+
+Ese desplazamiento se llama *indentación*, y es la forma en que Python distingue qué líneas pertenecen a la función y cuáles quedan fuera de ella.
+
+Dentro del cuerpo, la palabra clave `return` cumple un papel central: indica el valor que la función *entrega*. Sin `return`, la función ejecuta sus instrucciones pero no produce ningún resultado aprovechable, es como hacer un cálculo en un papel que nadie puede leer. Con `return`, el resultado queda disponible, puede guardarse en una variable, usarse en una expresión o pasarse como argumento a otra función. 
+
+```python
+def convertir_a_fahrenheit(celsius):
+    resultado = (celsius * 9/5) + 32    # dentro de la función: indentado
+    return resultado                    # el valor que la función entrega
+print("esto no es parte de la función") # sin indentar: fuera de la función
+```
+
+Esta separación entre interior y exterior tiene una consecuencia importante. Las variables que se crean dentro del cuerpo de la función son locales, lo que significa que solo existen mientras la función se está ejecutando. Cuando la función termina, esas variables desaparecen y no pueden utilizarse fuera de ella. En este caso, `resultado` solo existe dentro de `convertir_a_fahrenheit`. Esto permite que distintas funciones usen los mismos nombres sin interferir entre sí, lo que ayuda a mantener el código ordenado y predecible.
+
+Probemos ahora nuestra nueva función:
+
+```{python}
+def convertir_a_fahrenheit(celsius):
+    resultado = (celsius * 9/5) + 32
+    return resultado
+
+convertir_a_fahrenheit(0) # aquí usamos nuestra función evaluada en 0
+```
+
+Al llamar a la función se le pasan valores concretos entre paréntesis (en este caso, el número `0`). Esos valores concretos se llaman *argumentos*, y se distinguen de los parámetros en que los parámetros son los nombres declarados en la definición, mientras que los argumentos son los valores reales con los que se ejecuta la función.
+
+Una función puede recibir más de un parámetro, separados por comas, en directa correspondencia con la notación $f(x, y)$. Al llamarla, los argumentos se asignan a los parámetros en el mismo orden: el primero al primero, el segundo al segundo. Por esa razón se les llama *argumentos posicionales*. Por ejemplo, si queremos una función que divida dos números, podemos escribirla así:
+
+```{python}
+def dividir(dividendo, divisor):
+    return dividendo / divisor
+
+dividir(10, 2)    # aquí dividendo=10 y divisor=2
+```
+
+
+```{python}
+dividir(2, 10) # aquí dividendo=2 y divisor=10
+```
+
+es importante respetar el orden de los argumentos, porque si se invierte el resultado será distinto. En este caso, `dividir(10, 2)` devuelve `5.0`, mientras que `dividir(2, 10)` devuelve `0.2`.
+
+En esencia, crear una función es darle un nombre a un proceso para poder reutilizarlo. Este hábito (identificar las operaciones que se repiten y convertirlas en funciones) es uno de los más importantes al empezar a programar. El código se vuelve más claro, más ordenado y más fácil de modificar. Además, esta forma de pensar será la base para trabajar con estructuras más complejas que veremos más adelante.
+
+Ahora bien, para usar una función con eficacia no basta con saber llamarla: también conviene saber qué parámetros acepta, cuáles son obligatorios y cuáles tienen un valor por defecto. Esa información está siempre disponible.
+
+## Cómo explorar funciones y encontrar más
+
+Las funciones que hemos visto (`len()`, `min()`, `max()`, `round()`, `print()`) son solo una muestra pequeña de las funciones built-in de Python. En realidad el lenguaje incluye muchas más, y conocerlas todas de memoria no es ni posible ni necesario. Lo importante es saber *cómo encontrar* lo que se necesita cuando se necesita.
+
+La herramienta más inmediata está dentro del propio notebook: la función `help()`. Pasándole como argumento el nombre de otra función, Python muestra su documentación básica: qué parámetros acepta, qué valor devuelve y una breve descripción de su comportamiento.
+
+Por ejemplo, al ejecutar ```help(round)``` se muestra lo siguiente:
+
+```
+round(number, ndigits=None)
+Round a number to a given precision in decimal digits.
+
+The return value is an integer if ndigits is omitted or None. Otherwise the return value has the same type as the number. ndigits may be negative.
+```
+
+La salida de `help(round)` puede parecer densa a primera vista, pero casi siempre sigue la misma estructura. Primero aparece la *firma de la función*, que es su nombre seguido de los parámetros que acepta y el orden en que deben introducirse. Después viene una descripción de lo que hace y, a veces, detalles adicionales sobre su comportamiento.
+
+La firma también muestra qué parámetros son obligatorios y cuáles son opcionales. Cuando un parámetro aparece con un `=`, como `ndigits=None` en el caso de `round()`, significa que tiene un valor por defecto y puede omitirse (si no se proporciona, Python usa el valor que aparece después del `=`).
+
+En el caso de `round()`, la firma nos dice que acepta dos parámetros: en la primera posición `number`, el número que queremos redondear, y en la segunda `ndigits`, el número de decimales que queremos conservar. Como `ndigits` tiene valor por defecto `None`, podemos simplemente llamar a `round(número)` y Python redondeará al entero más cercano. Si escribimos `round(número, 2)`, conservará dos cifras decimales:
+
+
+```{python}
+round(22.8673, 2)
+```
+
+Vale la pena hacer lo mismo con `print()`, que acepta más opciones de las que hemos usado hasta ahora. Al ejecutar `help(print)` se obtiene:
+
+```
+print(*args, sep=' ', end='\n', file=None, flush=False)
+Prints the values to a stream, or to sys.stdout by default.
+
+sep string inserted between values, default a space. end string appended after the last value, default a newline. file a file-like object (stream); defaults to the current sys.stdout. flush whether to forcibly flush the stream.
+```
+
+La firma de `print()` revela algo interesante: todos sus parámetros opcionales tienen nombre (`sep`, `end`, `file`, `flush`). Esto conecta directamente con una característica del lenguaje que ya está implícita en lo que hemos visto: Python permite pasar argumentos usando explícitamente el nombre del parámetro al que corresponden, con la sintaxis `nombre_del_parámetro=valor`. A estos se les llaman *argumentos por nombre* o *keyword arguments*.
+
+La ventaja es clara: con keyword arguments, el orden deja de importar, porque cada valor llega directamente al parámetro que le corresponde, sin ambigüedad. Por ejemplo:
+
+
+```{python}
+dividir(dividendo=10, divisor=2)    # explícito: no depende del orden
+```
+
+
+```{python}
+dividir(divisor=2, dividendo=10)    # el orden cambió, el resultado no
+```
+
+Los keyword arguments son especialmente útiles cuando una función tiene varios parámetros opcionales y el orden no es obvio a primera vista. Con `print()`, por ejemplo, permiten modificar comportamientos específicos sin tener que recordar en qué posición va cada parámetro. Por ejemplo, si queremos cambiar el separador entre los valores que imprimimos, podemos usar `sep` sin preocuparnos por el orden de los demás parámetros:
+
+
+```{python}
+print("manzana", "pera", "uva", sep=" | ")    # sep es keyword argument
+```
+
+Siguiendo con `print()`, hay algo más que conviene conocer: los *f-strings*. Son una forma de construir cadenas que mezclan texto fijo con valores de variables, todo en una sola línea. Se escriben poniendo una `f` antes de las comillas de apertura, y cualquier variable o expresión que se quiera insertar se encierra entre llaves `{}`. Por ejemplo, si queremos imprimir un mensaje que incluya el resultado de una operación, podemos hacerlo así:
+
+
+```{python}
+ciudad = "Ciudad de México"
+temp = 23.5
+
+print(f"La temperatura en {ciudad} es de {temp} grados.")
+```
+
+Para explorar más allá de lo que `help()` muestra, la fuente más completa es la documentación oficial de Python en [docs.python.org](https://docs.python.org). La sección *Built-in Functions* lista todas las funciones disponibles con ejemplos y explicaciones detalladas. Es un buen lugar al que volver cuando se necesita saber si ya existe una función que haga algo antes de intentar escribirla desde cero.
+
+En la práctica, la forma más rápida de resolver una duda concreta no es leer la documentación de arriba a abajo, sino buscar directamente. Una búsqueda como "python redondear número a 2 decimales" o "python cómo saber si un elemento está en una lista" lleva casi siempre a resultados útiles, frecuentemente en *Stack Overflow*, un sitio donde programadores publican preguntas y respuestas técnicas.
+
+Una alternativa cada vez más útil es consultar a un asistente de inteligencia artificial como Claude o ChatGPT. A diferencia de una búsqueda que devuelve una lista de páginas, una IA puede responder preguntas concretas en lenguaje natural, adaptar los ejemplos al contexto en que se está trabajando, o explicar un error que apareció al ejecutar una celda. Como cualquier herramienta, tiene limitaciones (a veces produce respuestas incorrectas con aparente seguridad), así que conviene verificar lo que sugiere ejecutando el código que proponga. Pero para aprender, explorar y desbloquear problemas concretos, es un recurso valioso.
+
+Con el tiempo la secuencia se vuelve natural: si se conoce el nombre de la función, `help()` resuelve la duda en segundos; si se necesita explorar qué existe, la documentación oficial es el lugar; si se tiene una tarea concreta pero no se sabe cómo resolverla, una búsqueda bien formulada o una pregunta a una IA es el camino más directo. Ninguna de estas herramientas excluye a las otras: los programadores las usan todas, con frecuencia en la misma sesión de trabajo.
+
+En la siguiente lección daremos un paso importante: dejaremos de trabajar solo con las secuencias que Python ya conoce y ampliaremos el catálogo de estructuras disponibles. Cada nueva estructura responde a un tipo de problema distinto, y elegir la adecuada es parte esencial de pensar como programador.

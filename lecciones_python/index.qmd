@@ -17,15 +17,15 @@ Python como calculadora: el punto de partida más natural. Introducción a los t
 
 Los operadores de comparación amplían el lenguaje más allá del cálculo numérico. A partir de ahí, se introduce la necesidad de manejar varios datos simultáneamente: listas, tuplas y cadenas como instancias del concepto unificador de secuencia, con sus operaciones comunes —indexación, rebanado y pertenencia.
 
-### [2. Funciones](2_funciones.qmd)
+### [3. Funciones](3_funciones.qmd)
 
 Las funciones como mecanismo para nombrar no valores sino procesos. Funciones predefinidas de Python (`len`, `min`, `max`, `round`, `print`) y definición de funciones propias. Cómo explorar la biblioteca estándar.
 
-### [3. Estructuras de datos](3_estructuras_de_datos.qmd)
+### [4. Estructuras de datos](4_estructuras_de_datos.qmd)
 
 Las cuatro estructuras fundamentales del lenguaje: listas, tuplas, conjuntos y diccionarios. Cada una responde a una necesidad distinta. El notebook culmina con una tabla comparativa y un estudio de las conversiones entre estructuras.
 
-### [4. Estructuras de control](4_estructuras_de_control.qmd)
+### [5. Estructuras de control](5_estructuras_de_control.qmd)
 
 La instrucción `if` como respuesta a la limitación de un código que no puede tomar decisiones. Cláusulas `else` y `elif`, condiciones compuestas con operadores lógicos, `if` anidados y el uso de `if` dentro de funciones como mecanismo de validación mediante `return` anticipado.
 
