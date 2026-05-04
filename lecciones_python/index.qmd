@@ -17,3 +17,5 @@ Cada lección está escrita como un texto continuo, no como una lista de comando
 
 ### [5. Estructuras de control: if / elif / else](5_estructuras_de_control.qmd)
 
+### [6. Bucles: for y while](6_bucles.qmd)
+

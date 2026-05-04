@@ -1,0 +1,423 @@
+---
+title: "Bucles: for y while"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior introdujo una capacidad nueva: que el código tome decisiones. Pero al final quedó planteada una limitación. Si quisiéramos clasificar a cada alumno de un grupo usando la función `clasificar` que escribimos, la única forma disponible sería llamarla una vez por alumno, escribiendo una línea distinta para cada uno. Eso es inmanejable cuando el grupo tiene treinta personas, e imposible cuando el tamaño de la colección no se conoce de antemano.
+
+Lo que falta es la capacidad de *repetir*: decirle a Python que ejecute el mismo conjunto de instrucciones varias veces, ya sea una vez por cada elemento de una colección, o bien mientras se cumpla cierta condición. A esa capacidad se le llama *bucle*, y Python ofrece dos formas de expresarla: el bucle `for` y el bucle `while`.
+
+## El bucle `for`
+
+La forma más común de repetición en programación consiste en recorrer una colección y hacer algo con cada uno de sus elementos. La estructura `for` expresa exactamente eso: para cada elemento de esta colección, ejecuta este bloque de instrucciones.
+
+La sintaxis es la siguiente:
+
+```python
+for variable in colección:
+    # instrucciones que se ejecutan una vez por cada elemento
+```
+
+`variable` es un nombre que en cada iteración toma el valor del elemento actual de la colección. `colección` puede ser cualquier secuencia o estructura de datos: una lista, una tupla, una cadena, un conjunto, un diccionario. El bloque indentado se ejecuta tantas veces como elementos tenga la colección.
+
+El ejemplo más directo es recorrer una lista e imprimir cada valor:
+
+```{python}
+temperaturas = [23.5, 24.0, 22.8, 19.0, 21.3]
+
+for t in temperaturas:
+    print(t)
+```
+
+En cada vuelta del bucle, la variable `t` toma el valor del siguiente elemento de la lista: primero `23.5`, luego `24.0`, y así hasta el último. Cuando se agotan los elementos, el bucle termina y Python continúa con lo que venga después.
+
+El nombre `t` es arbitrario; podría llamarse `temperatura`, `valor` o `x`. La convención es usar un nombre que describa lo que representa cada elemento dentro del bloque. Ese nombre solo existe dentro del bucle —aunque en Python, a diferencia de lo que ocurre con las funciones, la variable sigue siendo accesible después de que el bucle termina, con el valor que tenía en la última iteración.
+
+### `for` sobre distintas colecciones
+
+El bucle `for` funciona sobre cualquier colección que ya conocemos. Recorrer una tupla es idéntico a recorrer una lista:
+
+```{python}
+coordenadas = (19.4326, -99.1332)
+
+for valor in coordenadas:
+    print(valor)
+```
+
+Aplicado a una cadena, el bucle recorre sus caracteres uno a uno, lo que tiene sentido porque una cadena es, en el fondo, una secuencia de caracteres:
+
+```{python}
+for caracter in "Python":
+    print(caracter)
+```
+
+Sobre un conjunto, el bucle recorre sus elementos en un orden no garantizado, consistente con lo que ya sabemos sobre los conjuntos:
+
+```{python}
+materias = {"Cálculo", "Estadística", "Álgebra", "Física"}
+
+for materia in materias:
+    print(materia)
+```
+
+Sobre un diccionario, el comportamiento merece atención: por defecto, el bucle `for` recorre las *claves*, no los valores. Para acceder al valor correspondiente a cada clave, basta con usar la notación de corchetes que ya conocemos:
+
+```{python}
+estudiante = {
+    "nombre":   "Ana",
+    "edad":     20,
+    "promedio": 9.2
+}
+
+for clave in estudiante:
+    print(f"{clave}: {estudiante[clave]}")
+```
+
+### Combinando `for` con `if`
+
+El bloque de un `for` puede contener cualquier instrucción válida, incluyendo las estructuras de control de la lección anterior. Esto es donde el bucle empieza a mostrar su verdadero alcance: recorrer una colección y tomar decisiones sobre cada elemento.
+
+Retomando el ejemplo que quedó pendiente al cierre de la lección anterior, podemos ahora clasificar a todos los alumnos de un grupo de una sola vez:
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+for cal in calificaciones:
+    nivel = clasificar(cal)
+    print(f"{cal} → {nivel}")
+```
+
+Siete calificaciones, siete líneas de resultado, una sola llamada a `clasificar` por cada una, sin repetir código. Si el grupo tuviera trescientos alumnos, el bucle seguiría siendo exactamente el mismo.
+
+Otro patrón muy frecuente es filtrar: recorrer una colección y procesar solo los elementos que cumplen cierta condición.
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+print("Alumnos reprobados:")
+for cal in calificaciones:
+    if cal < 6.0:
+        print(f"  {cal}")
+```
+
+### Acumulación dentro de un `for`
+
+Un patrón especialmente útil es la *acumulación*: inicializar una variable antes del bucle y actualizarla en cada iteración. El resultado al terminar el bucle es el valor acumulado a lo largo de toda la colección.
+
+Por ejemplo, para contar cuántas calificaciones aprobatorias hay en una lista:
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+aprobados = 0   # contador inicial
+
+for cal in calificaciones:
+    if cal >= 6.0:
+        aprobados = aprobados + 1   # incrementamos el contador
+
+print(f"Alumnos aprobados: {aprobados} de {len(calificaciones)}")
+```
+
+El mismo patrón sirve para construir colecciones nuevas a partir de una existente. Aquí construimos un diccionario de frecuencias: cuántas veces aparece cada nivel de clasificación en la lista de calificaciones.
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8, 9.1, 7.8, 5.0]
+
+frecuencias = {
+    "Sobresaliente": 0,
+    "Bien":          0,
+    "Suficiente":    0,
+    "Reprobado":     0
+}
+
+for cal in calificaciones:
+    nivel = clasificar(cal)
+    frecuencias[nivel] = frecuencias[nivel] + 1
+
+for nivel in frecuencias:
+    print(f"{nivel}: {frecuencias[nivel]}")
+```
+
+El primer `for` recorre la lista de calificaciones y acumula en el diccionario. El segundo recorre el diccionario para mostrar el resultado. Dos bucles, dos propósitos distintos, usando las estructuras de datos que ya conocemos.
+
+### La función `range()`
+
+Hasta ahora todos los bucles `for` han recorrido colecciones que ya existían: listas de calificaciones, diccionarios de estudiantes, conjuntos de materias. Pero a veces se necesita repetir algo un número fijo de veces, o generar una secuencia de números enteros para trabajar con ella.
+
+Para eso existe la función `range()`. Genera una secuencia de enteros que el `for` puede recorrer. La forma más simple es `range(n)`, que produce los enteros desde `0` hasta `n - 1`, sin incluir `n`:
+
+```{python}
+for i in range(5):
+    print(i)
+```
+
+Al igual que el slicing que ya conocemos, el extremo superior de `range` no se incluye. `range(5)` produce `0, 1, 2, 3, 4`, cinco valores en total.
+
+`range()` también acepta un punto de inicio y un paso, con la misma lógica que el slicing: `range(inicio, fin)` genera desde `inicio` hasta `fin - 1`, y `range(inicio, fin, paso)` avanza de `paso` en `paso`:
+
+```{python}
+for i in range(1, 6):      # del 1 al 5
+    print(i)
+```
+
+```{python}
+for i in range(0, 11, 2):  # pares del 0 al 10
+    print(i)
+```
+
+`range()` también puede contar hacia atrás usando un paso negativo:
+
+```{python}
+for i in range(5, 0, -1):  # del 5 al 1, descendiendo
+    print(i)
+```
+
+Un uso natural de `range()` es recorrer los índices de una lista cuando se necesita tanto el índice como el valor. Recordemos que los índices van de `0` a `len(lista) - 1`, exactamente el rango que produce `range(len(lista))`:
+
+```{python}
+temperaturas = [23.5, 24.0, 22.8, 19.0, 21.3]
+
+for i in range(len(temperaturas)):
+    print(f"Hora {i}: {temperaturas[i]} °C")
+```
+
+### La función `enumerate()`
+
+Recorrer una lista con `range(len(...))` para obtener el índice y el valor al mismo tiempo funciona, pero resulta algo indirecto. Python ofrece `enumerate()` para hacer exactamente eso de forma más directa: produce pares `(índice, valor)` que se pueden desempaquetar en dos variables, usando el desempaquetado de tuplas que ya conocemos de la lección de estructuras de datos.
+
+```{python}
+temperaturas = [23.5, 24.0, 22.8, 19.0, 21.3]
+
+for i, t in enumerate(temperaturas):
+    print(f"Hora {i}: {t} °C")
+```
+
+El resultado es idéntico al ejemplo anterior, pero el código expresa la intención con más claridad: queremos recorrer `temperaturas` obteniendo en cada paso tanto el índice como el valor. `enumerate()` acepta un segundo argumento opcional para especificar desde qué número empieza a contar:
+
+```{python}
+for i, t in enumerate(temperaturas, start=1):   # empieza a contar desde 1
+    print(f"Hora {i}: {t} °C")
+```
+
+### La función `zip()`
+
+A veces se tienen dos listas relacionadas elemento a elemento y se quiere recorrerlas en paralelo. `zip()` combina dos o más secuencias en pares, produciendo en cada iteración una tupla con un elemento de cada una:
+
+```{python}
+ciudades      = ["CDMX", "Guadalajara", "Monterrey"]
+temperaturas  = [22.5,   18.3,          28.1]
+
+for ciudad, temp in zip(ciudades, temperaturas):
+    print(f"{ciudad}: {temp} °C")
+```
+
+El desempaquetado de la tupla en `ciudad, temp` es exactamente el mismo mecanismo que ya vimos con las tuplas en la lección de estructuras de datos. `zip()` se detiene cuando la secuencia más corta se agota, lo que evita errores si las listas tienen longitudes distintas.
+
+### Construir una lista nueva con `for`
+
+Uno de los patrones de acumulación más frecuentes no produce un número ni un diccionario, sino una lista nueva. La idea es simple: se inicializa una lista vacía antes del bucle y, dentro de él, se va extendiendo con nuevos elementos. Añadir un elemento al final de una lista es una operación que normalmente requeriría un método, mecanismo que todavía no hemos introducido. Sin embargo, hay una forma de construirlas sin necesidad de ningún método: la concatenación con `+`, que ya conocemos de las secuencias.
+
+Dentro de un bucle, `lista = lista + [elemento]` extiende la lista en cada iteración asignándole una nueva lista que incluye el elemento adicional:
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+aprobados = []   # lista vacía
+
+for cal in calificaciones:
+    if cal >= 6.0:
+        aprobados = aprobados + [cal]   # concatenamos una lista de un solo elemento
+
+print(aprobados)
+```
+
+El patrón tiene tres partes invariables: una lista vacía antes del bucle, una condición que decide qué incluir, y la concatenación que extiende la lista. Es un esquema que aparece tan seguido que Python desarrolló una sintaxis especial para expresarlo en una sola línea, que es exactamente lo que introduce la siguiente lección.
+
+### `break` y `continue`
+
+Dentro de un bucle `for` o `while` es posible alterar el flujo normal de la iteración con dos instrucciones: `break` y `continue`.
+
+`break` interrumpe el bucle de inmediato, sin esperar a que se agoten los elementos ni a que la condición cambie. Es útil cuando se busca algo dentro de una colección y no tiene sentido seguir recorriendo el resto una vez encontrado:
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+primera_reprobada = None
+
+for cal in calificaciones:
+    if cal < 6.0:
+        primera_reprobada = cal
+        break   # encontramos lo que buscábamos; no hace falta seguir
+
+if primera_reprobada is not None:
+    print(f"Primera calificación reprobatoria: {primera_reprobada}")
+else:
+    print("No hay calificaciones reprobatorias.")
+```
+
+Sin `break`, el bucle seguiría recorriendo toda la lista aunque ya hubiera encontrado lo que buscaba. Con `break`, se detiene exactamente en ese punto.
+
+`continue` no termina el bucle, sino solo la iteración actual: descarta el resto del bloque y pasa directamente al siguiente elemento. Es útil cuando ciertos elementos deben ignorarse sin necesidad de anidar todo el código dentro de un `if`:
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+print("Calificaciones aprobatorias:")
+for cal in calificaciones:
+    if cal < 6.0:
+        continue   # ignoramos las reprobadas y pasamos a la siguiente
+    print(f"  {cal}")
+```
+
+La diferencia entre usar `continue` y envolver el `print` dentro de un `if cal >= 6.0` es de organización: con `continue` se expresa primero la condición de exclusión y después el código que aplica a los elementos que pasan el filtro, sin añadir un nivel extra de indentación. En bucles con varias condiciones de exclusión, esto puede hacer el código considerablemente más plano y legible.
+
+## El bucle `while`
+
+El bucle `for` es la elección natural cuando se conoce de antemano la colección o el número de repeticiones. Pero hay situaciones donde no se sabe cuántas veces hay que repetir: el bucle debe continuar mientras se cumpla una condición, y detenerse en cuanto esa condición deje de ser verdadera. Para eso existe el bucle `while`.
+
+La sintaxis es directa: la condición se evalúa antes de cada iteración, y el bloque se ejecuta mientras sea `True`. En cuanto la condición resulta `False`, el bucle termina.
+
+```python
+while condición:
+    # instrucciones que se repiten mientras condición sea True
+```
+
+Un ejemplo elemental: calcular cuántas veces hay que doblar una hoja de papel para que su grosor supere un metro. El grosor inicial es de 0.1 mm y se duplica en cada doblez.
+
+```{python}
+grosor    = 0.1   # milímetros
+dobleces  = 0
+
+while grosor < 1000:          # 1000 mm = 1 metro
+    grosor   = grosor * 2
+    dobleces = dobleces + 1
+
+print(f"Dobleces necesarios: {dobleces}")
+print(f"Grosor final: {grosor:.2f} mm")
+```
+
+No había forma de saber de antemano cuántos dobleces serían necesarios: el número de repeticiones dependía del resultado de las operaciones dentro del bucle. El `while` maneja exactamente esa situación.
+
+### La condición debe volverse `False` en algún momento
+
+El riesgo del `while` es escribir una condición que nunca deje de ser verdadera, produciendo un *bucle infinito* que el programa nunca abandona. En Google Colab, un bucle infinito se interrumpe manualmente con el botón de detener ejecución, o con `Ctrl + C`. El ejemplo siguiente ilustra la forma correcta: la variable que controla la condición se actualiza dentro del bucle, garantizando que en algún momento la condición resulte `False`.
+
+```{python}
+contador = 10
+
+while contador > 0:
+    print(contador)
+    contador = contador - 1   # sin esta línea, el bucle nunca terminaría
+
+print("Fin.")
+```
+
+La regla práctica es que siempre debe haber dentro del bloque del `while` alguna instrucción que acerque el estado del programa hacia el momento en que la condición deje de cumplirse.
+
+### `while` con condiciones compuestas
+
+La condición del `while` puede ser tan compleja como se necesite, usando los mismos operadores lógicos que ya conocemos. Un uso frecuente es mantener un proceso hasta que se cumplan varias condiciones simultáneamente, o hasta que alguna de varias condiciones deje de cumplirse.
+
+Por ejemplo, simular la búsqueda del primer elemento de una lista que supere un umbral, avanzando posición por posición:
+
+```{python}
+temperaturas = [21.3, 22.1, 23.5, 26.8, 25.0, 24.4]
+umbral       = 25.0
+indice       = 0
+
+while indice < len(temperaturas) and temperaturas[indice] <= umbral:
+    indice = indice + 1
+
+if indice < len(temperaturas):
+    print(f"Primera temperatura sobre {umbral} °C: {temperaturas[indice]} en la posición {indice}.")
+else:
+    print("Ninguna temperatura supera el umbral.")
+```
+
+La condición combina dos verificaciones con `and`: que el índice no se haya salido de los límites de la lista, y que el elemento actual no supere el umbral. Ambas deben ser verdaderas para que el bucle continúe. La verificación del índice va primero porque, si el índice ya se salió de rango, Python no debe intentar acceder a `temperaturas[indice]`.
+
+### Cuándo usar `for` y cuándo usar `while`
+
+La distinción entre los dos bucles es conceptual antes que técnica.
+
+El `for` es la elección natural cuando se recorre una colección existente o cuando el número de repeticiones se conoce de antemano. La mayor parte de los bucles en programación cotidiana son `for`: recorrer una lista de registros, procesar cada carácter de una cadena, repetir una operación un número fijo de veces con `range()`. Cuando se necesita detener ese recorrido antes de llegar al final, `break` hace el trabajo sin necesidad de pasar a un `while`.
+
+El `while` es la elección natural cuando el número de repeticiones depende de algo que solo se puede saber mientras el bucle avanza: esperar a que una condición cambie, repetir hasta que un cálculo converja, o avanzar en una estructura sin un final predefinido. Si la condición de parada no se puede expresar como "hemos llegado al final de esta colección", probablemente corresponde un `while`.
+
+## Ejemplo integrador
+
+Para cerrar, un ejemplo que pone en juego todo lo que hemos aprendido en las últimas tres lecciones: estructuras de datos, `if` / `elif` / `else`, y los dos tipos de bucle.
+
+El problema: dada una lista de diccionarios, cada uno representando a un estudiante con nombre, calificación y carrera, queremos calcular el promedio por carrera y reportar cuántos alumnos están por encima de ese promedio en cada una.
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+grupo = [
+    {"nombre": "Ana",     "calificacion": 9.2, "carrera": "Matemáticas"},
+    {"nombre": "Luis",    "calificacion": 7.8, "carrera": "Física"},
+    {"nombre": "María",   "calificacion": 8.5, "carrera": "Matemáticas"},
+    {"nombre": "Carlos",  "calificacion": 6.1, "carrera": "Actuaría"},
+    {"nombre": "Sofía",   "calificacion": 9.7, "carrera": "Física"},
+    {"nombre": "Pedro",   "calificacion": 5.4, "carrera": "Actuaría"},
+    {"nombre": "Lucía",   "calificacion": 8.0, "carrera": "Matemáticas"},
+    {"nombre": "Roberto", "calificacion": 7.2, "carrera": "Física"},
+]
+
+# Paso 1: acumular la suma y el conteo por carrera
+sumas   = {}
+conteos = {}
+
+for alumno in grupo:
+    carrera = alumno["carrera"]
+    cal     = alumno["calificacion"]
+
+    if carrera not in sumas:
+        sumas[carrera]   = 0.0
+        conteos[carrera] = 0
+
+    sumas[carrera]   = sumas[carrera] + cal
+    conteos[carrera] = conteos[carrera] + 1
+
+# Paso 2: calcular el promedio por carrera
+promedios = {}
+for carrera in sumas:
+    promedios[carrera] = sumas[carrera] / conteos[carrera]
+
+# Paso 3: reportar
+for carrera in promedios:
+    print(f"\n{carrera} — promedio: {promedios[carrera]:.2f}")
+    for alumno in grupo:
+        if alumno["carrera"] == carrera:
+            cal   = alumno["calificacion"]
+            nivel = clasificar(cal)
+            marca = "▲" if cal > promedios[carrera] else " "
+            print(f"  {marca} {alumno['nombre']}: {cal} ({nivel})")
+```
+
+El ejemplo usa listas, diccionarios, `if` / `elif` / `else`, funciones propias, `for` anidado, y acumulación con diccionarios. Nada de lo que aparece aquí es nuevo: todo son las herramientas que hemos ido construyendo a lo largo de las últimas lecciones, combinadas para resolver un problema que ninguna de ellas podría abordar sola.
+
+## Lo que sigue
+
+Un patrón que ha aparecido varias veces en esta lección es el de construir una lista nueva a partir de una existente: recorrer la colección original con un `for`, aplicar alguna transformación o filtro a cada elemento, y acumular los resultados. Es un patrón tan frecuente que Python ofrece una sintaxis especial para expresarlo de forma más concisa y directa, sin necesidad de inicializar una lista vacía ni escribir el bloque de acumulación explícitamente. Esa sintaxis se llama *comprensión de lista*, y es exactamente lo que introduce la siguiente lección.
