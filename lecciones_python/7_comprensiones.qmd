@@ -1,0 +1,356 @@
+---
+title: "Comprensiones de listas"
+author: "Carlos Flores"
+format: html
+---
+
+En la lección anterior construimos listas nuevas a partir de colecciones existentes siguiendo siempre el mismo esquema: una lista vacía antes del bucle, un `for` que recorre la colección original, y una concatenación que acumula los elementos que nos interesan. El patrón es tan regular que resulta casi mecánico escribirlo. Cuando algo en programación es tan repetitivo que se puede describir con una receta fija, suele ser señal de que existe una forma más directa de expresarlo.
+
+En Python esa forma existe y se llama *comprensión de lista*. Permite construir una lista nueva a partir de cualquier colección en una sola línea, con una sintaxis que refleja directamente la intención sin el andamiaje del bucle explícito. Esta lección parte del patrón que ya conocemos, muestra cómo comprimirlo, y explora hasta dónde puede llevarse esa idea.
+
+## De un `for` a una comprensión
+
+El punto de partida es un bucle que ya sabemos escribir. Supongamos que tenemos una lista de temperaturas en Celsius y queremos convertirlas todas a Fahrenheit:
+
+```{python}
+celsius = [0.0, 20.0, 37.0, 100.0]
+
+fahrenheit = []
+for c in celsius:
+    fahrenheit = fahrenheit + [(c * 9 / 5) + 32]
+
+print(fahrenheit)
+```
+
+Tres líneas para el bucle, más la inicialización. La comprensión de lista expresa exactamente lo mismo en una sola línea:
+
+```{python}
+celsius    = [0.0, 20.0, 37.0, 100.0]
+fahrenheit = [(c * 9 / 5) + 32 for c in celsius]
+
+print(fahrenheit)
+```
+
+El resultado es idéntico. La sintaxis general de una comprensión de lista es:
+
+```python
+[expresión for variable in colección]
+```
+
+Leída en voz alta casi suena a lenguaje natural: "la lista de `expresión` para cada `variable` en `colección`". La `expresión` es cualquier cálculo que use `variable`, y define qué valor va en la lista nueva para cada elemento de la colección original.
+
+Una comparación directa deja clara la correspondencia entre las dos formas:
+
+```python
+# Con for explícito
+resultado = []
+for variable in colección:
+    resultado = resultado + [expresión]
+
+# Con comprensión
+resultado = [expresión for variable in colección]
+```
+
+Lo que antes ocupaba tres líneas ahora ocupa una, y la intención —"construir una lista aplicando esta transformación a cada elemento"— queda expresada de forma más directa.
+
+## Comprensiones con filtro
+
+El patrón de acumulación con `for` también aparecía combinado con un `if` para incluir solo los elementos que cumplen cierta condición. Eso también se puede expresar en una comprensión añadiendo la condición al final:
+
+```python
+[expresión for variable in colección if condición]
+```
+
+Por ejemplo, de la lista de calificaciones que hemos venido usando, extraer solo las aprobatorias:
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+aprobadas = [cal for cal in calificaciones if cal >= 6.0]
+print(aprobadas)
+```
+
+El `if` actúa como filtro: solo los elementos para los que la condición es `True` entran en la lista resultante. Los demás se descartan sin necesidad de `continue` ni de anidar código.
+
+La transformación y el filtro pueden combinarse. Por ejemplo, convertir a Fahrenheit solo las temperaturas que estén por encima de cero:
+
+```{python}
+celsius = [-10.0, 0.0, 20.0, 37.0, 100.0]
+
+fahrenheit_positivas = [(c * 9 / 5) + 32 for c in celsius if c > 0]
+print(fahrenheit_positivas)
+```
+
+El orden de lectura es el mismo que el del bucle equivalente: primero se itera, luego se filtra, luego se transforma. La `expresión` al principio de la comprensión es lo último que se evalúa, solo para los elementos que pasaron el filtro.
+
+## Comprensiones sobre distintas colecciones
+
+Así como el `for` funciona sobre cualquier estructura de datos, las comprensiones también. Cualquier colección iterable puede aparecer después del `in`.
+
+Sobre una cadena, la comprensión recorre sus caracteres. Esto permite, por ejemplo, extraer solo las vocales de una palabra:
+
+```{python}
+palabra = "murciélago"
+vocales = [c for c in palabra if c in {"a", "e", "i", "o", "u", "á", "é", "í", "ó", "ú"}]
+print(vocales)
+```
+
+Sobre un conjunto, la comprensión recorre sus elementos en orden no garantizado, igual que el `for`. Combinada con `sorted()`, que ya conocemos, permite obtener una lista ordenada a partir de un conjunto:
+
+```{python}
+materias = {"Cálculo", "Estadística", "Álgebra", "Física", "Geometría"}
+
+# Materias cuyo nombre tiene más de 7 caracteres, ordenadas
+largas = sorted([m for m in materias if len(m) > 7])
+print(largas)
+```
+
+Sobre un diccionario, la comprensión recorre las claves por defecto, igual que el `for`. Si se necesitan los valores o los pares clave-valor, se accede a ellos con la notación de corchetes que ya conocemos:
+
+```{python}
+estudiante = {
+    "nombre":   "Ana",
+    "edad":     20,
+    "promedio": 9.2,
+    "semestre": 4
+}
+
+# Solo los valores numéricos del diccionario
+numericos = [estudiante[clave] for clave in estudiante if type(estudiante[clave]) != str]
+print(numericos)
+```
+
+También es muy natural construir una lista de valores a partir de una lista de diccionarios, patrón que apareció en el ejemplo integrador de la lección anterior:
+
+```{python}
+grupo = [
+    {"nombre": "Ana",    "calificacion": 9.2, "carrera": "Matemáticas"},
+    {"nombre": "Luis",   "calificacion": 7.8, "carrera": "Física"},
+    {"nombre": "María",  "calificacion": 8.5, "carrera": "Matemáticas"},
+    {"nombre": "Carlos", "calificacion": 6.1, "carrera": "Actuaría"},
+    {"nombre": "Sofía",  "calificacion": 9.7, "carrera": "Física"},
+    {"nombre": "Pedro",  "calificacion": 5.4, "carrera": "Actuaría"},
+]
+
+# Solo los nombres de los alumnos de Física
+fisica = [a["nombre"] for a in grupo if a["carrera"] == "Física"]
+print(fisica)
+```
+
+```{python}
+# Todas las calificaciones, sin importar la carrera
+todas = [a["calificacion"] for a in grupo]
+print(f"Promedio general: {sum(todas) / len(todas):.2f}")
+```
+
+La segunda comprensión extrae todas las calificaciones en una sola línea; `sum()` y `len()`, que ya conocemos, hacen el resto.
+
+## Comprensiones con funciones propias
+
+La expresión de una comprensión puede ser cualquier cosa que Python pueda evaluar, incluyendo llamadas a funciones que nosotros mismos hayamos definido. Esto conecta directamente con la función `clasificar` que hemos venido usando desde la lección de estructuras de control:
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8]
+
+niveles = [clasificar(cal) for cal in calificaciones]
+print(niveles)
+```
+
+Lo que antes requería un `for` con dos líneas en el cuerpo —llamar a `clasificar` y guardar el resultado— ahora queda en una sola expresión. La función se aplica a cada elemento exactamente igual que en el bucle, pero sin el andamiaje de la acumulación.
+
+También es posible combinar la llamada a una función con un filtro. Por ejemplo, obtener la clasificación solo de los alumnos que pertenecen a una carrera concreta:
+
+```{python}
+resultado = [
+    (a["nombre"], clasificar(a["calificacion"]))
+    for a in grupo
+    if a["carrera"] == "Matemáticas"
+]
+
+for nombre, nivel in resultado:
+    print(f"{nombre}: {nivel}")
+```
+
+La comprensión produce una lista de tuplas, una por cada alumno de Matemáticas. El `for` final las desempaqueta en dos variables, usando el mismo mecanismo de desempaquetado que conocemos de la lección de estructuras de datos. Nada aquí es nuevo en términos de herramientas; lo nuevo es la forma en que se combinan.
+
+Cuando una comprensión empieza a ser larga, es perfectamente válido distribuirla en varias líneas. Python permite esto dentro de los corchetes sin necesidad de ningún carácter especial:
+
+```python
+resultado = [
+    expresión
+    for variable in colección
+    if condición
+]
+```
+
+La regla de estilo es que si la comprensión cabe cómodamente en una línea, se escribe en una línea; si no, se distribuye. En ambos casos la semántica es idéntica.
+
+## Comprensiones anidadas
+
+Así como los bucles `for` pueden anidarse, las comprensiones también. Una comprensión anidada tiene dos cláusulas `for`, y el resultado es equivalente a dos bucles uno dentro del otro.
+
+El caso más natural es aplanar una lista de listas: convertir una estructura de dos niveles en una lista simple con todos los elementos:
+
+```{python}
+matriz = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+plana = [elemento for fila in matriz for elemento in fila]
+print(plana)
+```
+
+El orden de las cláusulas `for` en la comprensión corresponde al orden en que se anidan los bucles: primero `for fila in matriz` (el bucle externo), luego `for elemento in fila` (el bucle interno). El bucle equivalente sería:
+
+```python
+plana = []
+for fila in matriz:
+    for elemento in fila:
+        plana = plana + [elemento]
+```
+
+Otro ejemplo natural con los datos que ya conocemos: a partir de una lista de ciudades y una lista de días, generar todos los pares posibles para planificar visitas:
+
+```{python}
+ciudades = ["CDMX", "Guadalajara", "Monterrey"]
+dias     = ["lunes", "miércoles", "viernes"]
+
+agenda = [(ciudad, dia) for ciudad in ciudades for dia in dias]
+for ciudad, dia in agenda:
+    print(f"{dia}: {ciudad}")
+```
+
+Las comprensiones anidadas son útiles cuando el anidamiento es simple y la intención es clara. Cuando la lógica se vuelve difícil de leer en una sola expresión, un par de bucles `for` explícitos suele comunicar mejor la intención.
+
+## Comprensiones de conjuntos y diccionarios
+
+La idea detrás de las comprensiones no se limita a las listas. Con una pequeña variación en la sintaxis, el mismo mecanismo produce conjuntos y diccionarios.
+
+Una *comprensión de conjunto* usa llaves `{}` en lugar de corchetes. El resultado es un conjunto, lo que significa que los duplicados se eliminan automáticamente:
+
+```{python}
+calificaciones = [8.2, 5.9, 9.5, 7.1, 6.0, 4.3, 9.8, 8.2, 7.1]
+
+# Valores únicos, como un conjunto
+unicos = {cal for cal in calificaciones}
+print(unicos)
+```
+
+```{python}
+# Carreras únicas presentes en el grupo
+carreras = {a["carrera"] for a in grupo}
+print(carreras)
+```
+
+Una *comprensión de diccionario* también usa llaves, pero con la forma `clave: valor` para cada entrada, igual que la sintaxis literal de los diccionarios:
+
+```{python}
+# Diccionario: nombre → calificación, para cada alumno del grupo
+califs_por_nombre = {a["nombre"]: a["calificacion"] for a in grupo}
+print(califs_por_nombre)
+```
+
+```{python}
+# Diccionario: nombre → nivel de clasificación
+niveles_por_nombre = {a["nombre"]: clasificar(a["calificacion"]) for a in grupo}
+print(niveles_por_nombre)
+```
+
+Con una comprensión de diccionario también se puede filtrar, igual que con las de lista:
+
+```{python}
+# Solo los alumnos con promedio sobresaliente
+sobresalientes = {
+    a["nombre"]: a["calificacion"]
+    for a in grupo
+    if a["calificacion"] >= 9.0
+}
+print(sobresalientes)
+```
+
+La tabla siguiente resume las tres variantes:
+
+| Tipo | Sintaxis | Resultado |
+|:----:|:--------:|:---------:|
+| Lista | `[expr for x in col]` | Lista ordenada, permite duplicados |
+| Conjunto | `{expr for x in col}` | Conjunto sin orden, sin duplicados |
+| Diccionario | `{clave: valor for x in col}` | Diccionario indexado por clave |
+
+## Cuándo usar una comprensión y cuándo un bucle
+
+Las comprensiones son más concisas, pero no siempre son la mejor elección. La regla práctica es sencilla: una comprensión comunica bien cuando su propósito es producir una colección nueva a partir de otra mediante una transformación, un filtro, o ambas cosas a la vez. Un bucle `for` explícito es más apropiado cuando el bloque de código produce efectos adicionales además de construir una colección (imprimir, acumular en varias variables al mismo tiempo, modificar estructuras externas), o cuando la lógica es suficientemente compleja como para que una sola línea resulte difícil de leer.
+
+En la práctica, el criterio más confiable es la legibilidad. Si al leer la comprensión en voz alta su intención queda inmediatamente clara, úsala. Si hay que detenerse a descifrarla, un bucle explícito probablemente comunica mejor.
+
+## Ejemplo integrador
+
+Para cerrar, un problema que requiere transformar, filtrar y resumir una colección de datos, usando comprensiones donde simplifican el código y bucles donde la lógica lo pide.
+
+El problema: dado el grupo de alumnos que hemos venido usando, queremos producir un reporte que muestre, por carrera, la lista de alumnos ordenada por calificación descendente, junto con su nivel de clasificación y si están por encima del promedio de su carrera.
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+grupo = [
+    {"nombre": "Ana",     "calificacion": 9.2, "carrera": "Matemáticas"},
+    {"nombre": "Luis",    "calificacion": 7.8, "carrera": "Física"},
+    {"nombre": "María",   "calificacion": 8.5, "carrera": "Matemáticas"},
+    {"nombre": "Carlos",  "calificacion": 6.1, "carrera": "Actuaría"},
+    {"nombre": "Sofía",   "calificacion": 9.7, "carrera": "Física"},
+    {"nombre": "Pedro",   "calificacion": 5.4, "carrera": "Actuaría"},
+    {"nombre": "Lucía",   "calificacion": 8.0, "carrera": "Matemáticas"},
+    {"nombre": "Roberto", "calificacion": 7.2, "carrera": "Física"},
+]
+
+# Carreras únicas presentes en el grupo (comprensión de conjunto)
+carreras = {a["carrera"] for a in grupo}
+
+for carrera in sorted(carreras):
+    # Alumnos de esta carrera (comprensión de lista con filtro)
+    alumnos_carrera = [a for a in grupo if a["carrera"] == carrera]
+
+    # Calificaciones de esta carrera (comprensión de lista)
+    califs = [a["calificacion"] for a in alumnos_carrera]
+
+    promedio = sum(califs) / len(califs)
+
+    # Ordenar por calificación descendente usando sorted() con key
+    alumnos_ordenados = sorted(alumnos_carrera, key=lambda a: a["calificacion"], reverse=True)
+
+    print(f"\n{carrera}  (promedio: {promedio:.2f})")
+    print("-" * 35)
+
+    for alumno in alumnos_ordenados:
+        cal   = alumno["calificacion"]
+        nivel = clasificar(cal)
+        marca = "▲" if cal > promedio else " "
+        print(f"  {marca} {alumno['nombre']:<10} {cal:.1f}  {nivel}")
+```
+
+El ejemplo usa comprensiones de conjunto para obtener las carreras únicas, comprensiones de lista para filtrar alumnos por carrera y extraer sus calificaciones, `sum()` y `len()` para el promedio, `sorted()` con una función anónima como criterio de ordenamiento, y un `for` explícito para el reporte final porque su propósito es imprimir, no construir una colección. Cada herramienta aparece donde su uso es más natural.
+
+## Lo que sigue
+
+Con las comprensiones, el vocabulario del lenguaje está prácticamente completo para los propósitos de esta serie. Hasta ahora todo el código ha dependido exclusivamente de lo que Python incluye de fábrica: sus tipos de datos, sus funciones built-in y las funciones que nosotros mismos hemos definido. Pero Python tiene un ecosistema enorme de código ya escrito, organizado en *módulos*, que extiende enormemente lo que es posible hacer sin implementar nada desde cero: cálculo numérico, estadística, visualización, manejo de datos. La siguiente lección introduce la forma de acceder a ese ecosistema.

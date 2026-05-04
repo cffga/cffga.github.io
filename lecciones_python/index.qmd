@@ -19,3 +19,4 @@ Cada lección está escrita como un texto continuo, no como una lista de comando
 
 ### [6. Bucles: for y while](6_bucles.qmd)
 
+### [7. Comprensiones de listas](7_comprensiones.qmd)
