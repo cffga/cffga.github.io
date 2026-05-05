@@ -362,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>En las lecciones anteriores aprendimos a organizar datos en variables y colecciones, y a expresar comparaciones que producen un valor <code>True</code> o <code>False</code>. En ese momento, los booleanos aparecieron como una respuesta a la pregunta “¿se cumple esta condición?”, pero no hicimos nada con esa respuesta más allá de observarla. Es el momento de darle uso.</p>
+<p>En las lecciones anteriores aprendimos a organizar datos en variables y secuencias, y a expresar comparaciones que producen un valor <code>True</code> o <code>False</code>. En ese momento, los booleanos aparecieron como una respuesta a la pregunta “¿se cumple esta condición?”, pero no hicimos nada con esa respuesta más allá de observarla. Es el momento de darle uso.</p>
 <p>Todo el código que hemos escrito hasta ahora sigue un único camino: Python lee cada línea y la ejecuta en orden, de arriba hacia abajo, sin desviarse. Eso es suficiente para describir cálculos, pero no para describir decisiones. Un sistema que clasifica a un estudiante como aprobado o reprobado, un sensor que emite una alerta solo cuando la temperatura supera un umbral, una función que no puede continuar si recibe datos inválidos: en todos estos casos el programa necesita escoger qué hacer en función de los datos que tiene. Esa capacidad de elegir entre caminos distintos es lo que introduce esta lección.</p>
 <section id="la-instrucción-if" class="level2">
 <h2 class="anchored" data-anchor-id="la-instrucción-if">La instrucción <code>if</code></h2>
@@ -370,7 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> condición:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># instrucciones que se ejecutan solo si condición es True</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>La condición puede ser cualquier expresión que Python pueda evaluar como <code>True</code> o <code>False</code>: una comparación, una combinación de comparaciones con <code>and</code> u <code>or</code>, o directamente una variable booleana. Si la evaluación resulta <code>True</code>, se ejecuta el bloque indentado; si resulta <code>False</code>, Python salta directamente a la primera línea que esté fuera de ese bloque.</p>
-<div id="67eb2c10" class="cell" data-execution_count="1">
+<div id="8e6318c0" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>temperatura <span class="op">=</span> <span class="fl">38.5</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> temperatura <span class="op">&gt;</span> <span class="fl">37.5</span>:</span>
@@ -380,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Si cambiamos el valor de <code>temperatura</code> a uno que no supere el umbral, el bloque indentado no se ejecuta en absoluto:</p>
-<div id="57088ce5" class="cell" data-execution_count="2">
+<div id="f436d17f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>temperatura <span class="op">=</span> <span class="fl">36.8</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> temperatura <span class="op">&gt;</span> <span class="fl">37.5</span>:</span>
@@ -396,8 +396,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="la-cláusula-else" class="level2">
 <h2 class="anchored" data-anchor-id="la-cláusula-else">La cláusula <code>else</code></h2>
 <p>Un <code>if</code> por sí solo permite reaccionar cuando algo es verdadero, pero no dice nada sobre qué hacer cuando es falso. En muchas situaciones eso no es suficiente: se quiere hacer una cosa si se cumple la condición, y otra cosa distinta si no se cumple. Para eso existe la cláusula <code>else</code>.</p>
-<p><code>else</code> se escribe al mismo nivel de indentación que el <code>if</code> al que pertenece, seguido de dos puntos. Su bloque se ejecuta únicamente cuando la condición del <code>if</code> resultó <code>False</code>. Los dos bloques son mutuamente excluyentes: nunca se ejecutan los dos al mismo tiempo.</p>
-<div id="d69df406" class="cell" data-execution_count="3">
+<p><code>else</code> se escribe al mismo nivel de indentación que el <code>if</code> al que pertenece, seguido de dos puntos. Su bloque se ejecuta únicamente cuando la condición del <code>if</code> resultó <code>False</code>. Los dos bloques son mutuamente excluyentes, o se ejecuta uno u otro, pero nunca ambos.</p>
+<div id="504285f9" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>calificacion <span class="op">=</span> <span class="fl">7.5</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> calificacion <span class="op">&gt;=</span> <span class="fl">6.0</span>:</span>
@@ -408,9 +408,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Aprobado</code></pre>
 </div>
 </div>
-<p>La estructura <code>if</code> / <code>else</code> garantiza que exactamente uno de los dos bloques se ejecutará, sin importar qué valor tome <code>calificacion</code>. No existe un tercer camino posible.</p>
-<p>Un uso muy natural de esta estructura es asignar un valor a una variable dependiendo de si se cumple una condición. Por ejemplo, el sistema de cobro de una red de transporte público aplica una tarifa diferente según si el pasajero es estudiante o no:</p>
-<div id="7cd3dafe" class="cell" data-execution_count="4">
+<p>Un uso típico de esta estructura es asignar un valor a una variable dependiendo de si se cumple una condición. Por ejemplo, el sistema de cobro de una red de transporte público aplica una tarifa diferente según si el pasajero es estudiante o no:</p>
+<div id="7f481d83" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>precio_base <span class="op">=</span> <span class="fl">22.0</span>   <span class="co"># precio sin descuento, en pesos</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>es_estudiante <span class="op">=</span> <span class="va">True</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -424,13 +423,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Tarifa a pagar: $11.00</code></pre>
 </div>
 </div>
-<p>Aquí la condición del <code>if</code> es directamente la variable booleana <code>es_estudiante</code>. No hace falta escribir <code>es_estudiante == True</code>: la variable ya es la condición. Del mismo modo, si en algún caso se quisiera verificar la situación contraria, la forma natural es <code>not es_estudiante</code>, no <code>es_estudiante == False</code>. Usar el booleano directamente, con o sin <code>not</code>, produce código más claro y es la convención esperada.</p>
+<p>Aquí la condición del <code>if</code> es directamente la variable booleana <code>es_estudiante</code>. No hace falta escribir <code>es_estudiante == True</code>: la variable ya es la condición. Del mismo modo, si en algún caso se quisiera verificar la situación contraria, la forma natural es <code>not es_estudiante</code>, no <code>es_estudiante == False</code>. En ambos casos, usar el booleano directamente es más legible, la comparación con <code>True</code> o <code>False</code> es redundante, porque el valor ya es verdadero o falso.</p>
 </section>
 <section id="la-cláusula-elif" class="level2">
 <h2 class="anchored" data-anchor-id="la-cláusula-elif">La cláusula <code>elif</code></h2>
 <p>Hay problemas que no se reducen a dos casos. Una escala de calificaciones tiene varios niveles: sobresaliente, bien, suficiente, reprobado. Una clasificación de riesgo puede ser baja, media o alta. Una tarifa puede depender de tres o más tramos de consumo. Para manejar estas situaciones de forma limpia, Python ofrece la cláusula <code>elif</code>, abreviatura de <em>else if</em>.</p>
 <p><code>elif</code> permite añadir condiciones adicionales entre el <code>if</code> inicial y el <code>else</code> final. Python las evalúa en orden, de arriba hacia abajo, y ejecuta el bloque de la primera que resulte <code>True</code>. En cuanto encuentra esa condición, salta todo lo que sigue y continúa después del bloque completo. Si ninguna resulta <code>True</code>, se ejecuta el bloque del <code>else</code>, cuando existe.</p>
-<div id="b73f7d6f" class="cell" data-execution_count="5">
+<div id="dfad68ed" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>calificacion <span class="op">=</span> <span class="fl">8.2</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> calificacion <span class="op">&gt;=</span> <span class="fl">9.0</span>:</span>
@@ -455,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="condiciones-compuestas">Condiciones compuestas</h2>
 <p>La condición de un <code>if</code> puede ser cualquier expresión booleana, incluyendo las que combinan varias comparaciones con <code>and</code>, <code>or</code> y <code>not</code>. Esto permite expresar restricciones que involucran varias variables a la vez.</p>
 <p>Para clasificar un punto del plano según el cuadrante al que pertenece, por ejemplo, hay que verificar simultáneamente el signo de <code>x</code> y el signo de <code>y</code>:</p>
-<div id="5b19d1b5" class="cell" data-execution_count="6">
+<div id="468d221a" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span>  <span class="fl">3.0</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="op">-</span><span class="fl">1.5</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -476,24 +475,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>El operador <code>in</code>, que ya conocemos de las secuencias y los conjuntos, también funciona directamente como condición de un <code>if</code>. Esto es natural cuando se quiere verificar si un valor pertenece a un grupo de opciones, sin necesidad de encadenar varios <code>or</code>:</p>
-<div id="951349f3" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dia <span class="op">=</span> <span class="st">"sábado"</span></span>
+<div id="c0bfc1c8" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dia <span class="op">=</span> <span class="st">"jueves"</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> dia <span class="kw">in</span> {<span class="st">"sábado"</span>, <span class="st">"domingo"</span>}:</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dia<span class="sc">}</span><span class="ss"> es fin de semana."</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> dia <span class="kw">in</span> {<span class="st">"jueves"</span>, <span class="st">"viernes"</span>}:</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dia<span class="sc">}</span><span class="ss"> es día feriado."</span>)</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dia<span class="sc">}</span><span class="ss"> es día hábil."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>sábado es fin de semana.</code></pre>
+<pre><code>jueves es día feriado.</code></pre>
 </div>
 </div>
-<p>Comparado con <code>dia == "sábado" or dia == "domingo"</code>, la versión con <code>in</code> es más concisa y más fácil de extender: si en algún momento hubiera que añadir un tercer caso, bastaría con incluirlo en el conjunto sin modificar la estructura de la condición.</p>
+<p>La condición del <code>if</code> en el ejemplo anterior podría haberse escrito como <code>dia == "jueves" or dia == "viernes"</code>, pero la versión con <code>in</code> es más concisa y más fácil de extender: si en algún momento hubiera que añadir un tercer caso, bastaría con incluirlo en el conjunto <code>{"jueves", "viernes"}</code> sin modificar la estructura de la condición.</p>
 </section>
 <section id="if-anidados" class="level2">
 <h2 class="anchored" data-anchor-id="if-anidados"><code>if</code> anidados</h2>
 <p>El bloque de instrucciones dentro de un <code>if</code> puede contener cualquier código válido de Python, incluyendo otros <code>if</code>. Esto se llama <em>anidamiento</em> y sirve para expresar decisiones que solo tienen sentido dentro del contexto de una decisión anterior.</p>
 <p>El caso más claro es cuando una segunda condición solo es relevante si la primera ya se cumplió. Para determinar si un número es positivo y par, la paridad solo vale la pena verificarla si ya sabemos que el número es positivo:</p>
-<div id="6ff7add1" class="cell" data-execution_count="8">
+<div id="71e2b3d5" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>numero <span class="op">=</span> <span class="dv">14</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> numero <span class="op">&gt;</span> <span class="dv">0</span>:</span>
@@ -514,9 +513,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="if-dentro-de-funciones-y-el-return-anticipado" class="level2">
 <h2 class="anchored" data-anchor-id="if-dentro-de-funciones-y-el-return-anticipado"><code>if</code> dentro de funciones y el <code>return</code> anticipado</h2>
-<p>En la lección sobre funciones vimos que <code>return</code> entrega el resultado de una función al código que la llamó, y que es el único valor que cruza la frontera entre el interior y el exterior de la función. Lo que no mencionamos entonces es que una función puede tener más de un <code>return</code>. En cuanto Python ejecuta cualquiera de ellos, la función termina de inmediato: las líneas que siguen simplemente no se ejecutan.</p>
+<p>En la lección sobre funciones vimos que <code>return</code> entrega el resultado de una función al código que la llamó, y que es el único valor que cruza la frontera entre el interior (el cuerpo) y el exterior de la función. Lo que no mencionamos entonces es que una función puede tener más de un <code>return</code>. En cuanto Python ejecuta cualquiera de ellos, la función termina de inmediato, las líneas que siguen simplemente no se ejecutan.</p>
 <p>Esto se vuelve natural al combinar funciones con estructuras <code>if</code>. Una función que clasifica una calificación puede devolver su resultado directamente desde cada rama:</p>
-<div id="6138d2dd" class="cell" data-execution_count="9">
+<div id="ddf890b4" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clasificar(calificacion):</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> calificacion <span class="op">&gt;=</span> <span class="fl">9.0</span>:</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Sobresaliente"</span></span>
@@ -538,11 +537,10 @@ Reprobado</code></pre>
 <p>Una pregunta razonable al ver esto es si tener múltiples <code>return</code> contradice la idea matemática de que una función tiene una sola salida. En programación no hay contradicción: la función sigue produciendo exactamente un resultado por cada llamada. Lo que cambia es cuál de los posibles resultados se entrega, dependiendo de los datos que recibe. Desde fuera, el comportamiento es idéntico al de una función con un único <code>return</code>.</p>
 <section id="detener-la-ejecución-cuando-los-datos-no-son-válidos" class="level3">
 <h3 class="anchored" data-anchor-id="detener-la-ejecución-cuando-los-datos-no-son-válidos">Detener la ejecución cuando los datos no son válidos</h3>
-<p>Hasta ahora hemos visto <code>return</code> como la instrucción que entrega el resultado de una función. Pero una función solo puede hacer su trabajo si los datos que recibe son válidos. Cuando no lo son (porque un valor carece de sentido, o porque el cálculo produciría un error como una división entre cero que interrumpe el programa con un <code>ZeroDivisionError</code>) la función debería detenerse antes de intentar nada. La forma de lograrlo es colocar al principio un <code>if</code> que verifique el problema y ejecute un <code>return</code> de inmediato si lo encuentra. Este patrón se llama <em>retorno temprano</em> o <em>cláusula de guarda</em>.</p>
-<p>Cuando una función detecta datos inválidos y necesita detenerse, hay que decidir qué devuelve ese <code>return</code>. En Python existe una convención para estos casos: devolver <code>None</code>, un valor especial que representa la ausencia de resultado. No es cero, no es una cadena vacía, es simplemente nada, y es precisamente lo que se usa cuando una función no puede producir un valor significativo.</p>
-<p>Antes de ver el código, hay una regla de Python que conviene conocer: resulta que en Python los números <code>0</code> y <code>0.0</code> se evalúan como <code>False</code> en un contexto booleano, y las colecciones vacías hacen lo mismo. Una lista vacía <code>[]</code>, una tupla vacía <code>()</code>, una cadena vacía <code>""</code>, un conjunto vacío <code>set()</code> y un diccionario vacío <code>{}</code> son todos <code>False</code>. Cualquier colección con al menos un elemento es <code>True</code>. Esta regla hace que <code>not valores</code> sea una forma concisa de preguntar “¿la lista está vacía?”.</p>
-<p>Consideremos una función que calcula el promedio de una lista. El promedio requiere dividir entre la cantidad de elementos, operación que no tiene sentido si la lista está vacía:</p>
-<div id="d214bbac" class="cell" data-execution_count="10">
+<p>Hasta ahora hemos visto <code>return</code> como la instrucción que entrega el resultado de una función. Pero una función solo puede hacer su trabajo si los argumentos que recibe son válidos. Cuando no lo son (porque un valor carece de sentido, o porque el cálculo produciría un error como una división entre cero) la función debería detenerse antes de intentar nada. La forma de lograrlo es colocar al principio un <code>if</code> que verifique el problema y ejecute un <code>return</code> de “emergencia” si lo encuentra. Este patrón se llama <em>retorno temprano</em> o <em>cláusula de guarda</em>. En estos casos, hay que decidir qué devuelve ese <code>return</code> de emergencia. En Python existe una convención para estos casos: devolver <code>None</code>, un valor especial que representa la ausencia de resultado. No es cero, no es una cadena vacía, es simplemente nada, y es precisamente lo que se usa cuando una función no puede producir un valor significativo.</p>
+<p>Antes de ver un ejemplo, hay una regla de Python que conviene conocer: resulta que en Python los números <code>0</code> y <code>0.0</code> se evalúan como <code>False</code> en un contexto booleano, y las colecciones vacías hacen lo mismo. Una lista vacía <code>[]</code>, una tupla vacía <code>()</code>, una cadena vacía <code>""</code>, un conjunto vacío <code>set()</code> y un diccionario vacío <code>{}</code> son todos <code>False</code>. Cualquier colección con al menos un elemento es <code>True</code>. Esta regla hace que <code>not valores</code> sea una forma concisa de preguntar “¿la lista está vacía?”.</p>
+<p>Consideremos una función que calcula el promedio de una lista de números. El promedio requiere dividir entre la cantidad de elementos, operación que no tiene sentido si la lista está vacía:</p>
+<div id="92b7bdb0" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> promedio(valores):</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> valores:       <span class="co"># True cuando la lista está vacía</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>       <span class="co"># No hay resultado posible</span></span>
@@ -555,89 +553,80 @@ Reprobado</code></pre>
 None</code></pre>
 </div>
 </div>
-<p>La ventaja del retorno temprano se aprecia en la estructura que produce. Sin él, habría que envolver el cálculo dentro de un <code>else</code>, añadiendo un nivel de indentación al cuerpo principal:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> promedio(valores):</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> valores:</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:                                    <span class="co"># este else es innecesario</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">sum</span>(valores) <span class="op">/</span> <span class="bu">len</span>(valores)   <span class="co"># un nivel extra de indentación</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Con el retorno temprano el <code>else</code> sobra: si la lista está vacía, la función ya terminó. Lo que viene a continuación solo puede ejecutarse si la lista tiene elementos, sin necesidad de decirlo explícitamente. El código se lee de forma más plana y la lógica principal no queda enterrada bajo condiciones de validación.</p>
 <p>El patrón escala naturalmente cuando hay varias condiciones que verificar. Cada cláusula de guarda ocupa su propia línea al principio de la función, y el cuerpo principal permanece al primer nivel de indentación:</p>
-<div id="de5296af" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> velocidad(distancia, tiempo):</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> distancia <span class="op">&lt;</span> <span class="dv">0</span>:</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># La distancia no puede ser negativa</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tiempo <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># El tiempo debe ser estrictamente positivo</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> distancia <span class="op">/</span> tiempo</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(velocidad(<span class="dv">100</span>, <span class="dv">2</span>))    <span class="co"># Caso válido</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(velocidad(<span class="dv">100</span>, <span class="dv">0</span>))    <span class="co"># Tiempo cero: devuelve None</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(velocidad(<span class="op">-</span><span class="dv">10</span>, <span class="dv">2</span>))    <span class="co"># Distancia negativa: devuelve None</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="dd13fb7c" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> velocidad(distancia, tiempo):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> distancia <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># La distancia no puede ser negativa</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tiempo <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># El tiempo debe ser estrictamente positivo</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> distancia <span class="op">/</span> tiempo</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(velocidad(<span class="dv">100</span>, <span class="dv">2</span>))    <span class="co"># Caso válido</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(velocidad(<span class="dv">100</span>, <span class="dv">0</span>))    <span class="co"># Tiempo cero: devuelve None</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(velocidad(<span class="op">-</span><span class="dv">10</span>, <span class="dv">2</span>))    <span class="co"># Distancia negativa: devuelve None</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>50.0
 None
 None</code></pre>
 </div>
 </div>
-<p>Aquí aparecen dos <code>if</code> separados en lugar de un <code>elif</code>. Esto es intencional: cada guarda verifica un problema distinto e independiente. Usar <code>elif</code> también funcionaría en este caso concreto, porque en cuanto la primera guarda se cumple la función ya terminó, pero dos <code>if</code> independientes comunican con más claridad que se trata de dos validaciones distintas y no de ramas alternativas de una misma decisión.</p>
-<p>El cálculo real solo se alcanza cuando todos los controles han pasado. Esta organización, validar primero y calcular al final, es un hábito que hace las funciones más robustas y fáciles de mantener.</p>
-<p>Cuando el código que llama a estas funciones recibe <code>None</code>, necesita poder distinguirlo de cualquier otro resultado. Para eso Python recomienda usar el operador <code>is</code> en lugar de <code>==</code>:</p>
-<div id="ec63a437" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> velocidad(<span class="dv">100</span>, <span class="dv">2</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> resultado <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Velocidad: </span><span class="sc">{</span>resultado<span class="sc">}</span><span class="ss"> m/s"</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No se pudo calcular la velocidad."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Aquí aparecen dos <code>if</code> separados en lugar de un <code>elif</code>. Esto es intencional: cada cláusula de guarda verifica un problema distinto e independiente. Usar <code>elif</code> también funcionaría en este caso concreto, pero dos <code>if</code> independientes comunican con más claridad que se trata de dos validaciones distintas y no de ramas alternativas de una misma decisión.</p>
+<p>Como las funciones <code>promedio</code> y <code>velocidad</code> anteriores pueden devolver un número o <code>None</code>, si pretendemos usar sus valores es fundamental verificar qué <code>return</code> se recibió antes de operar sobre él. Si el código que las llama no hace esa verificación, intentará operar sobre <code>None</code> y Python lanzará un error. La forma correcta de verificar si una función devolvió <code>None</code> o un valor válido es con el operador <code>is</code>, que pregunta si dos nombres apuntan exactamente al mismo objeto en memoria. <code>None</code> es un objeto único en Python, por lo que <code>is None</code> e <code>is not None</code> son las formas convencionales y precisas de verificarlo.</p>
+<div id="659725ed" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> velocidad(<span class="dv">100</span>, <span class="dv">2</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> resultado <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: <span class="co"># prueba que el resultado no es None antes de usarlo</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Velocidad: </span><span class="sc">{</span>resultado<span class="sc">}</span><span class="ss"> m/s"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No se pudo calcular la velocidad."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Velocidad: 50.0 m/s</code></pre>
 </div>
 </div>
-<p>El operador <code>is</code> verifica identidad: pregunta si dos nombres apuntan exactamente al mismo objeto en memoria, no solo si tienen el mismo valor. <code>None</code> es un objeto único en Python, por lo que <code>is None</code> e <code>is not None</code> son las formas convencionales y precisas de verificarlo.</p>
 </section>
 </section>
 <section id="ejemplo-integrador" class="level2">
 <h2 class="anchored" data-anchor-id="ejemplo-integrador">Ejemplo integrador</h2>
-<p>Para ver cómo encajan los conceptos de esta lección, vamos a construir una función que calcula el precio final de un producto en una tienda. Los datos del producto llegan como un diccionario con claves como <code>"precio"</code>, <code>"categoria"</code> y <code>"en_oferta"</code>. La función debe rechazar datos incoherentes —un diccionario sin precio, o un precio negativo— y, si los datos son válidos, aplicar un descuento que depende de la categoría del artículo y de si está en oferta.</p>
+<p>Para ver cómo encajan los conceptos de esta lección, vamos a construir una función que calcula el precio final de un producto en una tienda. Los datos del producto llegan como un diccionario con claves como <code>"precio"</code>, <code>"categoria"</code> y <code>"en_oferta"</code>. La función debe rechazar datos incoherentes (un diccionario sin precio, o un precio negativo) y, si los datos son válidos, aplicar un descuento que depende de la categoría del artículo y de si está en oferta.</p>
 <p>Este problema combina tres cosas que ya conocemos: cláusulas de guarda para validar la entrada, <code>if</code> / <code>elif</code> / <code>else</code> para decidir qué descuento corresponde, y acceso a un diccionario para leer los datos.</p>
-<div id="5602afe4" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calcular_precio_final(producto):</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"precio"</span> <span class="kw">not</span> <span class="kw">in</span> producto:</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># Sin precio base no hay cálculo posible</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> producto[<span class="st">"precio"</span>] <span class="op">&lt;</span> <span class="dv">0</span>:</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># Un precio negativo no tiene sentido</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    precio <span class="op">=</span> producto[<span class="st">"precio"</span>]</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> producto[<span class="st">"en_oferta"</span>]:</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> producto[<span class="st">"categoria"</span>] <span class="op">==</span> <span class="st">"electrónica"</span>:</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>            descuento <span class="op">=</span> <span class="fl">0.12</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> producto[<span class="st">"categoria"</span>] <span class="op">==</span> <span class="st">"ropa"</span>:</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>            descuento <span class="op">=</span> <span class="fl">0.20</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>            descuento <span class="op">=</span> <span class="fl">0.08</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        descuento <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> precio <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> descuento)</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>laptop <span class="op">=</span> {</span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nombre"</span>:    <span class="st">"Laptop"</span>,</span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"precio"</span>:    <span class="fl">18500.0</span>,</span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"categoria"</span>: <span class="st">"electrónica"</span>,</span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"en_oferta"</span>: <span class="va">True</span></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>precio_final <span class="op">=</span> calcular_precio_final(laptop)</span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> precio_final <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Producto:     </span><span class="sc">{</span>laptop[<span class="st">'nombre'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Precio base:  $</span><span class="sc">{</span>laptop[<span class="st">'precio'</span>]<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Precio final: $</span><span class="sc">{</span>precio_final<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Error: datos del producto incompletos o inválidos."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="604c263f" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calcular_precio_final(producto):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"precio"</span> <span class="kw">not</span> <span class="kw">in</span> producto:</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># Sin precio base no hay cálculo posible</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> producto[<span class="st">"precio"</span>] <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>   <span class="co"># Un precio negativo no tiene sentido</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    precio <span class="op">=</span> producto[<span class="st">"precio"</span>]</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> producto[<span class="st">"en_oferta"</span>]:</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> producto[<span class="st">"categoria"</span>] <span class="op">==</span> <span class="st">"electrónica"</span>:</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>            descuento <span class="op">=</span> <span class="fl">0.12</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> producto[<span class="st">"categoria"</span>] <span class="op">==</span> <span class="st">"ropa"</span>:</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>            descuento <span class="op">=</span> <span class="fl">0.20</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>            descuento <span class="op">=</span> <span class="fl">0.08</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>        descuento <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> precio <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> descuento)</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>laptop <span class="op">=</span> {</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nombre"</span>:    <span class="st">"Laptop"</span>,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"precio"</span>:    <span class="fl">18500.0</span>,</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"categoria"</span>: <span class="st">"electrónica"</span>,</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"en_oferta"</span>: <span class="va">True</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>precio_final <span class="op">=</span> calcular_precio_final(laptop)</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> precio_final <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Producto:     </span><span class="sc">{</span>laptop[<span class="st">'nombre'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Precio base:  $</span><span class="sc">{</span>laptop[<span class="st">'precio'</span>]<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Precio final: $</span><span class="sc">{</span>precio_final<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Error: datos del producto incompletos o inválidos."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Producto:     Laptop
 Precio base:  $18,500.00
