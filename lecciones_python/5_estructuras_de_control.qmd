@@ -37,7 +37,7 @@ if temperatura > 37.5:
 print("Lectura procesada.")   # Esta línea siempre se ejecuta
 ```
 
-La línea `print("Lectura procesada.")` no está indentada respecto al `if`, por lo que queda fuera de su bloque y se ejecuta siempre, independientemente de si la condición fue `True` o `False`. La indentación no es una convención estética: es el mecanismo con el que Python delimita qué instrucciones pertenecen a un bloque y cuáles no. El mismo principio que ya vimos con las funciones aplica aquí de forma idéntica.
+La línea `print("Lectura procesada.")` no está indentada respecto al `if`, por lo que queda fuera de su bloque y se ejecuta siempre, independientemente de si la condición fue `True` o `False`.
 
 ## La cláusula `else`
 
@@ -56,21 +56,21 @@ else:
 
 La estructura `if` / `else` garantiza que exactamente uno de los dos bloques se ejecutará, sin importar qué valor tome `calificacion`. No existe un tercer camino posible.
 
-Un uso muy natural de esta estructura es asignar un valor a una variable dependiendo de si se cumple una condición. Por ejemplo, calcular el precio final de un artículo aplicando un descuento solo a los socios:
+Un uso muy natural de esta estructura es asignar un valor a una variable dependiendo de si se cumple una condición. Por ejemplo, el sistema de cobro de una red de transporte público aplica una tarifa diferente según si el pasajero es estudiante o no:
 
 ```{python}
-precio_base = 250.0
-es_socio    = True
+precio_base = 22.0   # precio sin descuento, en pesos
+es_estudiante = True
 
-if es_socio:
-    precio_final = precio_base * 0.85   # 15 % de descuento para socios
+if es_estudiante:
+    precio_final = precio_base * 0.50   # 50 % de descuento para estudiantes
 else:
     precio_final = precio_base
 
-print(f"Precio final: ${precio_final:.2f}")
+print(f"Tarifa a pagar: ${precio_final:.2f}")
 ```
 
-Aquí la condición es directamente la variable booleana `es_socio`. No hace falta escribir `es_socio == True`: la variable ya *es* la condición. Del mismo modo, si en algún caso se quisiera verificar que alguien *no* es socio, la forma natural es `not es_socio`, no `es_socio == False`. Usar el booleano directamente, con o sin `not`, produce código más claro y es la convención esperada.
+Aquí la condición del `if` es directamente la variable booleana `es_estudiante`. No hace falta escribir `es_estudiante == True`: la variable ya es la condición. Del mismo modo, si en algún caso se quisiera verificar la situación contraria, la forma natural es `not es_estudiante`, no `es_estudiante == False`. Usar el booleano directamente, con o sin `not`, produce código más claro y es la convención esperada.
 
 ## La cláusula `elif`
 
@@ -188,11 +188,13 @@ Cada rama tiene su propio `return`. En cuanto Python encuentra el primero que ap
 
 Una pregunta razonable al ver esto es si tener múltiples `return` contradice la idea matemática de que una función tiene una sola salida. En programación no hay contradicción: la función sigue produciendo exactamente un resultado por cada llamada. Lo que cambia es cuál de los posibles resultados se entrega, dependiendo de los datos que recibe. Desde fuera, el comportamiento es idéntico al de una función con un único `return`.
 
-### El `return` anticipado como mecanismo de validación
+### Detener la ejecución cuando los datos no son válidos
 
-El `return` dentro de un `if` no solo sirve para entregar resultados desde distintas ramas. También es la base de un patrón muy frecuente en la práctica: el *retorno temprano* o *cláusula de guarda*. La idea es sencilla: si los datos que recibe la función no son válidos para que el cálculo tenga sentido, la función se detiene de inmediato antes de hacer cualquier otra cosa, devolviendo un valor que señale el problema.
+Hasta ahora hemos visto `return` como la instrucción que entrega el resultado de una función. Pero una función solo puede hacer su trabajo si los datos que recibe son válidos. Cuando no lo son (porque un valor carece de sentido, o porque el cálculo produciría un error como una división entre cero que interrumpe el programa con un `ZeroDivisionError`) la función debería detenerse antes de intentar nada. La forma de lograrlo es colocar al principio un `if` que verifique el problema y ejecute un `return` de inmediato si lo encuentra. Este patrón se llama *retorno temprano* o *cláusula de guarda*.
 
-Para entender qué valor devolver en esos casos, conviene introducir `None`. Es un valor especial de Python que representa la ausencia de un resultado: no es cero, no es una cadena vacía, es simplemente *nada*. Cuando una función no puede producir un resultado significativo, `None` es la forma canónica de expresarlo.
+Cuando una función detecta datos inválidos y necesita detenerse, hay que decidir qué devuelve ese `return`. En Python existe una convención para estos casos: devolver `None`, un valor especial que representa la ausencia de resultado. No es cero, no es una cadena vacía, es simplemente nada, y es precisamente lo que se usa cuando una función no puede producir un valor significativo.
+
+Antes de ver el código, hay una regla de Python que conviene conocer: resulta que en Python los números `0` y `0.0` se evalúan como `False` en un contexto booleano, y las colecciones vacías hacen lo mismo. Una lista vacía `[]`, una tupla vacía `()`, una cadena vacía `""`, un conjunto vacío `set()` y un diccionario vacío `{}` son todos `False`. Cualquier colección con al menos un elemento es `True`. Esta regla hace que `not valores` sea una forma concisa de preguntar "¿la lista está vacía?".
 
 Consideremos una función que calcula el promedio de una lista. El promedio requiere dividir entre la cantidad de elementos, operación que no tiene sentido si la lista está vacía:
 
@@ -205,8 +207,6 @@ def promedio(valores):
 print(promedio([7.5, 9.0, 8.5]))
 print(promedio([]))
 ```
-
-La condición `not valores` merece una aclaración. Así como los números `0` y `0.0` se consideran `False` en un contexto booleano, Python aplica la misma lógica a las colecciones: una lista vacía `[]`, una tupla vacía `()`, una cadena vacía `""`, un conjunto vacío `set()` y un diccionario vacío `{}` se evalúan todos como `False`. Cualquier colección con al menos un elemento se evalúa como `True`. Por eso `not valores` es `True` exactamente cuando la lista no tiene elementos, que es el caso que queremos detectar antes de continuar.
 
 La ventaja del retorno temprano se aprecia en la estructura que produce. Sin él, habría que envolver el cálculo dentro de un `else`, añadiendo un nivel de indentación al cuerpo principal:
 
@@ -254,7 +254,9 @@ El operador `is` verifica identidad: pregunta si dos nombres apuntan exactamente
 
 ## Ejemplo integrador
 
-Los conceptos de esta lección se combinan de forma natural con las estructuras de datos de la lección anterior. Un diccionario puede representar los datos de un producto; una función con cláusulas de guarda y ramas `if` / `elif` / `else` puede calcular su precio final según distintas reglas:
+Para ver cómo encajan los conceptos de esta lección, vamos a construir una función que calcula el precio final de un producto en una tienda. Los datos del producto llegan como un diccionario con claves como `"precio"`, `"categoria"` y `"en_oferta"`. La función debe rechazar datos incoherentes —un diccionario sin precio, o un precio negativo— y, si los datos son válidos, aplicar un descuento que depende de la categoría del artículo y de si está en oferta.
+
+Este problema combina tres cosas que ya conocemos: cláusulas de guarda para validar la entrada, `if` / `elif` / `else` para decidir qué descuento corresponde, y acceso a un diccionario para leer los datos.
 
 ```{python}
 def calcular_precio_final(producto):
