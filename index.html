@@ -222,10 +222,12 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .entry-title[data-md] {
+    .entry-title[data-md],
+    .entry-title[data-pdf] {
       cursor: pointer;
     }
-    .entry-title[data-md]:hover {
+    .entry-title[data-md]:hover,
+    .entry-title[data-pdf]:hover {
       color: var(--accent);
       text-decoration: underline;
     }
@@ -376,7 +378,7 @@
     </p>
     <ul class="entry-list">
       <li>
-        <div class="entry-title"><a href="#">Diferenciación — borrador</a></div>
+        <div class="entry-title" data-pdf="notas/notas-calculo-dif-varias-var.pdf">Diferenciación — borrador</div>
         <div class="entry-meta">Análisis matemático · En progreso</div>
         <div class="entry-desc">
           Notas para un texto sobre diferenciación al estilo de Spivak, dirigido a estudiantes
@@ -384,7 +386,7 @@
         </div>
       </li>
       <li>
-        <div class="entry-title"><a href="#">Muestreo aleatorio simple (MAS)</a></div>
+        <div class="entry-title">Muestreo aleatorio simple (MAS)</div>
         <div class="entry-meta">Estadística · Referencia</div>
         <div class="entry-desc">Guía práctica y fichas de fórmulas para MAS, con ejercicios resueltos.</div>
       </li>
@@ -533,6 +535,14 @@
     }
   }
 
+  function loadFile(path) {
+    if (path.endsWith('.md')) {
+      loadArticle(path);
+    } else if (path.endsWith('.pdf')) {
+      loadPdf(path);
+    }
+  }
+
   function loadArticle(path) {
     const content = document.getElementById('article-content');
 
@@ -577,6 +587,24 @@
     window.scrollTo(0, 0);
   }
 
+  function loadPdf(path) {
+    if (!ignoreHash) {
+      ignoreHash = true;
+      location.hash = '/' + path;
+      ignoreHash = false;
+    }
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-viewer').classList.add('active');
+    document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
+    const content = document.getElementById('article-content');
+    content.innerHTML =
+      '<object data="' + path + '" type="application/pdf" ' +
+      'style="width:100%;min-height:85vh;border:1px solid var(--rule);border-radius:4px;">' +
+      '<p style="padding:1rem;">No se pudo mostrar el PDF. ' +
+      '<a href="' + path + '" download>Descargar</a></p></object>';
+    window.scrollTo(0, 0);
+  }
+
   function closeArticle() {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + activeSectionId).classList.add('active');
@@ -588,10 +616,11 @@
   }
 
   document.addEventListener('click', function(e) {
-    const target = e.target.closest('[data-md]');
+    const target = e.target.closest('[data-md], [data-pdf]');
     if (target) {
       e.preventDefault();
-      loadArticle(target.getAttribute('data-md'));
+      const path = target.getAttribute('data-md') || target.getAttribute('data-pdf');
+      loadFile(path);
     }
   });
 
@@ -604,8 +633,8 @@
     }
     if (hash.startsWith('/')) {
       const path = hash.slice(1);
-      const el = document.querySelector('[data-md="' + path + '"]');
-      if (el) loadArticle(path);
+      const el = document.querySelector('[data-md="' + path + '"], [data-pdf="' + path + '"]');
+      if (el) loadFile(path);
       return;
     }
     const link = document.querySelector('nav ul li a[href="#' + hash + '"]');

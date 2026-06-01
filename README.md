@@ -37,7 +37,7 @@ El contenido de las secciones **Piezas sueltas**, **Notas**, **Proyectos**, **Pr
 
 ## Cómo agregar contenido nuevo
 
-1. Crear el archivo `.md` en la carpeta correspondiente (`piezas-sueltas/`, `notas/`, etc.).
+1. Crear el archivo `.md` (artículo) o `.pdf` (notas, papers) en la carpeta correspondiente.
 2. Agregar una entrada en `index.html` dentro de la sección correspondiente:
    ```html
    <li>
@@ -46,9 +46,10 @@ El contenido de las secciones **Piezas sueltas**, **Notas**, **Proyectos**, **Pr
      <div class="entry-desc">Descripción breve.</div>
    </li>
    ```
-   El atributo `data-md` debe contener la ruta relativa al archivo Markdown desde la raíz del repositorio.
-   El título (`entry-title`) recibe automáticamente cursor pointer y subrayado al hover gracias al selector `.entry-title[data-md]`.
-3. Opcional: si el artículo tiene código, tablas o imágenes, el visor ya tiene estilos predefinidos para `pre`, `code`, `table`, `blockquote` e `img`.
+   - Para artículos en Markdown, usa `data-md="ruta/al/archivo.md"`.
+   - Para archivos PDF, usa `data-pdf="ruta/al/archivo.pdf"`.
+   El título (`entry-title`) recibe automáticamente cursor pointer y subrayado al hover tanto con `data-md` como con `data-pdf`.
+3. Opcional: si el artículo tiene código, tablas o imágenes, el visor ya tiene estilos predefinidos para `pre`, `code`, `table`, `blockquote` e `img`. Para PDFs, se renderiza con un `<object>` nativo que incluye barra de herramientas del navegador y opción de descarga.
 
 ## Secciones del sitio
 
@@ -73,6 +74,10 @@ El SPA tiene un `#page-viewer` oculto (clase `.page`) dentro de `<main>`. El flu
 6. `window.scrollTo(0, 0)` asegura que el artículo se vea desde el inicio.
 7. "← Volver" llama `closeArticle()`: restaura la URL a `#seccion`, esconde `#page-viewer` y activa la sección que estaba activa.
 8. Cambiar de sección (clic en navbar) también esconde el visor.
+
+### PDFs
+
+Los archivos `.pdf` usan el mismo `#page-viewer`. `loadPdf(path)` inyecta un `<object>` con el PDF, que el navegador renderiza nativamente (incluye barra de herramientas, zoom y botón de descarga). Si no puede mostrarlo inline, ofrece un enlace de descarga directa como fallback. La entrada se marca con `data-pdf` en lugar de `data-md`.
 
 ## Navegación por hash (URLs compartibles)
 
