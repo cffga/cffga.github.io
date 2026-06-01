@@ -25,7 +25,8 @@ El contenido de las secciones **Piezas sueltas**, **Notas**, **Proyectos**, **Pr
 ├── .nojekyll                   ← Desactiva Jekyll en GitHub Pages
 │
 ├── piezas-sueltas/             ← Artículos de la sección "Piezas sueltas"
-│   └── gestion-paquetes-arch.md
+│   ├── gestion-paquetes-arch.md
+│   └── tesis-cohomologia.pdf
 │
 ├── programacion/               ← Materiales de la sección "Programación"
 │   └── lecciones_python/       ← Curso de Python (Quarto)
@@ -33,9 +34,10 @@ El contenido de las secciones **Piezas sueltas**, **Notas**, **Proyectos**, **Pr
 │       ├── _site/              ← Sitio generado por Quarto
 │       └── *.qmd               ← Lecciones en formato Quarto
 │
-├── proyectos/                  ← Artículos de la sección "Proyectos"
+├── proyectos/                  ← Artículos de la sección "Proyectos" (vacía)
 ├── notas/                      ← Artículos de la sección "Notas"
-└── material-recomendado/       ← Artículos de la sección "Material recomendado"
+│   └── notas-calculo-dif-varias-var.pdf
+└── material-recomendado/       ← Artículos de la sección "Material recomendado" (vacía)
 ```
 
 ## Cómo agregar contenido nuevo
@@ -104,7 +106,71 @@ El sitio usa `location.hash` para que cada sección y artículo tenga su propia 
 - **Renderizado de Markdown**: [marked](https://marked.js.org/) via CDN
 - **Cache de artículos**: en memoria (`articleCache{}`), evita fetch repetido del mismo archivo `.md`
 - **Visor de PDFs**: vía `<object>` nativo del navegador (barra de herramientas, zoom, descarga)
-- **Enrutamiento**: por hash (`location.hash` + `history.replaceState`), soporta navegación atrás/adelante
+- **Enrutamiento**: por hash (`location.hash` + flag `ignoreHash`), soporta navegación atrás/adelante
 - **Meta tags**: Open Graph (`og:title`, `og:description`, `og:url`, `og:type`) y Twitter Card para previsualización en redes sociales
 - **Curso de Python**: [Quarto](https://quarto.org)
 - **Servicio de hosting**: GitHub Pages (Jekyll desactivado)
+
+## Tipos de entrada en las listas
+
+Además de `data-md` y `data-pdf`, una entrada puede no tener atributo de archivo y ser solo texto informativo:
+
+```html
+<li>
+  <span class="entry-title">Muestreo aleatorio simple (MAS)</span>
+  <div class="entry-meta">Estadística · Tema</div>
+  <div class="entry-desc">Descripción sin archivo asociado.</div>
+</li>
+```
+
+En ese caso no hay clic ni visor — solo se muestra la información. Usar `span` en vez de `div.entry-title` cuando no haya archivo (para evitar `cursor: pointer`).
+
+## Clases CSS principales
+
+| Clase | Ubicación | Propósito |
+|---|---|---|
+| `.page` | `<section>` o `<div>` dentro de `<main>` | Cada sección y el visor son `.page`. Se ocultan por defecto. |
+| `.page.active` | — | La sección visible recibe esta clase (`display: block`). |
+| `#page-viewer` | `<div class="page">` dentro de `<main>` | Visor de artículos y PDFs. Contiene un `#article-content` y un botón "← Volver". |
+| `.page-nav` | `<nav>` dentro de cada `.page` | Barra superior con el botón de retroceso. |
+| `.entry-list` | `<ul>` dentro de las secciones | Lista de entradas. Sin viñetas, con separación entre ítems. |
+| `.entry-title` | `<div>` dentro de cada `<li>` | Título cliqueable. `cursor: pointer` si tiene `data-md` o `data-pdf`. |
+| `.entry-meta` | `<div>` dentro de cada `<li>` | Metadatos (tema, tipo, fecha). |
+| `.entry-desc` | `<div>` dentro de cada `<li>` | Descripción breve del contenido. |
+
+## Funciones JavaScript principales
+
+| Función | Rol |
+|---|---|
+| `showPage(id, el)` | Muestra la sección `id` y oculta las demás. Actualiza el hash. |
+| `loadFile(path)` | Detecta extensión y llama a `loadArticle` o `loadPdf`. |
+| `loadArticle(path)` | Fetch + cache + `marked.parse()` → inyecta en `#article-content`. |
+| `loadPdf(path)` | Inyecta `<object>` con el PDF en `#article-content`. |
+| `closeArticle()` | Oculta `#page-viewer`, restaura el hash a la sección activa. |
+| `navigate()` | Listener de `hashchange`: decide si mostrar sección, artículo o PDF. |
+
+Variables globales: `ignoreHash` (evita bucles entre `showPage`/`loadFile` y `hashchange`), `articleCache` (caché en memoria de archivos `.md`).
+
+## Nav links
+
+Cada enlace en la navbar necesita dos cosas:
+
+```html
+<a href="#piezas" onclick="showPage('piezas', this)">Piezas sueltas</a>
+```
+
+- `href="#seccion"` permite navegación directa por URL.
+- `onclick="showPage('seccion', this)"` maneja el cambio de sección sin recargar.
+- La función `showPage` también oculta el visor si estaba abierto.
+
+## Flujo de trabajo (Git)
+
+```bash
+git add -A                           # agregar archivos nuevos y modificados
+git commit -m "mensaje descriptivo"  # commit
+git push                             # despliegue automático a GitHub Pages
+```
+
+- GitHub Pages despliega desde `main`. Los cambios tardan ~30 s – 2 min en reflejarse.
+- El archivo `.nojekyll` evita que Jekyll filtre rutas con `_`.
+- No usar `git push --force` a menos que sepas lo que haces.
