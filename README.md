@@ -14,7 +14,6 @@ Página personal [cffga.github.io](https://cffga.github.io). Sitio estático de 
 │   └── lecciones_python/       ← Curso de Python (Quarto)
 ├── proyectos/
 │   └── isl-esp/                ← Traducción ISL (Quarto)
-│       ├── index.html          ← Redirección → _site/
 │       ├── _quarto.yml
 │       ├── index.qmd           ← Portada del libro
 │       ├── chapters/           ← 13 capítulos traducidos
@@ -48,7 +47,7 @@ Para agregar contenido nuevo:
 
 Traducción al español de *An Introduction to Statistical Learning with Applications in Python* (James, Witten, Hastie, Tibshirani, Taylor).
 
-**URL**: [cffga.github.io/proyectos/isl-esp/](https://cffga.github.io/proyectos/isl-esp/) (redirige a `_site/`)
+**URL**: [cffga.github.io/proyectos/isl-esp/_site/](https://cffga.github.io/proyectos/isl-esp/_site/)
 
 ### Requisitos para compilar
 
@@ -69,7 +68,7 @@ git add -A && git commit -m "Actualiza ISL" && git push
 | Aspecto | Explicación |
 |---|---|
 | `_site/` trackeado | Normalmente se ignora; aquí se trackea porque GitHub Pages sirve desde este directorio. Sin CI/CD, es la única forma de desplegar. |
-| `index.html` redirect | `proyectos/isl-esp/index.html` redirige a `_site/` con `<meta http-equiv="refresh" content="0;url=_site/">`. Sin él, la URL limpia da 404. |
+| URL | Se accede directamente a `_site/` (Quarto elimina el `index.html` de redirección durante el render). |
 | `.gitignore` modificado | Se eliminaron las reglas `_site/` y `*.pdf` del ignore original (ver `proyectos/isl-esp/.gitignore`). |
 | `_freeze/` | Cache de ejecución de Quarto. Se regenera solo, se ignora en git. |
 | Traducción | Solo cubre el texto explicativo. Laboratorios y ejercicios no traducidos (enlaces a fuentes oficiales al final de cada capítulo). |
