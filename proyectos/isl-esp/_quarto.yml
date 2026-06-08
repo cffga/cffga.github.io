@@ -50,6 +50,7 @@ website:
 format:
   html:
     lang: es
+    favicon: favicon.png
     theme:
       - cosmo
       - custom.scss

@@ -12,6 +12,7 @@ website:
 
 format:
   html:
+    favicon: favicon.png
     theme:
       light: cosmo
       dark: darkly
