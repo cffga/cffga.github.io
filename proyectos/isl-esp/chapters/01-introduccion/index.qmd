@@ -95,6 +95,7 @@ En algunos ejemplos, $p$ podría ser bastante grande, del orden de miles o inclu
 
 En general, denotaremos con $x_{ij}$ el valor de la $j$-ésima variable para la $i$-ésima observación, donde $i = 1, 2, \dots, n$ y $j = 1, 2, \dots, p$. A lo largo de este libro, $i$ se utilizará para indexar las muestras u observaciones (de 1 a $n$) y $j$ se utilizará para indexar las variables (de 1 a $p$). Denotamos con $\mathbf{X}$ una matriz $n \times p$ cuyo elemento $(i, j)$ es $x_{ij}$. Es decir,
 
+<div id="eq-1-1">
 $$
 \mathbf{X} =
 \begin{pmatrix}
@@ -118,6 +119,7 @@ x_{i2} \\
 x_{ip}
 \end{pmatrix}. \tag{1.1}
 $$
+</div>
 
 (Los vectores se representan por defecto como columnas.) Por ejemplo, para los datos `Wage`, $\mathbf{x}_i$ es un vector de longitud 11, que consta del `year`, la `age`, la `race` y otros valores para el $i$-ésimo individuo. En otras ocasiones nos interesaremos por las columnas de $\mathbf{X}$, que escribimos como $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_p$. Cada una es un vector de longitud $n$. Es decir,
 
@@ -201,7 +203,7 @@ a_n
 \end{pmatrix}.
 $$
 
-Sin embargo, los vectores que no son de longitud $n$ (como los vectores de características de longitud $p$, como en (1.1)) se denotarán en *redonda minúscula*, por ejemplo, $a$. Los escalares también se denotarán en *redonda minúscula*, por ejemplo, $a$. En los raros casos en que estos dos usos de la redonda minúscula puedan dar lugar a ambigüedad, aclararemos cuál es el uso pretendido. Las matrices se denotarán mediante *negritas mayúsculas*, como $\mathbf{A}$. Las variables aleatorias se denotarán usando *redonda mayúscula*, por ejemplo, $A$, independientemente de sus dimensiones.
+Sin embargo, los vectores que no son de longitud $n$ (como los vectores de características de longitud $p$, como en <a href="#eq-1-1" class="quarto-xref">(1.1)</a>) se denotarán en *redonda minúscula*, por ejemplo, $a$. Los escalares también se denotarán en *redonda minúscula*, por ejemplo, $a$. En los raros casos en que estos dos usos de la redonda minúscula puedan dar lugar a ambigüedad, aclararemos cuál es el uso pretendido. Las matrices se denotarán mediante *negritas mayúsculas*, como $\mathbf{A}$. Las variables aleatorias se denotarán usando *redonda mayúscula*, por ejemplo, $A$, independientemente de sus dimensiones.
 
 Ocasionalmente querremos indicar la dimensión de un objeto particular. Para indicar que un objeto es un escalar, usaremos la notación $a \in \mathbb{R}$. Para indicar que es un vector de longitud $k$, usaremos $a \in \mathbb{R}^k$ (o $\mathbf{a} \in \mathbb{R}^n$ si es de longitud $n$). Indicaremos que un objeto es una matriz $r \times s$ usando $\mathbf{A} \in \mathbb{R}^{r \times s}$.
 

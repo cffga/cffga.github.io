@@ -82,6 +82,13 @@ grep -oP '<code>[^<]*</code>' _site/chapters/{capitulo}/index.html | sort -u
 
 Comparar ambas listas y verificar que **cada cursiva del original tiene su correspondiente en la traducción** y que **cada término monoespaciado del original tiene sus backticks en la traducción**.
 
+Además, verificar las notas al pie:
+
+```bash
+# Contar notas en la traducción (deben coincidir 1:1 con las del PDF original)
+grep -c '\^\[.*\]' chapters/{capitulo}/index.qmd
+```
+
 ---
 
 # ROL DEL SISTEMA
@@ -237,6 +244,137 @@ Quarto genera automáticamente `<figcaption class="quarto-uncaptioned">Figura N<
   display: none !important;
 }
 ```
+
+## 10. Manejo de Notas al Pie de Página
+
+### 10.1 Regla general
+
+Toda nota al pie del PDF original **debe** traducirse y preservarse. No se omite ninguna.
+
+### 10.2 Sintaxis Quarto
+
+Usar la sintaxis inline de Quarto `^[...]` colocada inmediatamente después del texto al que hace referencia, sin espacio:
+
+```markdown
+...la verdadera relación entre $X$ e $Y$.^[La suposición de linealidad es a menudo un modelo de trabajo útil.]
+```
+
+### 10.3 Contenido de la nota
+
+- El contenido se traduce **íntegramente** al español.
+- Se preserva **todo** el formato: cursivas (`*...*`), negritas, backticks (`` `...` ``), y matemáticas (`$...$`).
+- Si la nota contiene referencias a figuras o tablas, se usa el mismo formato de enlace HTML explícito:
+
+```markdown
+...los coeficientes para $\hat{\beta}_0$ y $\hat{\beta}_1$ son muy grandes.^[En la Tabla 3.1, un valor p pequeño para el intercepto indica que podemos rechazar la hipótesis nula...]
+```
+
+### 10.4 Numeración
+
+Quarto numera las notas automáticamente (1, 2, 3...) y las recopila al final del documento bajo el encabezado "Notas". No es necesario numerarlas manualmente.
+
+### 10.5 Ubicación en el párrafo
+
+La nota `^[...]` se coloca **inmediatamente** después de la palabra o signo de puntuación al que se adosa, sin espacio. Si va tras una palabra: pegada. Si va tras un punto: pegada al punto.
+
+```markdown
+✅ ...sigue una distribución $F$.^[Incluso si los errores no están distribuidos normalmente...]
+✅ ...exactamente equivalente^[El cuadrado de cada estadístico $t$ es el estadístico $F$ correspondiente.] a la prueba $F$...
+```
+
+### 10.6 Verificación
+
+```bash
+# Contar notas en el original (marcadores de superíndice en PDF)
+# Comparar con el conteo en la traducción:
+grep -c '\^\[.*\]' chapters/XX-capitulo/index.qmd
+```
+
+---
+
+## 11. Referencias a Ecuaciones con Vista Previa al Hover
+
+### 11.1 Regla general
+
+Toda ecuación numerada del PDF original **debe** poder mostrarse como vista previa al pasar el ratón sobre su referencia en el texto. El mecanismo es idéntico al de figuras: se usan enlaces `<a href="#eq-X-Y" class="quarto-xref">` y el sistema tippy de Quarto muestra la ecuación al hacer hover.
+
+### 11.2 Numeración de ecuaciones
+
+Las ecuaciones heredan la numeración del original (capítulo.ecuación):
+- Capítulo 1: `\tag{1.1}`
+- Capítulo 2: `\tag{2.1}`, `\tag{2.2}`, etc.
+- Capítulo 3: `\qquad (3.1)`, `\qquad (3.2)`, etc.
+
+> ⚠️ **No se usa** `{#eq-X-Y}` de Quarto porque genera numeración automática que interferiría con la numeración manual.
+
+### 11.3 Envoltorio de ecuación con `id`
+
+Cada ecuación numerada se envuelve en un `<div id="eq-X-Y">`:
+
+```markdown
+<div id="eq-3-5">
+$$Y = \beta_0 + \beta_1 X + \epsilon. \qquad (3.5)$$
+</div>
+```
+
+Para ecuaciones de varias líneas (`\begin{aligned}`, `\begin{cases}`, etc.):
+
+```markdown
+<div id="eq-3-22">
+$$
+\begin{aligned}
+\text{RSS} &= \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \\
+           &= \sum_{i=1}^{n} (y_i - \hat{\beta}_0 - \hat{\beta}_1 x_{i1} - \cdots)^2. \qquad (3.22)
+\end{aligned}
+$$
+</div>
+```
+
+### 11.4 Formato de referencias en el texto
+
+Se usa el mismo formato de enlaces HTML explícitos que para figuras y tablas:
+
+```markdown
+<a href="#eq-3-5" class="quarto-xref">Ecuación&nbsp;3.5</a>
+<a href="#eq-3-5" class="quarto-xref">(3.5)</a>
+```
+
+La clase `quarto-xref` activa el tooltip hover de Quarto.
+
+### 11.5 Verificación pre-entrega
+
+```bash
+# Contar ecuaciones envueltas (deben coincidir con las del PDF original)
+grep -c 'id="eq-3-' chapters/XX-capitulo/index.qmd
+
+# Contar referencias enlazadas
+grep -c 'href="#eq-3-' chapters/XX-capitulo/index.qmd
+
+# Verificar que NO hay \qquad ni \tag sin envoltorio en texto (deben quedar 0 coincidencias)
+grep -n '\\qquad\|\\tag{' chapters/XX-capitulo/index.qmd | grep -v '<div id="eq-'
+# NOTA: Todo \qquad o \tag debe estar dentro de <div id="eq-X-Y">. Si hay coincidencias, falta envolver alguna ecuación.
+```
+
+### 11.6 Script de automatización
+
+Para capítulos con numeración `\qquad (N.X)` (ej. Capítulo 3):
+
+```python
+import re
+# Match $$ ... \qquad (N.X) ... $$ (multiline)
+pattern = r'\$\$\s*\n?(.*?\\qquad\s*\((\d+)\.(\d+)\).*?)\s*\$\$'
+# Wrap: <div id="eq-N-X">\n$$\n{content}\n$$\n</div>
+```
+
+Para capítulos con numeración `\tag{N.X}` (ej. Capítulos 1 y 2):
+
+```python
+pattern = r'\$\$\s*\n?(.*?\\tag\{(\d+)\.(\d+)\}.*?)\s*\$\$'
+```
+
+Referencias: reemplazar `Ecuación N.X` y `(N.X)` por `<a href="#eq-N-X" class="quarto-xref">...</a>`.
+
+---
 
 # ALCANCE POR CAPÍTULO (PÁGINAS DEL PDF ORIGINAL)
 

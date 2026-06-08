@@ -13,7 +13,7 @@
   } else {
     var parts = window.location.pathname.split('/');
     var depth = (window.location.pathname.match(/chapters\//g) || []).length;
-    baseUrl = window.location.origin + parts.slice(0, -(depth + 1) || 1).join('/') + '/';
+    baseUrl = window.location.origin + parts.slice(0, -(2 * depth + 1) || 1).join('/') + '/';
   }
   var jsonUrl = baseUrl + 'figures-map.json';
   fetch(jsonUrl)

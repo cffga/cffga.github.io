@@ -31,25 +31,35 @@ Resulta que la regresión lineal puede usarse para responder cada una de estas p
 
 La *regresión lineal simple* (*simple linear regression*) hace honor a su nombre: es un enfoque muy directo para predecir una variable respuesta cuantitativa $Y$ con base en una única variable predictora $X$. Se asume que existe aproximadamente una relación lineal entre $X$ e $Y$. Matemáticamente, podemos escribir esta relación lineal como
 
-$$Y \approx \beta_0 + \beta_1 X. \qquad (3.1)$$
+<div id="eq-3-1">
+$$
+Y \approx \beta_0 + \beta_1 X. \qquad (3.1)
+$$
+</div>
 
-Se puede interpretar "$\approx$" como "se modela aproximadamente como". A veces describiremos (3.1) diciendo que estamos *regresando* $Y$ sobre $X$ (o $Y$ en función de $X$).
+Se puede interpretar "$\approx$" como "se modela aproximadamente como". A veces describiremos <a href="#eq-3-1" class="quarto-xref">(3.1)</a> diciendo que estamos *regresando* $Y$ sobre $X$ (o $Y$ en función de $X$).
 
 Por ejemplo, $X$ puede representar la publicidad en `TV` e $Y$ puede representar las ventas (`sales`). Entonces podemos regresar `sales` sobre `TV` ajustando el modelo
 
-$$\text{sales} \approx \beta_0 + \beta_1 \times \text{TV}.$$
+<div id="eq-3-2">
+$$
+\text{sales} \approx \beta_0 + \beta_1 \times \text{TV}.$$
 
 En la Ecuación 3.1, $\beta_0$ y $\beta_1$ son dos constantes desconocidas que representan los términos de *intercepto* (*intercept*) y *pendiente* (*slope*) en el modelo lineal. En conjunto, $\beta_0$ y $\beta_1$ se conocen como los *coeficientes* (*coefficients*) o *parámetros* (*parameters*) del modelo. Una vez que hemos utilizado nuestros datos de entrenamiento para producir estimaciones $\hat{\beta}_0$ y $\hat{\beta}_1$ para los coeficientes del modelo, podemos predecir ventas futuras con base en un valor particular de publicidad en `TV` calculando
 
-$$\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x, \qquad (3.2)$$
+$$\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x, \qquad (3.2)
+$$
+</div>
 
 donde $\hat{y}$ indica una predicción de $Y$ con base en $X = x$. Aquí utilizamos el símbolo de acento circunflejo, $\hat{ }$, para denotar el valor estimado de un parámetro o coeficiente desconocido, o para denotar el valor predicho de la variable respuesta.
 
 ### 3.1.1 Estimación de los Coeficientes
 
-En la práctica, $\beta_0$ y $\beta_1$ son desconocidos. Por lo tanto, antes de poder usar (3.1) para hacer predicciones, debemos usar datos para estimar los coeficientes. Sea
+En la práctica, $\beta_0$ y $\beta_1$ son desconocidos. Por lo tanto, antes de poder usar <a href="#eq-3-1" class="quarto-xref">(3.1)</a> para hacer predicciones, debemos usar datos para estimar los coeficientes. Sea
 
-$$(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$$
+<div id="eq-3-3">
+$$
+(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$$
 
 lo que representa $n$ pares de observaciones, cada uno de los cuales consiste en una medición de $X$ y una medición de $Y$. En el ejemplo de `Advertising`, este conjunto de datos consiste en el presupuesto de publicidad en `TV` y las ventas del producto en $n = 200$ mercados diferentes. (Recordemos que los datos se muestran en la Figura 2.1.) Nuestro objetivo es obtener estimaciones de los coeficientes $\hat{\beta}_0$ y $\hat{\beta}_1$ tales que el modelo lineal (3.1) se ajuste bien a los datos disponibles —es decir, de modo que $y_i \approx \hat{\beta}_0 + \hat{\beta}_1 x_i$ para $i = 1, \ldots, n$. En otras palabras, queremos encontrar un intercepto $\hat{\beta}_0$ y una pendiente $\hat{\beta}_1$ tales que la línea resultante esté lo más cerca posible de los $n = 200$ puntos de datos. Existen varias formas de medir la cercanía. Sin embargo, con mucho, el enfoque más común consiste en minimizar el criterio de *mínimos cuadrados* (*least squares*), y adoptamos ese enfoque en este capítulo. En el Capítulo 6 se considerarán enfoques alternativos.
 
@@ -59,13 +69,21 @@ $$\text{RSS} = e_1^2 + e_2^2 + \cdots + e_n^2,$$
 
 o equivalentemente como
 
-$$\text{RSS} = (y_1 - \hat{\beta}_0 - \hat{\beta}_1 x_1)^2 + (y_2 - \hat{\beta}_0 - \hat{\beta}_1 x_2)^2 + \cdots + (y_n - \hat{\beta}_0 - \hat{\beta}_1 x_n)^2. \qquad (3.3)$$
+$$\text{RSS} = (y_1 - \hat{\beta}_0 - \hat{\beta}_1 x_1)^2 + (y_2 - \hat{\beta}_0 - \hat{\beta}_1 x_2)^2 + \cdots + (y_n - \hat{\beta}_0 - \hat{\beta}_1 x_n)^2. \qquad (3.3)
+$$
+</div>
 
 El enfoque de mínimos cuadrados elige $\hat{\beta}_0$ y $\hat{\beta}_1$ para minimizar la RSS. Usando algo de cálculo, se puede demostrar que los minimizadores son
 
-$$\hat{\beta}_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2}, \qquad (3.4)$$
+<div id="eq-3-4">
+$$
+\hat{\beta}_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2}, \qquad (3.4)
+$$
+</div>
 
-$$\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x},$$
+<div id="eq-3-5">
+$$
+\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x},$$
 
 donde $\bar{y} \equiv \frac{1}{n} \sum_{i=1}^{n} y_i$ y $\bar{x} \equiv \frac{1}{n} \sum_{i=1}^{n} x_i$ son las medias muestrales. En otras palabras, (3.4) define las estimaciones de los coeficientes de mínimos cuadrados para la regresión lineal simple.
 
@@ -74,72 +92,108 @@ donde $\bar{y} \equiv \frac{1}{n} \sum_{i=1}^{n} y_i$ y $\bar{x} \equiv \frac{1}
 <p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.1: Para los datos Advertising, el ajuste de mínimos cuadrados para la regresión de sales sobre TV. El ajuste se encuentra minimizando la suma de cuadrados de los residuos. Cada segmento de línea gris representa un residuo. En este caso, un ajuste lineal captura la esencia de la relación, aunque sobreestima la tendencia en la parte izquierda del gráfico.</p>
 </div>
 
-La <a href="#fig-3-1" class="quarto-xref">Figura&nbsp;3.1</a> muestra el ajuste de regresión lineal simple a los datos `Advertising`, donde $\hat{\beta}_0 = 7.03$ y $\hat{\beta}_1 = 0.0475$. En otras palabras, según esta aproximación, $1{,}000$ adicionales gastados en publicidad en `TV` están asociados con la venta de aproximadamente 47.5 unidades adicionales del producto. En la <a href="#fig-3-2" class="quarto-xref">Figura&nbsp;3.2</a>, hemos calculado la RSS para varios valores de $\beta_0$ y $\beta_1$, usando los datos `Advertising` con `sales` como variable respuesta y `TV` como predictor. En cada gráfico, el punto rojo representa el par de estimaciones de mínimos cuadrados $(\hat{\beta}_0, \hat{\beta}_1)$ dado por (3.4). Estos valores claramente minimizan la RSS.
+La <a href="#fig-3-1" class="quarto-xref">Figura&nbsp;3.1</a> muestra el ajuste de regresión lineal simple a los datos `Advertising`, donde $\hat{\beta}_0 = 7.03$ y $\hat{\beta}_1 = 0.0475$. En otras palabras, según esta aproximación, $1{,}000$ adicionales gastados en publicidad en `TV` están asociados con la venta de aproximadamente 47.5 unidades adicionales del producto. En la <a href="#fig-3-2" class="quarto-xref">Figura&nbsp;3.2</a>, hemos calculado la RSS para varios valores de $\beta_0$ y $\beta_1$, usando los datos `Advertising` con `sales` como variable respuesta y `TV` como predictor. En cada gráfico, el punto rojo representa el par de estimaciones de mínimos cuadrados $(\hat{\beta}_0, \hat{\beta}_1)$ dado por <a href="#eq-3-4" class="quarto-xref">(3.4)</a>. Estos valores claramente minimizan la RSS.
 
 <div id="fig-3-2" style="text-align:center; margin:1.5em 0;">
 <img src="../../Figures/Chapter3/png/3_2a.png" class="img-fluid figure-img" style="width:48.0%" alt="">
 <img src="../../Figures/Chapter3/png/3_2b.png" class="img-fluid figure-img" style="width:48.0%" alt="">
-<p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.2: Gráficos de contorno y tridimensional de la RSS sobre los datos Advertising, usando sales como variable respuesta y TV como predictor. Los puntos rojos corresponden a las estimaciones de mínimos cuadrados $\hat{\beta}_0$ y $\hat{\beta}_1$, dados por (3.4).</p>
+<p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.2: Gráficos de contorno y tridimensional de la RSS sobre los datos Advertising, usando sales como variable respuesta y TV como predictor. Los puntos rojos corresponden a las estimaciones de mínimos cuadrados $\hat{\beta}_0$ y $\hat{\beta}_1$, dados por <a href="#eq-3-4" class="quarto-xref">(3.4)</a>.</p>
 </div>
 
 ### 3.1.2 Evaluación de la Precisión de las Estimaciones de los Coeficientes
 
 Recordemos de (2.1) que asumimos que la verdadera relación entre $X$ e $Y$ toma la forma $Y = f(X) + \epsilon$ para alguna función desconocida $f$, donde $\epsilon$ es un término de error aleatorio con media cero. Si $f$ va a ser aproximada por una función lineal, entonces podemos escribir esta relación como
 
-$$Y = \beta_0 + \beta_1 X + \epsilon. \qquad (3.5)$$
+$$Y = \beta_0 + \beta_1 X + \epsilon. \qquad (3.5)
+$$
+</div>
 
 Aquí $\beta_0$ es el término de intercepto —es decir, el valor esperado de $Y$ cuando $X = 0$, y $\beta_1$ es la pendiente —el aumento promedio en $Y$ asociado con un aumento de una unidad en $X$. El término de error es un comodín para lo que omitimos con este modelo simple: la verdadera relación probablemente no es lineal, puede haber otras variables que causen variación en $Y$, y puede haber error de medición. Típicamente asumimos que el término de error es independiente de $X$.
 
-El modelo dado por (3.5) define la *línea de regresión poblacional* (*population regression line*), que es la mejor aproximación lineal a la verdadera relación entre $X$ e $Y$.^[La suposición de linealidad es a menudo un modelo de trabajo útil. Sin embargo, a pesar de lo que muchos libros de texto puedan decirnos, rara vez creemos que la verdadera relación sea lineal.] Las estimaciones de los coeficientes de regresión de mínimos cuadrados (3.4) caracterizan la *línea de mínimos cuadrados* (*least squares line*) (3.2). El panel izquierdo de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> muestra estas dos líneas en un ejemplo simulado simple. Creamos 100 valores aleatorios de $X$, y generamos 100 valores correspondientes de $Y$ a partir del modelo
+El modelo dado por <a href="#eq-3-5" class="quarto-xref">(3.5)</a> define la *línea de regresión poblacional* (*population regression line*), que es la mejor aproximación lineal a la verdadera relación entre $X$ e $Y$.^[La suposición de linealidad es a menudo un modelo de trabajo útil. Sin embargo, a pesar de lo que muchos libros de texto puedan decirnos, rara vez creemos que la verdadera relación sea lineal.] Las estimaciones de los coeficientes de regresión de mínimos cuadrados <a href="#eq-3-4" class="quarto-xref">(3.4)</a> caracterizan la *línea de mínimos cuadrados* (*least squares line*) <a href="#eq-3-2" class="quarto-xref">(3.2)</a>. El panel izquierdo de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> muestra estas dos líneas en un ejemplo simulado simple. Creamos 100 valores aleatorios de $X$, y generamos 100 valores correspondientes de $Y$ a partir del modelo
 
-$$Y = 2 + 3X + \epsilon, \qquad (3.6)$$
+<div id="eq-3-6">
+$$
+Y = 2 + 3X + \epsilon, \qquad (3.6)
+$$
+</div>
 
-donde $\epsilon$ se generó a partir de una distribución normal con media cero. La línea roja en el panel izquierdo de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> muestra la verdadera relación, $f(X) = 2 + 3X$, mientras que la línea azul es la estimación de mínimos cuadrados basada en los datos observados. La verdadera relación generalmente no se conoce para datos reales, pero la línea de mínimos cuadrados siempre puede calcularse usando las estimaciones de los coeficientes dadas en (3.4). En otras palabras, en aplicaciones reales, tenemos acceso a un conjunto de observaciones a partir del cual podemos calcular la línea de mínimos cuadrados; sin embargo, la línea de regresión poblacional no se observa. En el panel derecho de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> hemos generado diez conjuntos de datos diferentes a partir del modelo dado por (3.6) y graficado las diez líneas de mínimos cuadrados correspondientes. Nótese que diferentes conjuntos de datos generados a partir del mismo modelo verdadero resultan en líneas de mínimos cuadrados ligeramente diferentes, pero la línea de regresión poblacional no observada no cambia.
+donde $\epsilon$ se generó a partir de una distribución normal con media cero. La línea roja en el panel izquierdo de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> muestra la verdadera relación, $f(X) = 2 + 3X$, mientras que la línea azul es la estimación de mínimos cuadrados basada en los datos observados. La verdadera relación generalmente no se conoce para datos reales, pero la línea de mínimos cuadrados siempre puede calcularse usando las estimaciones de los coeficientes dadas en <a href="#eq-3-4" class="quarto-xref">(3.4)</a>. En otras palabras, en aplicaciones reales, tenemos acceso a un conjunto de observaciones a partir del cual podemos calcular la línea de mínimos cuadrados; sin embargo, la línea de regresión poblacional no se observa. En el panel derecho de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> hemos generado diez conjuntos de datos diferentes a partir del modelo dado por <a href="#eq-3-6" class="quarto-xref">(3.6)</a> y graficado las diez líneas de mínimos cuadrados correspondientes. Nótese que diferentes conjuntos de datos generados a partir del mismo modelo verdadero resultan en líneas de mínimos cuadrados ligeramente diferentes, pero la línea de regresión poblacional no observada no cambia.
 
 <div id="fig-3-3" style="text-align:center; margin:1.5em 0;">
 <img src="../../Figures/Chapter3/png/3_3.png" class="img-fluid figure-img" style="width:65.0%" alt="">
 <p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.3: Un conjunto de datos simulado. <em>Izquierda:</em> La línea roja representa la verdadera relación, $f(X) = 2 + 3X$, que se conoce como la línea de regresión poblacional. La línea azul es la línea de mínimos cuadrados; es la estimación de mínimos cuadrados para $f(X)$ basada en los datos observados, mostrados en negro. <em>Derecha:</em> La línea de regresión poblacional se muestra nuevamente en rojo, y la línea de mínimos cuadrados en azul oscuro. En azul claro, se muestran diez líneas de mínimos cuadrados, cada una calculada con base en un conjunto aleatorio separado de observaciones. Cada línea de mínimos cuadrados es diferente, pero en promedio, las líneas de mínimos cuadrados están bastante cerca de la línea de regresión poblacional.</p>
 </div>
 
-A primera vista, la diferencia entre la línea de regresión poblacional y la línea de mínimos cuadrados puede parecer sutil y confusa. Solo tenemos un conjunto de datos, así que ¿qué significa que dos líneas diferentes describan la relación entre el predictor y la variable respuesta? Fundamentalmente, el concepto de estas dos líneas es una extensión natural del enfoque estadístico estándar de usar información de una muestra para estimar características de una población grande. Por ejemplo, supongamos que estamos interesados en conocer la media poblacional $\mu$ de alguna variable aleatoria $Y$. Desafortunadamente, $\mu$ es desconocida, pero tenemos acceso a $n$ observaciones de $Y$, $y_1, \ldots, y_n$, que podemos usar para estimar $\mu$. Una estimación razonable es $\hat{\mu} = \bar{y}$, donde $\bar{y} = \frac{1}{n} \sum_{i=1}^{n} y_i$ es la media muestral. La media muestral y la media poblacional son diferentes, pero en general la media muestral proporcionará una buena estimación de la media poblacional. De la misma manera, los coeficientes desconocidos $\beta_0$ y $\beta_1$ en la regresión lineal definen la línea de regresión poblacional. Buscamos estimar estos coeficientes desconocidos usando $\hat{\beta}_0$ y $\hat{\beta}_1$ dados en (3.4). Estas estimaciones de los coeficientes definen la línea de mínimos cuadrados.
+A primera vista, la diferencia entre la línea de regresión poblacional y la línea de mínimos cuadrados puede parecer sutil y confusa. Solo tenemos un conjunto de datos, así que ¿qué significa que dos líneas diferentes describan la relación entre el predictor y la variable respuesta? Fundamentalmente, el concepto de estas dos líneas es una extensión natural del enfoque estadístico estándar de usar información de una muestra para estimar características de una población grande. Por ejemplo, supongamos que estamos interesados en conocer la media poblacional $\mu$ de alguna variable aleatoria $Y$. Desafortunadamente, $\mu$ es desconocida, pero tenemos acceso a $n$ observaciones de $Y$, $y_1, \ldots, y_n$, que podemos usar para estimar $\mu$. Una estimación razonable es $\hat{\mu} = \bar{y}$, donde $\bar{y} = \frac{1}{n} \sum_{i=1}^{n} y_i$ es la media muestral. La media muestral y la media poblacional son diferentes, pero en general la media muestral proporcionará una buena estimación de la media poblacional. De la misma manera, los coeficientes desconocidos $\beta_0$ y $\beta_1$ en la regresión lineal definen la línea de regresión poblacional. Buscamos estimar estos coeficientes desconocidos usando $\hat{\beta}_0$ y $\hat{\beta}_1$ dados en <a href="#eq-3-4" class="quarto-xref">(3.4)</a>. Estas estimaciones de los coeficientes definen la línea de mínimos cuadrados.
 
-La analogía entre la regresión lineal y la estimación de la media de una variable aleatoria es apropiada y se basa en el concepto de *sesgo* (*bias*). Si usamos la media muestral $\hat{\mu}$ para estimar $\mu$, esta estimación es *insesgada* (*unbiased*), en el sentido de que en promedio, esperamos que $\hat{\mu}$ sea igual a $\mu$. ¿Qué significa exactamente esto? Significa que con base en un conjunto particular de observaciones $y_1, \ldots, y_n$, $\hat{\mu}$ podría sobrestimar $\mu$, y con base en otro conjunto de observaciones, $\hat{\mu}$ podría subestimar $\mu$. Pero si pudiéramos promediar un número enorme de estimaciones de $\mu$ obtenidas de un número enorme de conjuntos de observaciones, entonces este promedio sería exactamente igual a $\mu$. Por lo tanto, un *estimador insesgado* (*unbiased estimator*) no sobrestima ni subestima sistemáticamente el verdadero parámetro. La propiedad de insesgadez también se cumple para las estimaciones de los coeficientes de mínimos cuadrados dadas por (3.4): si estimamos $\beta_0$ y $\beta_1$ con base en un conjunto de datos particular, entonces nuestras estimaciones no serán exactamente iguales a $\beta_0$ y $\beta_1$. Pero si pudiéramos promediar las estimaciones obtenidas sobre un número enorme de conjuntos de datos, ¡entonces el promedio de estas estimaciones sería exacto! De hecho, podemos ver en el panel derecho de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> que el promedio de muchas líneas de mínimos cuadrados, cada una estimada a partir de un conjunto de datos separado, está bastante cerca de la verdadera línea de regresión poblacional.
+La analogía entre la regresión lineal y la estimación de la media de una variable aleatoria es apropiada y se basa en el concepto de *sesgo* (*bias*). Si usamos la media muestral $\hat{\mu}$ para estimar $\mu$, esta estimación es *insesgada* (*unbiased*), en el sentido de que en promedio, esperamos que $\hat{\mu}$ sea igual a $\mu$. ¿Qué significa exactamente esto? Significa que con base en un conjunto particular de observaciones $y_1, \ldots, y_n$, $\hat{\mu}$ podría sobrestimar $\mu$, y con base en otro conjunto de observaciones, $\hat{\mu}$ podría subestimar $\mu$. Pero si pudiéramos promediar un número enorme de estimaciones de $\mu$ obtenidas de un número enorme de conjuntos de observaciones, entonces este promedio sería exactamente igual a $\mu$. Por lo tanto, un *estimador insesgado* (*unbiased estimator*) no sobrestima ni subestima sistemáticamente el verdadero parámetro. La propiedad de insesgadez también se cumple para las estimaciones de los coeficientes de mínimos cuadrados dadas por <a href="#eq-3-4" class="quarto-xref">(3.4)</a>: si estimamos $\beta_0$ y $\beta_1$ con base en un conjunto de datos particular, entonces nuestras estimaciones no serán exactamente iguales a $\beta_0$ y $\beta_1$. Pero si pudiéramos promediar las estimaciones obtenidas sobre un número enorme de conjuntos de datos, ¡entonces el promedio de estas estimaciones sería exacto! De hecho, podemos ver en el panel derecho de la <a href="#fig-3-3" class="quarto-xref">Figura&nbsp;3.3</a> que el promedio de muchas líneas de mínimos cuadrados, cada una estimada a partir de un conjunto de datos separado, está bastante cerca de la verdadera línea de regresión poblacional.
 
 Continuamos la analogía con la estimación de la media poblacional $\mu$ de una variable aleatoria $Y$. Una pregunta natural es la siguiente: ¿qué tan precisa es la media muestral $\hat{\mu}$ como estimación de $\mu$? Hemos establecido que el promedio de los $\hat{\mu}$ sobre muchos conjuntos de datos estará muy cerca de $\mu$, pero que una sola estimación $\hat{\mu}$ puede ser una subestimación o sobrestimación sustancial de $\mu$. ¿Qué tan lejos estará esa única estimación $\hat{\mu}$? En general, respondemos esta pregunta calculando el *error estándar* (*standard error*) de $\hat{\mu}$, escrito como $\text{SE}(\hat{\mu})$. Tenemos la bien conocida fórmula
 
-$$\text{Var}(\hat{\mu}) = \text{SE}(\hat{\mu})^2 = \frac{\sigma^2}{n}, \qquad (3.7)$$
+<div id="eq-3-7">
+$$
+\text{Var}(\hat{\mu}) = \text{SE}(\hat{\mu})^2 = \frac{\sigma^2}{n}, \qquad (3.7)
+$$
+</div>
 
-donde $\sigma$ es la desviación estándar de cada realización $y_i$ de $Y$.^[Esta fórmula es válida siempre que las $n$ observaciones no estén correlacionadas.] A grandes rasgos, el *error estándar* nos dice la cantidad promedio en que esta estimación $\hat{\mu}$ difiere del valor real de $\mu$. La Ecuación 3.7 también nos dice cómo esta desviación se reduce con $n$ —cuantas más observaciones tengamos, menor será el error estándar de $\hat{\mu}$. De manera similar, podemos preguntarnos qué tan cerca están $\hat{\beta}_0$ y $\hat{\beta}_1$ de los valores verdaderos $\beta_0$ y $\beta_1$. Para calcular los errores estándar asociados con $\hat{\beta}_0$ y $\hat{\beta}_1$, usamos las siguientes fórmulas:
+donde $\sigma$ es la desviación estándar de cada realización $y_i$ de $Y$.^[Esta fórmula es válida siempre que las $n$ observaciones no estén correlacionadas.] A grandes rasgos, el *error estándar* nos dice la cantidad promedio en que esta estimación $\hat{\mu}$ difiere del valor real de $\mu$. La <a href="#eq-3-7" class="quarto-xref">Ecuación&nbsp;3.7</a> también nos dice cómo esta desviación se reduce con $n$ —cuantas más observaciones tengamos, menor será el error estándar de $\hat{\mu}$. De manera similar, podemos preguntarnos qué tan cerca están $\hat{\beta}_0$ y $\hat{\beta}_1$ de los valores verdaderos $\beta_0$ y $\beta_1$. Para calcular los errores estándar asociados con $\hat{\beta}_0$ y $\hat{\beta}_1$, usamos las siguientes fórmulas:
 
-$$\text{SE}(\hat{\beta}_0)^2 = \sigma^2 \left[ \frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2} \right], \qquad \text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2}, \qquad (3.8)$$
+<div id="eq-3-8">
+$$
+\text{SE}(\hat{\beta}_0)^2 = \sigma^2 \left[ \frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2} \right], \qquad \text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2}, \qquad (3.8)
+$$
+</div>
 
 donde $\sigma^2 = \text{Var}(\epsilon)$. Para que estas fórmulas sean estrictamente válidas, precisamos asumir que los errores $\epsilon_i$ para cada observación tienen varianza común $\sigma^2$ y no están correlacionados. Esto claramente no es cierto en la <a href="#fig-3-1" class="quarto-xref">Figura&nbsp;3.1</a>, pero la fórmula aún resulta ser una buena aproximación. Nótese en la fórmula que $\text{SE}(\hat{\beta}_1)$ es menor cuando los $x_i$ están más dispersos; intuitivamente tenemos más *apalancamiento* (*leverage*) para estimar una pendiente cuando este es el caso. También vemos que $\text{SE}(\hat{\beta}_0)$ sería igual a $\text{SE}(\hat{\mu})$ si $\bar{x}$ fuera cero (en cuyo caso $\hat{\beta}_0$ sería igual a $\bar{y}$). En general, $\sigma^2$ no se conoce, pero puede estimarse a partir de los datos. Esta estimación de $\sigma$ se conoce como el *error estándar residual* (*residual standard error*), y está dada por la fórmula $\text{RSE} = \sqrt{\text{RSS}/(n - 2)}$. Estrictamente hablando, cuando $\sigma^2$ se estima a partir de los datos deberíamos escribir $\widehat{\text{SE}}(\hat{\beta}_1)$ para indicar que se ha realizado una estimación, pero por simplicidad de notación omitiremos este "acento circunflejo" adicional.
 
 Los errores estándar pueden usarse para calcular *intervalos de confianza* (*confidence intervals*). Un *intervalo de confianza* del 95% se define como un rango de valores tal que con un 95% de probabilidad, el rango contendrá el verdadero valor desconocido del parámetro. El rango se define en términos de límites inferior y superior calculados a partir de la muestra de datos. Un intervalo de confianza del 95% tiene la siguiente propiedad: si tomamos muestras repetidas y construimos el intervalo de confianza para cada muestra, el 95% de los intervalos contendrá el verdadero valor desconocido del parámetro. Para la regresión lineal, el intervalo de confianza del 95% para $\beta_1$ toma aproximadamente la forma
 
-$$\hat{\beta}_1 \pm 2 \cdot \text{SE}(\hat{\beta}_1). \qquad (3.9)$$
+<div id="eq-3-9">
+$$
+\hat{\beta}_1 \pm 2 \cdot \text{SE}(\hat{\beta}_1). \qquad (3.9)
+$$
+</div>
 
 Es decir, hay aproximadamente un 95% de probabilidad de que el intervalo
 
-$$\big[ \hat{\beta}_1 - 2 \cdot \text{SE}(\hat{\beta}_1), \quad \hat{\beta}_1 + 2 \cdot \text{SE}(\hat{\beta}_1) \big] \qquad (3.10)$$
+<div id="eq-3-10">
+$$
+\big[ \hat{\beta}_1 - 2 \cdot \text{SE}(\hat{\beta}_1), \quad \hat{\beta}_1 + 2 \cdot \text{SE}(\hat{\beta}_1) \big] \qquad (3.10)
+$$
+</div>
 
-contendrá el verdadero valor de $\beta_1$.^[Aproximadamente por varias razones. La Ecuación 3.10 depende de la suposición de que los errores son gaussianos. Además, el factor de 2 delante del término $\text{SE}(\hat{\beta}_1)$ variará ligeramente dependiendo del número de observaciones $n$ en la regresión lineal. Para ser precisos, en lugar del número 2, (3.10) debería contener el cuantil del 97.5% de una distribución $t$ con $n-2$ grados de libertad. Más adelante en este capítulo se proporcionarán detalles sobre cómo calcular el intervalo de confianza del 95% de manera precisa en R.] De manera similar, un intervalo de confianza para $\beta_0$ toma aproximadamente la forma
+contendrá el verdadero valor de $\beta_1$.^[Aproximadamente por varias razones. La <a href="#eq-3-10" class="quarto-xref">Ecuación&nbsp;3.10</a> depende de la suposición de que los errores son gaussianos. Además, el factor de 2 delante del término $\text{SE}(\hat{\beta}_1)$ variará ligeramente dependiendo del número de observaciones $n$ en la regresión lineal. Para ser precisos, en lugar del número 2, <a href="#eq-3-10" class="quarto-xref">(3.10)</a> debería contener el cuantil del 97.5% de una distribución $t$ con $n-2$ grados de libertad. Más adelante en este capítulo se proporcionarán detalles sobre cómo calcular el intervalo de confianza del 95% de manera precisa en R.] De manera similar, un intervalo de confianza para $\beta_0$ toma aproximadamente la forma
 
-$$\hat{\beta}_0 \pm 2 \cdot \text{SE}(\hat{\beta}_0). \qquad (3.11)$$
+<div id="eq-3-11">
+$$
+\hat{\beta}_0 \pm 2 \cdot \text{SE}(\hat{\beta}_0). \qquad (3.11)
+$$
+</div>
 
 En el caso de los datos `Advertising`, el intervalo de confianza del 95% para $\beta_0$ es $[6.130, 7.935]$ y el intervalo de confianza del 95% para $\beta_1$ es $[0.042, 0.053]$. Por lo tanto, podemos concluir que en ausencia de cualquier publicidad, las ventas (`sales`) estarán, en promedio, entre 6{,}130 y 7{,}935 unidades. Además, por cada aumento de $1{,}000$ en publicidad televisiva, habrá un aumento promedio en las ventas de entre 42 y 53 unidades.
 
 Los errores estándar también pueden usarse para realizar *pruebas de hipótesis* (*hypothesis tests*) sobre los coeficientes. La prueba de hipótesis más común implica contrastar la *hipótesis nula* (*null hypothesis*) de
 
-$$H_0: \text{ No existe relación entre } X \text{ e } Y \qquad (3.12)$$
+<div id="eq-3-12">
+$$
+H_0: \text{ No existe relación entre } X \text{ e } Y \qquad (3.12)
+$$
+</div>
 
 frente a la *hipótesis alternativa* (*alternative hypothesis*)
 
-$$H_a: \text{ Existe alguna relación entre } X \text{ e } Y. \qquad (3.13)$$
+<div id="eq-3-13">
+$$
+H_a: \text{ Existe alguna relación entre } X \text{ e } Y. \qquad (3.13)
+$$
+</div>
 
 Matemáticamente, esto corresponde a contrastar
 
-$$H_0: \beta_1 = 0$$
+<div id="eq-3-14">
+$$
+H_0: \beta_1 = 0$$
 
 frente a
 
@@ -147,9 +201,11 @@ $$H_a: \beta_1 \neq 0,$$
 
 ya que si $\beta_1 = 0$ entonces el modelo (3.5) se reduce a $Y = \beta_0 + \epsilon$, y $X$ no está asociado con $Y$. Para contrastar la hipótesis nula, necesitamos determinar si $\hat{\beta}_1$, nuestra estimación para $\beta_1$, está suficientemente lejos de cero como para poder confiar en que $\beta_1$ es distinto de cero. ¿Qué tan lejos es suficientemente lejos? Esto, por supuesto, depende de la precisión de $\hat{\beta}_1$ —es decir, depende de $\text{SE}(\hat{\beta}_1)$. Si $\text{SE}(\hat{\beta}_1)$ es pequeño, entonces incluso valores relativamente pequeños de $\hat{\beta}_1$ pueden proporcionar evidencia sólida de que $\beta_1 \neq 0$, y por lo tanto de que existe una relación entre $X$ e $Y$. En contraste, si $\text{SE}(\hat{\beta}_1)$ es grande, entonces $\hat{\beta}_1$ debe ser grande en valor absoluto para que podamos rechazar la hipótesis nula. En la práctica, calculamos un *estadístico t* (*t-statistic*), dado por
 
-$$t = \frac{\hat{\beta}_1 - 0}{\text{SE}(\hat{\beta}_1)}, \qquad (3.14)$$
+$$t = \frac{\hat{\beta}_1 - 0}{\text{SE}(\hat{\beta}_1)}, \qquad (3.14)
+$$
+</div>
 
-que mide el número de desviaciones estándar a las que $\hat{\beta}_1$ está de 0. Si realmente no existe relación entre $X$ e $Y$, entonces esperamos que (3.14) tenga una distribución $t$ con $n - 2$ grados de libertad. La distribución $t$ tiene forma de campana y para valores de $n$ mayores que aproximadamente 30 es bastante similar a la distribución normal estándar. En consecuencia, es sencillo calcular la probabilidad de observar cualquier número igual a $|t|$ o mayor en valor absoluto, asumiendo $\beta_1 = 0$. Llamamos a esta probabilidad el *valor p* (*p-value*). A grandes rasgos, interpretamos el *valor p* de la siguiente manera: un *valor p* pequeño indica que es poco probable observar una asociación tan sustancial entre el predictor y la variable respuesta debido al azar, en ausencia de cualquier asociación real entre el predictor y la variable respuesta. Por lo tanto, si vemos un *valor p* pequeño, entonces podemos inferir que existe una asociación entre el predictor y la variable respuesta. Rechazamos la hipótesis nula —es decir, declaramos que existe una relación entre $X$ e $Y$— si el *valor p* es suficientemente pequeño. Los puntos de corte típicos para el *valor p* para rechazar la hipótesis nula son 5% o 1%, aunque este tema se explorará con mucho mayor detalle en el Capítulo 13. Cuando $n = 30$, estos corresponden a estadísticos $t$ (3.14) de alrededor de 2 y 2.75, respectivamente.
+que mide el número de desviaciones estándar a las que $\hat{\beta}_1$ está de 0. Si realmente no existe relación entre $X$ e $Y$, entonces esperamos que <a href="#eq-3-14" class="quarto-xref">(3.14)</a> tenga una distribución $t$ con $n - 2$ grados de libertad. La distribución $t$ tiene forma de campana y para valores de $n$ mayores que aproximadamente 30 es bastante similar a la distribución normal estándar. En consecuencia, es sencillo calcular la probabilidad de observar cualquier número igual a $|t|$ o mayor en valor absoluto, asumiendo $\beta_1 = 0$. Llamamos a esta probabilidad el *valor p* (*p-value*). A grandes rasgos, interpretamos el *valor p* de la siguiente manera: un *valor p* pequeño indica que es poco probable observar una asociación tan sustancial entre el predictor y la variable respuesta debido al azar, en ausencia de cualquier asociación real entre el predictor y la variable respuesta. Por lo tanto, si vemos un *valor p* pequeño, entonces podemos inferir que existe una asociación entre el predictor y la variable respuesta. Rechazamos la hipótesis nula —es decir, declaramos que existe una relación entre $X$ e $Y$— si el *valor p* es suficientemente pequeño. Los puntos de corte típicos para el *valor p* para rechazar la hipótesis nula son 5% o 1%, aunque este tema se explorará con mucho mayor detalle en el Capítulo 13. Cuando $n = 30$, estos corresponden a estadísticos $t$ <a href="#eq-3-14" class="quarto-xref">(3.14)</a> de alrededor de 2 y 2.75, respectivamente.
 
 <a id="tbl-3-1"></a>
 
@@ -164,7 +220,7 @@ La <a href="#tbl-3-1" class="quarto-xref">Tabla&nbsp;3.1</a> proporciona detalle
 
 ### 3.1.3 Evaluación de la Precisión del Modelo
 
-Una vez que hemos rechazado la hipótesis nula (3.12) a favor de la hipótesis alternativa (3.13), es natural querer cuantificar el grado en que el modelo se ajusta a los datos. La calidad de un ajuste de regresión lineal se evalúa típicamente usando dos cantidades relacionadas: el *error estándar residual* (*residual standard error*, RSE) y el estadístico $R^2$.
+Una vez que hemos rechazado la hipótesis nula <a href="#eq-3-12" class="quarto-xref">(3.12)</a> a favor de la hipótesis alternativa <a href="#eq-3-13" class="quarto-xref">(3.13)</a>, es natural querer cuantificar el grado en que el modelo se ajusta a los datos. La calidad de un ajuste de regresión lineal se evalúa típicamente usando dos cantidades relacionadas: el *error estándar residual* (*residual standard error*, RSE) y el estadístico $R^2$.
 
 <a id="tbl-3-2"></a>
 
@@ -180,35 +236,51 @@ La <a href="#tbl-3-2" class="quarto-xref">Tabla&nbsp;3.2</a> muestra el RSE, el 
 
 **Error Estándar Residual**
 
-Recordemos del modelo (3.5) que asociado con cada observación hay un término de error $\epsilon$. Debido a la presencia de estos términos de error, incluso si conociéramos la verdadera línea de regresión (es decir, incluso si $\beta_0$ y $\beta_1$ fueran conocidos), no podríamos predecir perfectamente $Y$ a partir de $X$. El RSE es una estimación de la desviación estándar de $\epsilon$. A grandes rasgos, es la cantidad promedio en que la variable respuesta se desviará de la verdadera línea de regresión. Se calcula usando la fórmula
+Recordemos del modelo <a href="#eq-3-5" class="quarto-xref">(3.5)</a> que asociado con cada observación hay un término de error $\epsilon$. Debido a la presencia de estos términos de error, incluso si conociéramos la verdadera línea de regresión (es decir, incluso si $\beta_0$ y $\beta_1$ fueran conocidos), no podríamos predecir perfectamente $Y$ a partir de $X$. El RSE es una estimación de la desviación estándar de $\epsilon$. A grandes rasgos, es la cantidad promedio en que la variable respuesta se desviará de la verdadera línea de regresión. Se calcula usando la fórmula
 
-$$\text{RSE} = \sqrt{\frac{1}{n-2} \text{RSS}} = \sqrt{\frac{1}{n-2} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}. \qquad (3.15)$$
+<div id="eq-3-15">
+$$
+\text{RSE} = \sqrt{\frac{1}{n-2} \text{RSS}} = \sqrt{\frac{1}{n-2} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}. \qquad (3.15)
+$$
+</div>
 
 Nótese que la RSS se definió en la Sección 3.1.1, y está dada por la fórmula
 
-$$\text{RSS} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2. \qquad (3.16)$$
+<div id="eq-3-16">
+$$
+\text{RSS} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2. \qquad (3.16)
+$$
+</div>
 
 En el caso de los datos `Advertising`, vemos de la salida de la regresión lineal en la <a href="#tbl-3-2" class="quarto-xref">Tabla&nbsp;3.2</a> que el RSE es 3.26. En otras palabras, las ventas reales en cada mercado se desvían de la verdadera línea de regresión en aproximadamente 3{,}260 unidades, en promedio. Otra forma de pensar sobre esto es que incluso si el modelo fuera correcto y los valores verdaderos de los coeficientes desconocidos $\beta_0$ y $\beta_1$ se conocieran exactamente, cualquier predicción de las ventas basada en la publicidad en `TV` aún estaría errada en aproximadamente 3{,}260 unidades en promedio. Por supuesto, si 3{,}260 unidades es un error de predicción aceptable o no depende del contexto del problema. En el conjunto de datos `Advertising`, el valor medio de `sales` sobre todos los mercados es aproximadamente 14{,}000 unidades, por lo que el error porcentual es $3{,}260/14{,}000 = 23\%$.
 
-El RSE se considera una medida de la falta de ajuste del modelo (3.5) a los datos. Si las predicciones obtenidas usando el modelo están muy cerca de los valores reales —es decir, si $\hat{y}_i \approx y_i$ para $i = 1, \ldots, n$— entonces (3.15) será pequeño, y podemos concluir que el modelo se ajusta muy bien a los datos. Por otro lado, si $\hat{y}_i$ está muy lejos de $y_i$ para una o más observaciones, entonces el RSE puede ser bastante grande, indicando que el modelo no se ajusta bien a los datos.
+El RSE se considera una medida de la falta de ajuste del modelo <a href="#eq-3-5" class="quarto-xref">(3.5)</a> a los datos. Si las predicciones obtenidas usando el modelo están muy cerca de los valores reales —es decir, si $\hat{y}_i \approx y_i$ para $i = 1, \ldots, n$— entonces <a href="#eq-3-15" class="quarto-xref">(3.15)</a> será pequeño, y podemos concluir que el modelo se ajusta muy bien a los datos. Por otro lado, si $\hat{y}_i$ está muy lejos de $y_i$ para una o más observaciones, entonces el RSE puede ser bastante grande, indicando que el modelo no se ajusta bien a los datos.
 
 **Estadístico $R^2$**
 
-El RSE proporciona una medida absoluta de la falta de ajuste del modelo (3.5) a los datos. Pero dado que se mide en las unidades de $Y$, no siempre está claro qué constituye un buen RSE. El estadístico $R^2$ proporciona una medida alternativa de ajuste. Toma la forma de una proporción —la proporción de varianza explicada— y por lo tanto siempre toma un valor entre 0 y 1, y es independiente de la escala de $Y$.
+El RSE proporciona una medida absoluta de la falta de ajuste del modelo <a href="#eq-3-5" class="quarto-xref">(3.5)</a> a los datos. Pero dado que se mide en las unidades de $Y$, no siempre está claro qué constituye un buen RSE. El estadístico $R^2$ proporciona una medida alternativa de ajuste. Toma la forma de una proporción —la proporción de varianza explicada— y por lo tanto siempre toma un valor entre 0 y 1, y es independiente de la escala de $Y$.
 
 Para calcular $R^2$, usamos la fórmula
 
-$$R^2 = \frac{\text{TSS} - \text{RSS}}{\text{TSS}} = 1 - \frac{\text{RSS}}{\text{TSS}}, \qquad (3.17)$$
+<div id="eq-3-17">
+$$
+R^2 = \frac{\text{TSS} - \text{RSS}}{\text{TSS}} = 1 - \frac{\text{RSS}}{\text{TSS}}, \qquad (3.17)
+$$
+</div>
 
-donde $\text{TSS} = \sum (y_i - \bar{y})^2$ es la *suma total de cuadrados* (*total sum of squares*), y RSS se define en (3.16). TSS mide la varianza total en la variable respuesta $Y$, y puede pensarse como la cantidad de variabilidad inherente en la variable respuesta antes de que se realice la regresión. En contraste, RSS mide la cantidad de variabilidad que queda sin explicar después de realizar la regresión. Por lo tanto, $\text{TSS} - \text{RSS}$ mide la cantidad de variabilidad en la variable respuesta que es explicada (o eliminada) al realizar la regresión, y $R^2$ mide la proporción de variabilidad en $Y$ que puede explicarse usando $X$. Un estadístico $R^2$ cercano a 1 indica que una gran proporción de la variabilidad en la variable respuesta es explicada por la regresión. Un número cercano a 0 indica que la regresión no explica gran parte de la variabilidad en la variable respuesta; esto podría ocurrir porque el modelo lineal es incorrecto, o la varianza del error $\sigma^2$ es alta, o ambas cosas. En la <a href="#tbl-3-2" class="quarto-xref">Tabla&nbsp;3.2</a>, el $R^2$ fue 0.61, por lo que poco menos de dos tercios de la variabilidad en `sales` es explicada por una regresión lineal sobre `TV`.
+donde $\text{TSS} = \sum (y_i - \bar{y})^2$ es la *suma total de cuadrados* (*total sum of squares*), y RSS se define en <a href="#eq-3-16" class="quarto-xref">(3.16)</a>. TSS mide la varianza total en la variable respuesta $Y$, y puede pensarse como la cantidad de variabilidad inherente en la variable respuesta antes de que se realice la regresión. En contraste, RSS mide la cantidad de variabilidad que queda sin explicar después de realizar la regresión. Por lo tanto, $\text{TSS} - \text{RSS}$ mide la cantidad de variabilidad en la variable respuesta que es explicada (o eliminada) al realizar la regresión, y $R^2$ mide la proporción de variabilidad en $Y$ que puede explicarse usando $X$. Un estadístico $R^2$ cercano a 1 indica que una gran proporción de la variabilidad en la variable respuesta es explicada por la regresión. Un número cercano a 0 indica que la regresión no explica gran parte de la variabilidad en la variable respuesta; esto podría ocurrir porque el modelo lineal es incorrecto, o la varianza del error $\sigma^2$ es alta, o ambas cosas. En la <a href="#tbl-3-2" class="quarto-xref">Tabla&nbsp;3.2</a>, el $R^2$ fue 0.61, por lo que poco menos de dos tercios de la variabilidad en `sales` es explicada por una regresión lineal sobre `TV`.
 
-El estadístico $R^2$ (3.17) tiene una ventaja interpretativa sobre el RSE (3.15), ya que a diferencia del RSE, siempre se encuentra entre 0 y 1. Sin embargo, aún puede ser difícil determinar qué es un buen valor de $R^2$, y en general, esto dependerá de la aplicación. Por ejemplo, en ciertos problemas de física, podemos saber que los datos verdaderamente provienen de un modelo lineal con un pequeño error residual. En este caso, esperaríamos ver un valor de $R^2$ extremadamente cercano a 1, y un valor de $R^2$ sustancialmente menor podría indicar un problema grave con el experimento en el que se generaron los datos. Por otro lado, en aplicaciones típicas en biología, psicología, marketing y otros dominios, el modelo lineal (3.5) es en el mejor de los casos una aproximación extremadamente burda a los datos, y los errores residuales debidos a otros factores no medidos son a menudo muy grandes. En este contexto, esperaríamos que solo una proporción muy pequeña de la varianza en la variable respuesta fuera explicada por el predictor, ¡y un valor de $R^2$ muy por debajo de 0.1 podría ser más realista!
+El estadístico $R^2$ <a href="#eq-3-17" class="quarto-xref">(3.17)</a> tiene una ventaja interpretativa sobre el RSE <a href="#eq-3-15" class="quarto-xref">(3.15)</a>, ya que a diferencia del RSE, siempre se encuentra entre 0 y 1. Sin embargo, aún puede ser difícil determinar qué es un buen valor de $R^2$, y en general, esto dependerá de la aplicación. Por ejemplo, en ciertos problemas de física, podemos saber que los datos verdaderamente provienen de un modelo lineal con un pequeño error residual. En este caso, esperaríamos ver un valor de $R^2$ extremadamente cercano a 1, y un valor de $R^2$ sustancialmente menor podría indicar un problema grave con el experimento en el que se generaron los datos. Por otro lado, en aplicaciones típicas en biología, psicología, marketing y otros dominios, el modelo lineal <a href="#eq-3-5" class="quarto-xref">(3.5)</a> es en el mejor de los casos una aproximación extremadamente burda a los datos, y los errores residuales debidos a otros factores no medidos son a menudo muy grandes. En este contexto, esperaríamos que solo una proporción muy pequeña de la varianza en la variable respuesta fuera explicada por el predictor, ¡y un valor de $R^2$ muy por debajo de 0.1 podría ser más realista!
 
 El estadístico $R^2$ es una medida de la relación lineal entre $X$ e $Y$. Recordemos que la *correlación* (*correlation*), definida como
 
-$$\text{Cor}(X, Y) = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2} \sqrt{\sum_{i=1}^{n} (y_i - \bar{y})^2}}, \qquad (3.18)$$
+<div id="eq-3-18">
+$$
+\text{Cor}(X, Y) = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2} \sqrt{\sum_{i=1}^{n} (y_i - \bar{y})^2}}, \qquad (3.18)
+$$
+</div>
 
-es también una medida de la relación lineal entre $X$ e $Y$.^[Nótese que, de hecho, el lado derecho de (3.18) es la correlación muestral; por lo tanto, sería más correcto escribir $\widehat{\text{Cor}}(X, Y)$; sin embargo, omitimos el "acento circunflejo" para facilitar la notación.] Esto sugiere que podríamos usar $r = \text{Cor}(X, Y)$ en lugar de $R^2$ para evaluar el ajuste del modelo lineal. De hecho, se puede demostrar que en el contexto de la regresión lineal simple, $R^2 = r^2$. En otras palabras, la correlación al cuadrado y el estadístico $R^2$ son idénticos. Sin embargo, en la siguiente sección discutiremos el problema de la *regresión lineal múltiple*, en el cual usamos varios predictores simultáneamente para predecir la variable respuesta. El concepto de correlación entre los predictores y la variable respuesta no se extiende automáticamente a este contexto, ya que la correlación cuantifica la asociación entre un solo par de variables en lugar de entre un número mayor de variables. Veremos que $R^2$ cumple este papel.
+es también una medida de la relación lineal entre $X$ e $Y$.^[Nótese que, de hecho, el lado derecho de <a href="#eq-3-18" class="quarto-xref">(3.18)</a> es la correlación muestral; por lo tanto, sería más correcto escribir $\widehat{\text{Cor}}(X, Y)$; sin embargo, omitimos el "acento circunflejo" para facilitar la notación.] Esto sugiere que podríamos usar $r = \text{Cor}(X, Y)$ en lugar de $R^2$ para evaluar el ajuste del modelo lineal. De hecho, se puede demostrar que en el contexto de la regresión lineal simple, $R^2 = r^2$. En otras palabras, la correlación al cuadrado y el estadístico $R^2$ son idénticos. Sin embargo, en la siguiente sección discutiremos el problema de la *regresión lineal múltiple*, en el cual usamos varios predictores simultáneamente para predecir la variable respuesta. El concepto de correlación entre los predictores y la variable respuesta no se extiende automáticamente a este contexto, ya que la correlación cuantifica la asociación entre un solo par de variables en lugar de entre un número mayor de variables. Veremos que $R^2$ cumple este papel.
 
 <a id="tbl-3-3"></a>
 
@@ -236,28 +308,44 @@ Una opción es ejecutar tres regresiones lineales simples separadas, cada una de
 
 Sin embargo, el enfoque de ajustar un modelo de regresión lineal simple separado para cada predictor no es del todo satisfactorio. En primer lugar, no está claro cómo hacer una única predicción de `sales` dados los tres presupuestos de medios publicitarios, ya que cada uno de los presupuestos está asociado con una ecuación de regresión separada. En segundo lugar, cada una de las tres ecuaciones de regresión ignora los otros dos medios al formar estimaciones para los coeficientes de regresión. Veremos en breve que si los presupuestos de los medios están correlacionados entre sí en los 200 mercados de nuestro conjunto de datos, entonces esto puede llevar a estimaciones muy engañosas de la asociación entre cada presupuesto de medio y las ventas.
 
-En lugar de ajustar un modelo de regresión lineal simple separado para cada predictor, un mejor enfoque es extender el modelo de regresión lineal simple (3.5) para que pueda dar cabida directamente a múltiples predictores. Podemos hacer esto dando a cada predictor un coeficiente de pendiente separado en un solo modelo. En general, supongamos que tenemos $p$ predictores distintos. Entonces el modelo de *regresión lineal múltiple* (*multiple linear regression*) toma la forma
+En lugar de ajustar un modelo de regresión lineal simple separado para cada predictor, un mejor enfoque es extender el modelo de regresión lineal simple <a href="#eq-3-5" class="quarto-xref">(3.5)</a> para que pueda dar cabida directamente a múltiples predictores. Podemos hacer esto dando a cada predictor un coeficiente de pendiente separado en un solo modelo. En general, supongamos que tenemos $p$ predictores distintos. Entonces el modelo de *regresión lineal múltiple* (*multiple linear regression*) toma la forma
 
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p + \epsilon, \qquad (3.19)$$
+<div id="eq-3-19">
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p + \epsilon, \qquad (3.19)
+$$
+</div>
 
-donde $X_j$ representa el $j$-ésimo predictor y $\beta_j$ cuantifica la asociación entre esa variable y la variable respuesta. Interpretamos $\beta_j$ como el efecto promedio sobre $Y$ de un aumento de una unidad en $X_j$, *manteniendo fijos todos los demás predictores*. En el ejemplo de `Advertising`, (3.19) se convierte en
+donde $X_j$ representa el $j$-ésimo predictor y $\beta_j$ cuantifica la asociación entre esa variable y la variable respuesta. Interpretamos $\beta_j$ como el efecto promedio sobre $Y$ de un aumento de una unidad en $X_j$, *manteniendo fijos todos los demás predictores*. En el ejemplo de `Advertising`, <a href="#eq-3-19" class="quarto-xref">(3.19)</a> se convierte en
 
-$$\text{sales} = \beta_0 + \beta_1 \times \text{TV} + \beta_2 \times \text{radio} + \beta_3 \times \text{newspaper} + \epsilon. \qquad (3.20)$$
+<div id="eq-3-20">
+$$
+\text{sales} = \beta_0 + \beta_1 \times \text{TV} + \beta_2 \times \text{radio} + \beta_3 \times \text{newspaper} + \epsilon. \qquad (3.20)
+$$
+</div>
 
 ### 3.2.1 Estimación de los Coeficientes de Regresión
 
-Como fue el caso en el contexto de la regresión lineal simple, los coeficientes de regresión $\beta_0, \beta_1, \ldots, \beta_p$ en (3.19) son desconocidos y deben estimarse. Dadas las estimaciones $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$, podemos hacer predicciones usando la fórmula
+Como fue el caso en el contexto de la regresión lineal simple, los coeficientes de regresión $\beta_0, \beta_1, \ldots, \beta_p$ en <a href="#eq-3-19" class="quarto-xref">(3.19)</a> son desconocidos y deben estimarse. Dadas las estimaciones $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$, podemos hacer predicciones usando la fórmula
 
-$$\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p. \qquad (3.21)$$
+<div id="eq-3-21">
+$$
+\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p. \qquad (3.21)
+$$
+</div>
 
 Los parámetros se estiman usando el mismo enfoque de mínimos cuadrados que vimos en el contexto de la regresión lineal simple. Elegimos $\beta_0, \beta_1, \ldots, \beta_p$ para minimizar la suma de cuadrados de los residuos
 
-$$\begin{aligned}
+<div id="eq-3-22">
+$$
+\begin{aligned}
 \text{RSS} &= \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \\
            &= \sum_{i=1}^{n} (y_i - \hat{\beta}_0 - \hat{\beta}_1 x_{i1} - \hat{\beta}_2 x_{i2} - \cdots - \hat{\beta}_p x_{ip})^2. \qquad (3.22)
-\end{aligned}$$
+\end{aligned}
+$$
+</div>
 
-Los valores $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ que minimizan (3.22) son las *estimaciones de los coeficientes de regresión de mínimos cuadrados múltiples*. A diferencia de las estimaciones de la regresión lineal simple dadas en (3.4), las estimaciones de los coeficientes de regresión múltiple tienen formas algo complicadas que se representan más fácilmente usando álgebra matricial. Por esta razón, no las proporcionamos aquí. Cualquier paquete de software estadístico puede usarse para calcular estas estimaciones de coeficientes, y más adelante en este capítulo mostraremos cómo hacerlo. La <a href="#fig-3-4" class="quarto-xref">Figura&nbsp;3.4</a> ilustra un ejemplo del ajuste de mínimos cuadrados a un conjunto de datos de juguete con $p = 2$ predictores.
+Los valores $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ que minimizan <a href="#eq-3-22" class="quarto-xref">(3.22)</a> son las *estimaciones de los coeficientes de regresión de mínimos cuadrados múltiples*. A diferencia de las estimaciones de la regresión lineal simple dadas en <a href="#eq-3-4" class="quarto-xref">(3.4)</a>, las estimaciones de los coeficientes de regresión múltiple tienen formas algo complicadas que se representan más fácilmente usando álgebra matricial. Por esta razón, no las proporcionamos aquí. Cualquier paquete de software estadístico puede usarse para calcular estas estimaciones de coeficientes, y más adelante en este capítulo mostraremos cómo hacerlo. La <a href="#fig-3-4" class="quarto-xref">Figura&nbsp;3.4</a> ilustra un ejemplo del ajuste de mínimos cuadrados a un conjunto de datos de juguete con $p = 2$ predictores.
 
 <div id="fig-3-4" style="text-align:center; margin:1.5em 0;">
 <img src="../../Figures/Chapter3/png/3_4.png" class="img-fluid figure-img" style="width:65.0%" alt="">
@@ -307,7 +395,9 @@ Ahora abordamos cada una de estas preguntas por turno.
 
 Recordemos que en el contexto de la regresión lineal simple, para determinar si existe una relación entre la variable respuesta y el predictor simplemente podemos verificar si $\beta_1 = 0$. En el contexto de la regresión múltiple con $p$ predictores, necesitamos preguntar si todos los coeficientes de regresión son cero, es decir, si $\beta_1 = \beta_2 = \cdots = \beta_p = 0$. Como en el contexto de la regresión lineal simple, utilizamos una prueba de hipótesis para responder esta pregunta. Contrastamos la hipótesis nula,
 
-$$H_0: \beta_1 = \beta_2 = \cdots = \beta_p = 0$$
+<div id="eq-3-23">
+$$
+H_0: \beta_1 = \beta_2 = \cdots = \beta_p = 0$$
 
 frente a la alternativa
 
@@ -315,11 +405,15 @@ $$H_a: \text{al menos un } \beta_j \text{ es distinto de cero.}$$
 
 Esta prueba de hipótesis se realiza calculando el *estadístico F* (*F-statistic*),
 
-$$F = \frac{(\text{TSS} - \text{RSS})/p}{\text{RSS}/(n - p - 1)}, \qquad (3.23)$$
+$$F = \frac{(\text{TSS} - \text{RSS})/p}{\text{RSS}/(n - p - 1)}, \qquad (3.23)
+$$
+</div>
 
 donde, al igual que con la regresión lineal simple, $\text{TSS} = \sum (y_i - \bar{y})^2$ y $\text{RSS} = \sum (y_i - \hat{y}_i)^2$. Si las suposiciones del modelo lineal son correctas, se puede demostrar que
 
-$$E\{\text{RSS}/(n - p - 1)\} = \sigma^2$$
+<div id="eq-3-24">
+$$
+E\{\text{RSS}/(n - p - 1)\} = \sigma^2$$
 
 y que, siempre que $H_0$ sea verdadera,
 
@@ -345,9 +439,11 @@ $$H_0: \beta_{p-q+1} = \beta_{p-q+2} = \cdots = \beta_p = 0,$$
 
 donde por conveniencia hemos colocado las variables elegidas para omisión al final de la lista. En este caso ajustamos un segundo modelo que utiliza todas las variables excepto esas últimas $q$. Supongamos que la suma de cuadrados de los residuos para ese modelo es $\text{RSS}_0$. Entonces el *estadístico F* apropiado es
 
-$$F = \frac{(\text{RSS}_0 - \text{RSS})/q}{\text{RSS}/(n - p - 1)}. \qquad (3.24)$$
+$$F = \frac{(\text{RSS}_0 - \text{RSS})/q}{\text{RSS}/(n - p - 1)}. \qquad (3.24)
+$$
+</div>
 
-Nótese que en la <a href="#tbl-3-4" class="quarto-xref">Tabla&nbsp;3.4</a>, para cada predictor individual se reportaron un estadístico $t$ y un *valor p*. Estos proporcionan información sobre si cada predictor individual está relacionado con la variable respuesta, después de ajustar por los otros predictores. Resulta que cada uno de estos es exactamente equivalente^[El cuadrado de cada estadístico $t$ es el estadístico $F$ correspondiente.] a la prueba $F$ que omite esa única variable del modelo, dejando todas las demás dentro —es decir, $q=1$ en (3.24). Así que reporta el efecto parcial de agregar esa variable al modelo. Por ejemplo, como discutimos anteriormente, estos *valores p* indican que `TV` y `radio` están relacionados con las ventas, pero que no hay evidencia de que `newspaper` esté asociado con las ventas, cuando `TV` y `radio` se mantienen fijos.
+Nótese que en la <a href="#tbl-3-4" class="quarto-xref">Tabla&nbsp;3.4</a>, para cada predictor individual se reportaron un estadístico $t$ y un *valor p*. Estos proporcionan información sobre si cada predictor individual está relacionado con la variable respuesta, después de ajustar por los otros predictores. Resulta que cada uno de estos es exactamente equivalente^[El cuadrado de cada estadístico $t$ es el estadístico $F$ correspondiente.] a la prueba $F$ que omite esa única variable del modelo, dejando todas las demás dentro —es decir, $q=1$ en <a href="#eq-3-24" class="quarto-xref">(3.24)</a>. Así que reporta el efecto parcial de agregar esa variable al modelo. Por ejemplo, como discutimos anteriormente, estos *valores p* indican que `TV` y `radio` están relacionados con las ventas, pero que no hay evidencia de que `newspaper` esté asociado con las ventas, cuando `TV` y `radio` se mantienen fijos.
 
 Dados estos *valores p* individuales para cada variable, ¿por qué necesitamos mirar el *estadístico F* global? Después de todo, parece probable que si alguno de los *valores p* para las variables individuales es muy pequeño, entonces al menos uno de los predictores está relacionado con la variable respuesta. Sin embargo, esta lógica es defectuosa, especialmente cuando el número de predictores $p$ es grande.
 
@@ -385,9 +481,13 @@ En contraste, el modelo que contiene solo `TV` como predictor tenía un $R^2$ de
 
 El modelo que contiene solo `TV` y `radio` como predictores tiene un RSE de 1.681, y el modelo que también contiene `newspaper` como predictor tiene un RSE de 1.686 (<a href="#tbl-3-6" class="quarto-xref">Tabla&nbsp;3.6</a>). En contraste, el modelo que contiene solo `TV` tiene un RSE de 3.26 (<a href="#tbl-3-2" class="quarto-xref">Tabla&nbsp;3.2</a>). Esto corrobora nuestra conclusión anterior de que un modelo que utiliza los gastos en `TV` y `radio` para predecir `sales` es mucho más preciso (en los datos de entrenamiento) que uno que solo utiliza el gasto en `TV`. Además, dado que los gastos en `TV` y `radio` se utilizan como predictores, no tiene sentido usar también el gasto en `newspaper` como predictor en el modelo. El lector observador podría preguntarse cómo puede aumentar el RSE cuando se agrega `newspaper` al modelo dado que la RSS debe disminuir. En general, el RSE se define como
 
-$$\text{RSE} = \sqrt{\frac{1}{n - p - 1} \text{RSS}}, \qquad (3.25)$$
+<div id="eq-3-25">
+$$
+\text{RSE} = \sqrt{\frac{1}{n - p - 1} \text{RSS}}, \qquad (3.25)
+$$
+</div>
 
-que se simplifica a (3.15) para una regresión lineal simple. Por lo tanto, los modelos con más variables pueden tener un RSE mayor si la disminución en RSS es pequeña en relación con el aumento en $p$.
+que se simplifica a <a href="#eq-3-15" class="quarto-xref">(3.15)</a> para una regresión lineal simple. Por lo tanto, los modelos con más variables pueden tener un RSE mayor si la disminución en RSS es pequeña en relación con el aumento en $p$.
 
 Además de observar las estadísticas RSE y $R^2$ que acabamos de discutir, puede ser útil graficar los datos. Los resúmenes gráficos pueden revelar problemas con un modelo que no son visibles a partir de estadísticas numéricas. Por ejemplo, la <a href="#fig-3-5" class="quarto-xref">Figura&nbsp;3.5</a> muestra un gráfico tridimensional de `TV` y `radio` versus `sales`. Vemos que algunas observaciones están por encima y algunas observaciones están por debajo del plano de regresión de mínimos cuadrados. En particular, el modelo lineal parece sobrestimar las ventas para casos en los que la mayor parte del dinero publicitario se gastó exclusivamente en `TV` o en `radio`. Subestima las ventas para casos en los que el presupuesto se dividió entre los dos medios. Este pronunciado patrón no lineal sugiere un efecto de *sinergia* o *interacción* (*interaction*) entre los medios publicitarios, mediante el cual combinar los medios juntos resulta en un mayor impulso a las ventas que usar cualquier medio individual. En la Sección 3.3.2, discutiremos la extensión del modelo lineal para dar cabida a tales efectos sinérgicos mediante el uso de términos de interacción.
 
@@ -398,11 +498,13 @@ Además de observar las estadísticas RSE y $R^2$ que acabamos de discutir, pued
 
 **Cuatro: Predicciones**
 
-Una vez que hemos ajustado el modelo de regresión múltiple, es sencillo aplicar (3.21) para predecir la variable respuesta $Y$ con base en un conjunto de valores para los predictores $X_1, X_2, \ldots, X_p$. Sin embargo, hay tres tipos de incertidumbre asociados con esta predicción.
+Una vez que hemos ajustado el modelo de regresión múltiple, es sencillo aplicar <a href="#eq-3-21" class="quarto-xref">(3.21)</a> para predecir la variable respuesta $Y$ con base en un conjunto de valores para los predictores $X_1, X_2, \ldots, X_p$. Sin embargo, hay tres tipos de incertidumbre asociados con esta predicción.
 
 1. Las estimaciones de los coeficientes $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$ son estimaciones para $\beta_0, \beta_1, \ldots, \beta_p$. Es decir, el plano de mínimos cuadrados
 
-   $$\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \cdots + \hat{\beta}_p X_p$$
+   <div id="eq-3-26">
+$$
+\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \cdots + \hat{\beta}_p X_p$$
 
    es solo una estimación del verdadero plano de regresión poblacional
 
@@ -436,14 +538,20 @@ Supongamos que deseamos investigar las diferencias en el saldo de la tarjeta de 
 $$x_i = \begin{cases}
 1 & \text{si la i-ésima persona posee una casa}\\
 0 & \text{si la i-ésima persona no posee una casa},
-\end{cases} \qquad (3.26)$$
+\end{cases} \qquad (3.26)
+$$
+</div>
 
 y usar esta variable como un predictor en la ecuación de regresión. Esto resulta en el modelo
 
-$$y_i = \beta_0 + \beta_1 x_i + \epsilon_i = \begin{cases}
+<div id="eq-3-27">
+$$
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i = \begin{cases}
 \beta_0 + \beta_1 + \epsilon_i & \text{si la i-ésima persona posee una casa}\\
 \beta_0 + \epsilon_i & \text{si no.}
-\end{cases} \qquad (3.27)$$
+\end{cases} \qquad (3.27)
+$$
+</div>
 
 Ahora $\beta_0$ puede interpretarse como el `balance` promedio de la tarjeta de crédito entre aquellos que no poseen casa, $\beta_0 + \beta_1$ como el `balance` promedio de la tarjeta de crédito entre aquellos que sí poseen su casa, y $\beta_1$ como la diferencia promedio en el `balance` de la tarjeta de crédito entre propietarios y no propietarios.
 
@@ -454,13 +562,15 @@ Ahora $\beta_0$ puede interpretarse como el `balance` promedio de la tarjeta de 
 | Intercepto  |   509.80    |     33.13      |    15.389     | $< 0.0001$ |
 | own[Yes]    |    19.73    |     46.05      |     0.429     |  0.6690   |
 
-: Tabla 3.7: Estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de balance sobre own en el conjunto de datos Credit. El modelo lineal se da en (3.27). Es decir, ownership se codifica como una variable dummy, como en (3.26).
+: Tabla 3.7: Estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de balance sobre own en el conjunto de datos Credit. El modelo lineal se da en <a href="#eq-3-27" class="quarto-xref">(3.27)</a>. Es decir, ownership se codifica como una variable dummy, como en <a href="#eq-3-26" class="quarto-xref">(3.26)</a>.
 
-La <a href="#tbl-3-7" class="quarto-xref">Tabla&nbsp;3.7</a> muestra las estimaciones de los coeficientes y otra información asociada con el modelo (3.27). La deuda promedio de tarjeta de crédito para los no propietarios se estima en $509.80$, mientras que se estima que los propietarios tienen $19.73$ en deuda adicional para un total de $509.80 + 19.73 = 529.53$. Sin embargo, notamos que el *valor p* para la *variable dummy* es muy alto. Esto indica que no hay evidencia estadística de una diferencia en el `balance` promedio de la tarjeta de crédito basada en la propiedad de la vivienda.
+La <a href="#tbl-3-7" class="quarto-xref">Tabla&nbsp;3.7</a> muestra las estimaciones de los coeficientes y otra información asociada con el modelo <a href="#eq-3-27" class="quarto-xref">(3.27)</a>. La deuda promedio de tarjeta de crédito para los no propietarios se estima en $509.80$, mientras que se estima que los propietarios tienen $19.73$ en deuda adicional para un total de $509.80 + 19.73 = 529.53$. Sin embargo, notamos que el *valor p* para la *variable dummy* es muy alto. Esto indica que no hay evidencia estadística de una diferencia en el `balance` promedio de la tarjeta de crédito basada en la propiedad de la vivienda.
 
-La decisión de codificar a los propietarios como 1 y a los no propietarios como 0 en (3.27) es arbitraria, y no tiene efecto en el ajuste de la regresión, pero sí altera la interpretación de los coeficientes. Si hubiéramos codificado a los no propietarios como 1 y a los propietarios como 0, entonces las estimaciones para $\beta_0$ y $\beta_1$ habrían sido 529.53 y $-19.73$, respectivamente, llevando una vez más a una predicción de deuda de tarjeta de crédito de $529.53 - 19.73 = 509.80$ para los no propietarios y una predicción de $529.53$ para los propietarios. Alternativamente, en lugar de un esquema de codificación 0/1, podríamos crear una *variable dummy*
+La decisión de codificar a los propietarios como 1 y a los no propietarios como 0 en <a href="#eq-3-27" class="quarto-xref">(3.27)</a> es arbitraria, y no tiene efecto en el ajuste de la regresión, pero sí altera la interpretación de los coeficientes. Si hubiéramos codificado a los no propietarios como 1 y a los propietarios como 0, entonces las estimaciones para $\beta_0$ y $\beta_1$ habrían sido 529.53 y $-19.73$, respectivamente, llevando una vez más a una predicción de deuda de tarjeta de crédito de $529.53 - 19.73 = 509.80$ para los no propietarios y una predicción de $529.53$ para los propietarios. Alternativamente, en lugar de un esquema de codificación 0/1, podríamos crear una *variable dummy*
 
-$$x_i = \begin{cases}
+<div id="eq-3-28">
+$$
+x_i = \begin{cases}
 1 & \text{si la i-ésima persona posee una casa}\\
 -1 & \text{si la i-ésima persona no posee una casa}
 \end{cases}$$
@@ -481,22 +591,32 @@ Cuando un predictor cualitativo tiene más de dos niveles, una sola *variable du
 $$x_{i1} = \begin{cases}
 1 & \text{si la i-ésima persona es del Sur}\\
 0 & \text{si la i-ésima persona no es del Sur},
-\end{cases} \qquad (3.28)$$
+\end{cases} \qquad (3.28)
+$$
+</div>
 
 y la segunda podría ser
 
-$$x_{i2} = \begin{cases}
+<div id="eq-3-29">
+$$
+x_{i2} = \begin{cases}
 1 & \text{si la i-ésima persona es del Oeste}\\
 0 & \text{si la i-ésima persona no es del Oeste}.
-\end{cases} \qquad (3.29)$$
+\end{cases} \qquad (3.29)
+$$
+</div>
 
 Entonces ambas variables pueden usarse en la ecuación de regresión, para obtener el modelo
 
-$$y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \epsilon_i = \begin{cases}
+<div id="eq-3-30">
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \epsilon_i = \begin{cases}
 \beta_0 + \beta_1 + \epsilon_i & \text{si la i-ésima persona es del Sur}\\
 \beta_0 + \beta_2 + \epsilon_i & \text{si la i-ésima persona es del Oeste}\\
 \beta_0 + \epsilon_i & \text{si la i-ésima persona es del Este.}
-\end{cases} \qquad (3.30)$$
+\end{cases} \qquad (3.30)
+$$
+</div>
 
 Ahora $\beta_0$ puede interpretarse como el `balance` promedio de la tarjeta de crédito para individuos del Este, $\beta_1$ puede interpretarse como la diferencia en el `balance` promedio entre personas del Sur versus el Este, y $\beta_2$ puede interpretarse como la diferencia en el `balance` promedio entre aquellos del Oeste versus el Este. Siempre habrá una variable dummy menos que el número de niveles. El nivel sin variable dummy —Este en este ejemplo— se conoce como la *categoría de referencia* o *línea base* (*baseline*).
 
@@ -508,7 +628,7 @@ Ahora $\beta_0$ puede interpretarse como el `balance` promedio de la tarjeta de 
 | region[South]  |   $-12.50$  |     56.68      |    $-0.221$   |  0.8260   |
 | region[West]   |   $-18.69$  |     65.02      |    $-0.287$   |  0.7740   |
 
-: Tabla 3.8: Estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de balance sobre region en el conjunto de datos Credit. El modelo lineal se da en (3.30). Es decir, region se codifica mediante dos variables dummy (3.28) y (3.29).
+: Tabla 3.8: Estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de balance sobre region en el conjunto de datos Credit. El modelo lineal se da en <a href="#eq-3-30" class="quarto-xref">(3.30)</a>. Es decir, region se codifica mediante dos variables dummy <a href="#eq-3-28" class="quarto-xref">(3.28)</a> y <a href="#eq-3-29" class="quarto-xref">(3.29)</a>.
 
 De la <a href="#tbl-3-8" class="quarto-xref">Tabla&nbsp;3.8</a>, vemos que el `balance` estimado para la línea base, Este, es $531.00$. Se estima que aquellos en el Sur tendrán $18.69$ menos de deuda que aquellos en el Este, y que aquellos en el Oeste tendrán $12.50$ menos de deuda que aquellos en el Este. Sin embargo, los *valores p* asociados con las estimaciones de los coeficientes para las dos variables dummy son muy grandes, lo que sugiere que no hay evidencia estadística de una diferencia real en el `balance` promedio de la tarjeta de crédito entre el Sur y el Este o entre el Oeste y el Este.^[En teoría aún podría existir una diferencia entre Sur y Oeste, aunque los datos aquí no sugieren ninguna diferencia.] Una vez más, el nivel seleccionado como categoría de referencia es arbitrario, y las predicciones finales para cada grupo serán las mismas independientemente de esta elección. Sin embargo, los coeficientes y sus *valores p* sí dependen de la elección de la codificación de variables dummy. En lugar de confiar en los coeficientes individuales, podemos usar una prueba $F$ para contrastar $H_0: \beta_1 = \beta_2 = 0$; esto no depende de la codificación. Esta prueba $F$ tiene un *valor p* de 0.96, indicando que no podemos rechazar la hipótesis nula de que no hay relación entre `balance` y `region`.
 
@@ -519,34 +639,44 @@ Existen muchas formas diferentes de codificar variables cualitativas además del
 
 ### 3.3.2 Extensiones del Modelo Lineal
 
-El modelo de regresión lineal estándar (3.19) proporciona resultados interpretables y funciona bastante bien en muchos problemas del mundo real. Sin embargo, hace varias suposiciones altamente restrictivas que a menudo se violan en la práctica. Dos de las suposiciones más importantes establecen que la relación entre los predictores y la variable respuesta es *aditiva* (*additive*) y *lineal* (*linear*). La suposición de aditividad significa que la asociación entre un predictor $X_j$ y la variable respuesta $Y$ no depende de los valores de los otros predictores. La suposición de linealidad establece que el cambio en la variable respuesta $Y$ asociado con un cambio de una unidad en $X_j$ es constante, independientemente del valor de $X_j$. En capítulos posteriores de este libro, examinamos una serie de métodos sofisticados que relajan estas dos suposiciones. Aquí, examinamos brevemente algunos enfoques clásicos comunes para extender el modelo lineal.
+El modelo de regresión lineal estándar <a href="#eq-3-19" class="quarto-xref">(3.19)</a> proporciona resultados interpretables y funciona bastante bien en muchos problemas del mundo real. Sin embargo, hace varias suposiciones altamente restrictivas que a menudo se violan en la práctica. Dos de las suposiciones más importantes establecen que la relación entre los predictores y la variable respuesta es *aditiva* (*additive*) y *lineal* (*linear*). La suposición de aditividad significa que la asociación entre un predictor $X_j$ y la variable respuesta $Y$ no depende de los valores de los otros predictores. La suposición de linealidad establece que el cambio en la variable respuesta $Y$ asociado con un cambio de una unidad en $X_j$ es constante, independientemente del valor de $X_j$. En capítulos posteriores de este libro, examinamos una serie de métodos sofisticados que relajan estas dos suposiciones. Aquí, examinamos brevemente algunos enfoques clásicos comunes para extender el modelo lineal.
 
 **Eliminación de la Suposición de Aditividad**
 
-En nuestro análisis previo de los datos `Advertising`, concluimos que tanto `TV` como `radio` parecen estar asociados con `sales`. Los modelos lineales que formaron la base de esta conclusión asumían que el efecto sobre las ventas de aumentar un medio publicitario es independiente de la cantidad gastada en los otros medios. Por ejemplo, el modelo lineal (3.20) establece que el aumento promedio en `sales` asociado con un aumento de una unidad en `TV` es siempre $\beta_1$, independientemente de la cantidad gastada en `radio`.
+En nuestro análisis previo de los datos `Advertising`, concluimos que tanto `TV` como `radio` parecen estar asociados con `sales`. Los modelos lineales que formaron la base de esta conclusión asumían que el efecto sobre las ventas de aumentar un medio publicitario es independiente de la cantidad gastada en los otros medios. Por ejemplo, el modelo lineal <a href="#eq-3-20" class="quarto-xref">(3.20)</a> establece que el aumento promedio en `sales` asociado con un aumento de una unidad en `TV` es siempre $\beta_1$, independientemente de la cantidad gastada en `radio`.
 
 Sin embargo, este modelo simple puede ser incorrecto. Supongamos que gastar dinero en publicidad radial realmente aumenta la efectividad de la publicidad televisiva, de modo que el término de pendiente para `TV` debería aumentar a medida que `radio` aumenta. En esta situación, dado un presupuesto fijo de $100{,}000$, gastar la mitad en `radio` y la mitad en `TV` puede aumentar las ventas más que asignar la cantidad total a `TV` o a `radio` individualmente. En marketing, esto se conoce como un *efecto de sinergia*, y en estadística se denomina *efecto de interacción* (*interaction effect*). La <a href="#fig-3-5" class="quarto-xref">Figura&nbsp;3.5</a> sugiere que tal efecto puede estar presente en los datos `Advertising`. Nótese que cuando los niveles de `TV` o `radio` son bajos, las ventas reales son menores de lo predicho por el modelo lineal. Pero cuando la publicidad se divide entre los dos medios, el modelo tiende a subestimar las ventas.
 
 Consideremos el modelo de regresión lineal estándar con dos variables,
 
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \epsilon.$$
+<div id="eq-3-31">
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \epsilon.$$
 
 Según este modelo, un aumento de una unidad en $X_1$ está asociado con un aumento promedio en $Y$ de $\beta_1$ unidades. Nótese que la presencia de $X_2$ no altera esta afirmación —es decir, independientemente del valor de $X_2$, un aumento de una unidad en $X_1$ está asociado con un aumento de $\beta_1$ unidades en $Y$. Una forma de extender este modelo es incluir un tercer predictor, llamado *término de interacción* (*interaction term*), que se construye calculando el producto de $X_1$ y $X_2$. Esto resulta en el modelo
 
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_2 + \epsilon. \qquad (3.31)$$
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_2 + \epsilon. \qquad (3.31)
+$$
+</div>
 
-¿Cómo la inclusión de este término de interacción relaja la suposición de aditividad? Nótese que (3.31) puede reescribirse como
+¿Cómo la inclusión de este término de interacción relaja la suposición de aditividad? Nótese que <a href="#eq-3-31" class="quarto-xref">(3.31)</a> puede reescribirse como
 
-$$\begin{aligned}
+<div id="eq-3-32">
+$$
+\begin{aligned}
 Y &= \beta_0 + (\beta_1 + \beta_3 X_2) X_1 + \beta_2 X_2 + \epsilon \\
   &= \beta_0 + \tilde{\beta}_1 X_1 + \beta_2 X_2 + \epsilon
-\end{aligned} \qquad (3.32)$$
+\end{aligned} \qquad (3.32)
+$$
+</div>
 
 donde $\tilde{\beta}_1 = \beta_1 + \beta_3 X_2$. Dado que $\tilde{\beta}_1$ es ahora una función de $X_2$, la asociación entre $X_1$ e $Y$ ya no es constante: un cambio en el valor de $X_2$ cambiará la asociación entre $X_1$ e $Y$. Un argumento similar muestra que un cambio en el valor de $X_1$ cambia la asociación entre $X_2$ e $Y$.
 
 Por ejemplo, supongamos que estamos interesados en estudiar la productividad de una fábrica. Deseamos predecir el número de unidades producidas con base en el número de líneas de producción y el número total de trabajadores. Parece probable que el efecto de aumentar el número de líneas de producción dependa del número de trabajadores, ya que si no hay trabajadores disponibles para operar las líneas, entonces aumentar el número de líneas no incrementará la producción. Esto sugiere que sería apropiado incluir un *término de interacción* entre líneas y trabajadores en un modelo lineal para predecir unidades. Supongamos que cuando ajustamos el modelo, obtenemos
 
-$$\begin{aligned}
+<div id="eq-3-33">
+$$
+\begin{aligned}
 \text{units} &\approx 1.2 + 3.4 \times \text{lines} + 0.22 \times \text{workers} + 1.4 \times (\text{lines} \times \text{workers})\\
              &= 1.2 + (3.4 + 1.4 \times \text{workers}) \times \text{lines} + 0.22 \times \text{workers}.
 \end{aligned}$$
@@ -558,9 +688,11 @@ Ahora volvemos al ejemplo de `Advertising`. Un modelo lineal que usa `radio`, `T
 $$\begin{aligned}
 \text{sales} &= \beta_0 + \beta_1 \times \text{TV} + \beta_2 \times \text{radio} + \beta_3 \times (\text{radio} \times \text{TV}) + \epsilon \\
              &= \beta_0 + (\beta_1 + \beta_3 \times \text{radio}) \times \text{TV} + \beta_2 \times \text{radio} + \epsilon. \qquad (3.33)
-\end{aligned}$$
+\end{aligned}
+$$
+</div>
 
-Podemos interpretar $\beta_3$ como el aumento en la efectividad de la publicidad en `TV` asociado con un aumento de una unidad en la publicidad en `radio` (o viceversa). Los coeficientes que resultan de ajustar el modelo (3.33) se dan en la <a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a>.
+Podemos interpretar $\beta_3$ como el aumento en la efectividad de la publicidad en `TV` asociado con un aumento de una unidad en la publicidad en `radio` (o viceversa). Los coeficientes que resultan de ajustar el modelo <a href="#eq-3-33" class="quarto-xref">(3.33)</a> se dan en la <a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a>.
 
 <a id="tbl-3-9"></a>
 
@@ -571,15 +703,17 @@ Podemos interpretar $\beta_3$ como el aumento en la efectividad de la publicidad
 | radio       |   0.0289    |     0.009      |     3.24      |  0.0014   |
 | TV×radio    |   0.0011    |     0.000      |    20.73      | $< 0.0001$ |
 
-: Tabla 3.9: Para los datos Advertising, estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de sales sobre TV y radio, con un término de interacción, como en (3.33).
+: Tabla 3.9: Para los datos Advertising, estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de sales sobre TV y radio, con un término de interacción, como en <a href="#eq-3-33" class="quarto-xref">(3.33)</a>.
 
-Los resultados en la <a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a> sugieren fuertemente que el modelo que incluye el término de interacción es superior al modelo que contiene solo *efectos principales* (*main effects*). El *valor p* para el término de interacción, TV×radio, es extremadamente bajo, indicando que hay fuerte evidencia para $H_a: \beta_3 \neq 0$. En otras palabras, está claro que la verdadera relación no es aditiva. El $R^2$ para el modelo (3.33) es 96.8%, comparado con solo 89.7% para el modelo que predice `sales` usando `TV` y `radio` sin un término de interacción. Esto significa que $(96.8 - 89.7)/(100 - 89.7) = 69\%$ de la variabilidad en las ventas que permanece después de ajustar el modelo aditivo ha sido explicada por el término de interacción. Las estimaciones de los coeficientes en la <a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a> sugieren que un aumento en la publicidad en `TV` de $1{,}000$ está asociado con un aumento en las ventas de $(\hat{\beta}_1 + \hat{\beta}_3 \times \text{radio}) \times 1{,}000 = 19 + 1.1 \times \text{radio}$ unidades. Y un aumento en la publicidad en `radio` de $1{,}000$ estará asociado con un aumento en las ventas de $(\hat{\beta}_2 + \hat{\beta}_3 \times \text{TV}) \times 1{,}000 = 29 + 1.1 \times \text{TV}$ unidades.
+Los resultados en la <a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a> sugieren fuertemente que el modelo que incluye el término de interacción es superior al modelo que contiene solo *efectos principales* (*main effects*). El *valor p* para el término de interacción, TV×radio, es extremadamente bajo, indicando que hay fuerte evidencia para $H_a: \beta_3 \neq 0$. En otras palabras, está claro que la verdadera relación no es aditiva. El $R^2$ para el modelo <a href="#eq-3-33" class="quarto-xref">(3.33)</a> es 96.8%, comparado con solo 89.7% para el modelo que predice `sales` usando `TV` y `radio` sin un término de interacción. Esto significa que $(96.8 - 89.7)/(100 - 89.7) = 69\%$ de la variabilidad en las ventas que permanece después de ajustar el modelo aditivo ha sido explicada por el término de interacción. Las estimaciones de los coeficientes en la <a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a> sugieren que un aumento en la publicidad en `TV` de $1{,}000$ está asociado con un aumento en las ventas de $(\hat{\beta}_1 + \hat{\beta}_3 \times \text{radio}) \times 1{,}000 = 19 + 1.1 \times \text{radio}$ unidades. Y un aumento en la publicidad en `radio` de $1{,}000$ estará asociado con un aumento en las ventas de $(\hat{\beta}_2 + \hat{\beta}_3 \times \text{TV}) \times 1{,}000 = 29 + 1.1 \times \text{TV}$ unidades.
 
 En este ejemplo, los *valores p* asociados con `TV`, `radio` y el término de interacción son todos estadísticamente significativos (<a href="#tbl-3-9" class="quarto-xref">Tabla&nbsp;3.9</a>), por lo que es obvio que las tres variables deben incluirse en el modelo. Sin embargo, a veces ocurre que un término de interacción tiene un *valor p* muy pequeño, pero los *efectos principales* asociados (en este caso, `TV` y `radio`) no. El *principio jerárquico* (*hierarchical principle*) establece que si incluimos una interacción en un modelo, también debemos incluir los *efectos principales*, incluso si los *valores p* asociados con sus coeficientes no son significativos. En otras palabras, si la interacción entre $X_1$ y $X_2$ parece importante, entonces debemos incluir tanto $X_1$ como $X_2$ en el modelo incluso si las estimaciones de sus coeficientes tienen *valores p* grandes. La razón de ser de este principio es que si $X_1 \times X_2$ está relacionado con la variable respuesta, entonces que los coeficientes de $X_1$ o $X_2$ sean exactamente cero es de poco interés. Además, $X_1 \times X_2$ típicamente está correlacionado con $X_1$ y $X_2$, por lo que omitirlos tiende a alterar el significado de la interacción.
 
 En el ejemplo anterior, consideramos una interacción entre `TV` y `radio`, ambas variables cuantitativas. Sin embargo, el concepto de interacciones se aplica igualmente bien a variables cualitativas, o a una combinación de variables cuantitativas y cualitativas. De hecho, una interacción entre una variable cualitativa y una variable cuantitativa tiene una interpretación particularmente elegante. Consideremos el conjunto de datos `Credit` de la Sección 3.3.1, y supongamos que deseamos predecir `balance` usando las variables `income` (cuantitativa) y `student` (cualitativa). En ausencia de un término de interacción, el modelo toma la forma
 
-$$\begin{aligned}
+<div id="eq-3-34">
+$$
+\begin{aligned}
 \text{balance}_i &\approx \beta_0 + \beta_1 \times \text{income}_i + \begin{cases}
 \beta_2 & \text{si la i-ésima persona es estudiante}\\
 0 & \text{si la i-ésima persona no es estudiante}
@@ -588,18 +722,22 @@ $$\begin{aligned}
 \beta_0 + \beta_2 & \text{si la i-ésima persona es estudiante}\\
 \beta_0 & \text{si la i-ésima persona no es estudiante.}
 \end{cases}
-\end{aligned} \qquad (3.34)$$
+\end{aligned} \qquad (3.34)
+$$
+</div>
 
 Nótese que esto equivale a ajustar dos líneas paralelas a los datos, una para estudiantes y otra para no estudiantes. Las líneas para estudiantes y no estudiantes tienen diferentes interceptos, $\beta_0 + \beta_2$ versus $\beta_0$, pero la misma pendiente, $\beta_1$. Esto se ilustra en el panel izquierdo de la <a href="#fig-3-7" class="quarto-xref">Figura&nbsp;3.7</a>. El hecho de que las líneas sean paralelas significa que el efecto promedio sobre `balance` de un aumento de una unidad en `income` no depende de si el individuo es estudiante o no. Esto representa una limitación potencialmente seria del modelo, ya que de hecho un cambio en `income` puede tener un efecto muy diferente en el `balance` de la tarjeta de crédito de un estudiante versus un no estudiante.
 
 <div id="fig-3-7" style="text-align:center; margin:1.5em 0;">
 <img src="../../Figures/Chapter3/png/3_7.png" class="img-fluid figure-img" style="width:65.0%" alt="">
-<p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.7: Para los datos Credit, se muestran las líneas de mínimos cuadrados para la predicción de balance a partir de income para estudiantes y no estudiantes. <em>Izquierda:</em> Se ajustó el modelo (3.34). No hay interacción entre income y student. <em>Derecha:</em> Se ajustó el modelo (3.35). Hay un término de interacción entre income y student.</p>
+<p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.7: Para los datos Credit, se muestran las líneas de mínimos cuadrados para la predicción de balance a partir de income para estudiantes y no estudiantes. <em>Izquierda:</em> Se ajustó el modelo <a href="#eq-3-34" class="quarto-xref">(3.34)</a>. No hay interacción entre income y student. <em>Derecha:</em> Se ajustó el modelo <a href="#eq-3-35" class="quarto-xref">(3.35)</a>. Hay un término de interacción entre income y student.</p>
 </div>
 
 Esta limitación puede abordarse agregando una variable de interacción, creada multiplicando `income` por la variable dummy para `student`. Nuestro modelo ahora se convierte en
 
-$$\begin{aligned}
+<div id="eq-3-35">
+$$
+\begin{aligned}
 \text{balance}_i &\approx \beta_0 + \beta_1 \times \text{income}_i + \begin{cases}
 \beta_2 + \beta_3 \times \text{income}_i & \text{si es estudiante}\\
 0 & \text{si no es estudiante}
@@ -608,19 +746,25 @@ $$\begin{aligned}
 (\beta_0 + \beta_2) + (\beta_1 + \beta_3) \times \text{income}_i & \text{si es estudiante}\\
 \beta_0 + \beta_1 \times \text{income}_i & \text{si no es estudiante.}
 \end{cases}
-\end{aligned} \qquad (3.35)$$
+\end{aligned} \qquad (3.35)
+$$
+</div>
 
-Una vez más, tenemos dos líneas de regresión diferentes para los estudiantes y los no estudiantes. Pero ahora esas líneas de regresión tienen diferentes interceptos, $\beta_0 + \beta_2$ versus $\beta_0$, así como diferentes pendientes, $\beta_1 + \beta_3$ versus $\beta_1$. Esto permite la posibilidad de que los cambios en `income` puedan afectar los saldos de las tarjetas de crédito de estudiantes y no estudiantes de manera diferente. El panel derecho de la <a href="#fig-3-7" class="quarto-xref">Figura&nbsp;3.7</a> muestra las relaciones estimadas entre `income` y `balance` para estudiantes y no estudiantes en el modelo (3.35). Notamos que la pendiente para estudiantes es menor que la pendiente para no estudiantes. Esto sugiere que los aumentos en `income` están asociados con aumentos menores en el `balance` de la tarjeta de crédito entre estudiantes en comparación con los no estudiantes.
+Una vez más, tenemos dos líneas de regresión diferentes para los estudiantes y los no estudiantes. Pero ahora esas líneas de regresión tienen diferentes interceptos, $\beta_0 + \beta_2$ versus $\beta_0$, así como diferentes pendientes, $\beta_1 + \beta_3$ versus $\beta_1$. Esto permite la posibilidad de que los cambios en `income` puedan afectar los saldos de las tarjetas de crédito de estudiantes y no estudiantes de manera diferente. El panel derecho de la <a href="#fig-3-7" class="quarto-xref">Figura&nbsp;3.7</a> muestra las relaciones estimadas entre `income` y `balance` para estudiantes y no estudiantes en el modelo <a href="#eq-3-35" class="quarto-xref">(3.35)</a>. Notamos que la pendiente para estudiantes es menor que la pendiente para no estudiantes. Esto sugiere que los aumentos en `income` están asociados con aumentos menores en el `balance` de la tarjeta de crédito entre estudiantes en comparación con los no estudiantes.
 
 **Relaciones No Lineales**
 
-Como se discutió anteriormente, el modelo de regresión lineal (3.19) asume una relación lineal entre la variable respuesta y los predictores. Pero en algunos casos, la verdadera relación entre la variable respuesta y los predictores puede ser *no lineal*. Aquí presentamos una forma muy simple de extender directamente el modelo lineal para dar cabida a relaciones no lineales, usando *regresión polinomial* (*polynomial regression*). En capítulos posteriores, presentaremos enfoques más complejos para realizar ajustes no lineales en contextos más generales.
+Como se discutió anteriormente, el modelo de regresión lineal <a href="#eq-3-19" class="quarto-xref">(3.19)</a> asume una relación lineal entre la variable respuesta y los predictores. Pero en algunos casos, la verdadera relación entre la variable respuesta y los predictores puede ser *no lineal*. Aquí presentamos una forma muy simple de extender directamente el modelo lineal para dar cabida a relaciones no lineales, usando *regresión polinomial* (*polynomial regression*). En capítulos posteriores, presentaremos enfoques más complejos para realizar ajustes no lineales en contextos más generales.
 
 Consideremos la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a>, en la que se muestra `mpg` (consumo de combustible en millas por galón) versus `horsepower` (potencia) para varios automóviles en el conjunto de datos `Auto`. La línea naranja representa el ajuste de regresión lineal. Existe una relación pronunciada entre `mpg` y `horsepower`, pero parece claro que esta relación es de hecho no lineal: los datos sugieren una relación curva. Un enfoque simple para incorporar asociaciones no lineales en un modelo lineal es incluir versiones transformadas de los predictores. Por ejemplo, los puntos en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a> parecen tener una forma *cuadrática* (*quadratic*), lo que sugiere que un modelo de la forma
 
-$$\text{mpg} = \beta_0 + \beta_1 \times \text{horsepower} + \beta_2 \times \text{horsepower}^2 + \epsilon \qquad (3.36)$$
+<div id="eq-3-36">
+$$
+\text{mpg} = \beta_0 + \beta_1 \times \text{horsepower} + \beta_2 \times \text{horsepower}^2 + \epsilon \qquad (3.36)
+$$
+</div>
 
-puede proporcionar un mejor ajuste. La Ecuación 3.36 implica predecir `mpg` usando una función no lineal de `horsepower`. ¡Pero sigue siendo un modelo lineal! Es decir, (3.36) es simplemente un modelo de regresión lineal múltiple con $X_1 = \text{horsepower}$ y $X_2 = \text{horsepower}^2$. Así que podemos usar software estándar de regresión lineal para estimar $\beta_0$, $\beta_1$ y $\beta_2$ para producir un ajuste no lineal. La curva azul en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a> muestra el ajuste cuadrático resultante a los datos. El ajuste cuadrático parece ser sustancialmente mejor que el ajuste obtenido cuando solo se incluye el término lineal. El $R^2$ del ajuste cuadrático es 0.688, comparado con 0.606 para el ajuste lineal, y el *valor p* en la <a href="#tbl-3-10" class="quarto-xref">Tabla&nbsp;3.10</a> para el término cuadrático es altamente significativo.
+puede proporcionar un mejor ajuste. La <a href="#eq-3-36" class="quarto-xref">Ecuación&nbsp;3.36</a> implica predecir `mpg` usando una función no lineal de `horsepower`. ¡Pero sigue siendo un modelo lineal! Es decir, <a href="#eq-3-36" class="quarto-xref">(3.36)</a> es simplemente un modelo de regresión lineal múltiple con $X_1 = \text{horsepower}$ y $X_2 = \text{horsepower}^2$. Así que podemos usar software estándar de regresión lineal para estimar $\beta_0$, $\beta_1$ y $\beta_2$ para producir un ajuste no lineal. La curva azul en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a> muestra el ajuste cuadrático resultante a los datos. El ajuste cuadrático parece ser sustancialmente mejor que el ajuste obtenido cuando solo se incluye el término lineal. El $R^2$ del ajuste cuadrático es 0.688, comparado con 0.606 para el ajuste lineal, y el *valor p* en la <a href="#tbl-3-10" class="quarto-xref">Tabla&nbsp;3.10</a> para el término cuadrático es altamente significativo.
 
 <div id="fig-3-8" style="text-align:center; margin:1.5em 0;">
 <img src="../../Figures/Chapter3/png/3_8.png" class="img-fluid figure-img" style="width:65.0%" alt="">
@@ -637,7 +781,7 @@ puede proporcionar un mejor ajuste. La Ecuación 3.36 implica predecir `mpg` usa
 
 : Tabla 3.10: Para el conjunto de datos Auto, estimaciones de los coeficientes de mínimos cuadrados asociadas con la regresión de mpg sobre horsepower y horsepower<sup>2</sup>.
 
-Si incluir `horsepower`$^2$ condujo a una mejora tan grande en el modelo, ¿por qué no incluir `horsepower`$^3$, `horsepower`$^4$, o incluso `horsepower`$^5$? La curva verde en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a> muestra el ajuste que resulta de incluir todos los polinomios hasta el quinto grado en el modelo (3.36). El ajuste resultante parece innecesariamente ondulado —es decir, no está claro que incluir los términos adicionales realmente haya conducido a un mejor ajuste a los datos.
+Si incluir `horsepower`$^2$ condujo a una mejora tan grande en el modelo, ¿por qué no incluir `horsepower`$^3$, `horsepower`$^4$, o incluso `horsepower`$^5$? La curva verde en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a> muestra el ajuste que resulta de incluir todos los polinomios hasta el quinto grado en el modelo <a href="#eq-3-36" class="quarto-xref">(3.36)</a>. El ajuste resultante parece innecesariamente ondulado —es decir, no está claro que incluir los términos adicionales realmente haya conducido a un mejor ajuste a los datos.
 
 El enfoque que acabamos de describir para extender el modelo lineal para dar cabida a relaciones no lineales se conoce como *regresión polinomial*, ya que hemos incluido funciones polinomiales de los predictores en el modelo de regresión. Exploramos más a fondo este enfoque y otras extensiones no lineales del modelo lineal en el Capítulo 7.
 
@@ -665,7 +809,7 @@ Los *gráficos de residuos* (*residual plots*) son una herramienta gráfica úti
 <p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.9: Gráficos de residuos versus valores predichos (o ajustados) para el conjunto de datos Auto. En cada gráfico, la línea roja es un ajuste suave a los residuos, destinado a facilitar la identificación de una tendencia. <em>Izquierda:</em> Una regresión lineal de mpg sobre horsepower. Un fuerte patrón en los residuos indica no linealidad en los datos. <em>Derecha:</em> Una regresión lineal de mpg sobre horsepower y horsepower<sup>2</sup>. Hay poco patrón en los residuos.</p>
 </div>
 
-El panel izquierdo de la <a href="#fig-3-9" class="quarto-xref">Figura&nbsp;3.9</a> muestra un gráfico de residuos de la regresión lineal de `mpg` sobre `horsepower` en el conjunto de datos `Auto` que se ilustró en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a>. La línea roja es un ajuste suave a los residuos, que se muestra para facilitar la identificación de cualquier tendencia. Los residuos exhiben una clara forma de U, lo que proporciona una fuerte indicación de no linealidad en los datos. En contraste, el panel derecho de la <a href="#fig-3-9" class="quarto-xref">Figura&nbsp;3.9</a> muestra el gráfico de residuos que resulta del modelo (3.36), que contiene un término cuadrático. Parece haber poco patrón en los residuos, lo que sugiere que el término cuadrático mejora el ajuste a los datos.
+El panel izquierdo de la <a href="#fig-3-9" class="quarto-xref">Figura&nbsp;3.9</a> muestra un gráfico de residuos de la regresión lineal de `mpg` sobre `horsepower` en el conjunto de datos `Auto` que se ilustró en la <a href="#fig-3-8" class="quarto-xref">Figura&nbsp;3.8</a>. La línea roja es un ajuste suave a los residuos, que se muestra para facilitar la identificación de cualquier tendencia. Los residuos exhiben una clara forma de U, lo que proporciona una fuerte indicación de no linealidad en los datos. En contraste, el panel derecho de la <a href="#fig-3-9" class="quarto-xref">Figura&nbsp;3.9</a> muestra el gráfico de residuos que resulta del modelo <a href="#eq-3-36" class="quarto-xref">(3.36)</a>, que contiene un término cuadrático. Parece haber poco patrón en los residuos, lo que sugiere que el término cuadrático mejora el ajuste a los datos.
 
 Si el gráfico de residuos indica que hay asociaciones no lineales en los datos, entonces un enfoque simple es usar transformaciones no lineales de los predictores, como $\log X$, $\sqrt{X}$, y $X^2$, en el modelo de regresión. En capítulos posteriores de este libro, discutiremos otros enfoques no lineales más avanzados para abordar este problema.
 
@@ -727,7 +871,11 @@ En una regresión lineal simple, las observaciones de alto apalancamiento son ba
 
 Para cuantificar el apalancamiento de una observación, calculamos el *estadístico de apalancamiento* (*leverage statistic*). Un valor grande de este estadístico indica una observación con alto apalancamiento. Para una regresión lineal simple,
 
-$$h_i = \frac{1}{n} + \frac{(x_i - \bar{x})^2}{\sum_{i' =1}^{n} (x_{i'} - \bar{x})^2}. \qquad (3.37)$$
+<div id="eq-3-37">
+$$
+h_i = \frac{1}{n} + \frac{(x_i - \bar{x})^2}{\sum_{i' =1}^{n} (x_{i'} - \bar{x})^2}. \qquad (3.37)
+$$
+</div>
 
 Es claro de esta ecuación que $h_i$ aumenta con la distancia de $x_i$ a $\bar{x}$. Existe una extensión simple de $h_i$ al caso de múltiples predictores, aunque no proporcionamos la fórmula aquí. El estadístico de apalancamiento $h_i$ siempre está entre $1/n$ y 1, y el apalancamiento promedio para todas las observaciones es siempre igual a $(p + 1)/n$. Así que si una observación dada tiene un estadístico de apalancamiento que excede en gran medida $(p+1)/n$, entonces podemos sospechar que el punto correspondiente tiene alto apalancamiento.
 
@@ -742,7 +890,7 @@ La *colinealidad* (*collinearity*) se refiere a la situación en la que dos o m�
 <p class="figure-caption" style="margin-top:0.5em; text-align:center;">Figura&nbsp;3.14: Diagramas de dispersión de las observaciones del conjunto de datos Credit. <em>Izquierda:</em> Un gráfico de age versus limit. Estas dos variables no son colineales. <em>Derecha:</em> Un gráfico de rating versus limit. Existe una alta colinealidad.</p>
 </div>
 
-La <a href="#fig-3-15" class="quarto-xref">Figura&nbsp;3.15</a> ilustra algunas de las dificultades que pueden resultar de la colinealidad. El panel izquierdo de la <a href="#fig-3-15" class="quarto-xref">Figura&nbsp;3.15</a> es un gráfico de contorno de la RSS (3.22) asociada con diferentes estimaciones posibles de los coeficientes para la regresión de `balance` sobre `limit` y `age`. Cada elipse representa un conjunto de coeficientes que corresponden a la misma RSS, y las elipses más cercanas al centro toman los valores más bajos de RSS. Los puntos negros y las líneas discontinuas asociadas representan las estimaciones de los coeficientes que resultan en la RSS más pequeña posible —en otras palabras, estas son las estimaciones de mínimos cuadrados. Los ejes para `limit` y `age` han sido escalados de modo que el gráfico incluya estimaciones posibles de los coeficientes que están hasta cuatro errores estándar a cada lado de las estimaciones de mínimos cuadrados. Así, el gráfico incluye todos los valores plausibles para los coeficientes. Por ejemplo, vemos que el verdadero coeficiente de `limit` está casi ciertamente en algún lugar entre 0.15 y 0.20.
+La <a href="#fig-3-15" class="quarto-xref">Figura&nbsp;3.15</a> ilustra algunas de las dificultades que pueden resultar de la colinealidad. El panel izquierdo de la <a href="#fig-3-15" class="quarto-xref">Figura&nbsp;3.15</a> es un gráfico de contorno de la RSS <a href="#eq-3-22" class="quarto-xref">(3.22)</a> asociada con diferentes estimaciones posibles de los coeficientes para la regresión de `balance` sobre `limit` y `age`. Cada elipse representa un conjunto de coeficientes que corresponden a la misma RSS, y las elipses más cercanas al centro toman los valores más bajos de RSS. Los puntos negros y las líneas discontinuas asociadas representan las estimaciones de los coeficientes que resultan en la RSS más pequeña posible —en otras palabras, estas son las estimaciones de mínimos cuadrados. Los ejes para `limit` y `age` han sido escalados de modo que el gráfico incluya estimaciones posibles de los coeficientes que están hasta cuatro errores estándar a cada lado de las estimaciones de mínimos cuadrados. Así, el gráfico incluye todos los valores plausibles para los coeficientes. Por ejemplo, vemos que el verdadero coeficiente de `limit` está casi ciertamente en algún lugar entre 0.15 y 0.20.
 
 En contraste, el panel derecho de la <a href="#fig-3-15" class="quarto-xref">Figura&nbsp;3.15</a> muestra gráficos de contorno de la RSS asociada con posibles estimaciones de los coeficientes para la regresión de `balance` sobre `limit` y `rating`, que sabemos que son altamente colineales. Ahora los contornos corren a lo largo de un valle estrecho; hay un amplio rango de valores para las estimaciones de los coeficientes que resultan en valores iguales de RSS. Por lo tanto, un pequeño cambio en los datos podría hacer que el par de valores de los coeficientes que producen la RSS más pequeña —es decir, las estimaciones de mínimos cuadrados— se mueva a cualquier lugar a lo largo de este valle. Esto resulta en una gran incertidumbre en las estimaciones de los coeficientes. Nótese que la escala para el coeficiente de `limit` ahora va de aproximadamente $-0.2$ a 0.2; esto es un aumento de ocho veces sobre el rango plausible del coeficiente de `limit` en la regresión con `age`. Curiosamente, aunque los coeficientes de `limit` y `rating` ahora tienen mucha más incertidumbre individual, casi ciertamente se encontrarán en algún lugar de este valle de contorno. Por ejemplo, no esperaríamos que el verdadero valor de los coeficientes de `limit` y `rating` fuera $-0.1$ y 1 respectivamente, aunque tal valor es plausible para cada coeficiente individualmente.
 
@@ -782,7 +930,7 @@ Al enfrentar el problema de la colinealidad, existen dos soluciones simples. La 
 
 Ahora volvemos brevemente a las siete preguntas sobre los datos `Advertising` que nos propusimos responder al comienzo de este capítulo.
 
-1. ¿Existe una relación entre las ventas (`sales`) y el presupuesto publicitario? Esta pregunta puede responderse ajustando un modelo de regresión múltiple de `sales` sobre `TV`, `radio` y `newspaper`, como en (3.20), y contrastando la hipótesis $H_0: \beta_{\text{TV}} = \beta_{\text{radio}} = \beta_{\text{newspaper}} = 0$. En la Sección 3.2.2, mostramos que el *estadístico F* puede usarse para determinar si debemos o no rechazar esta hipótesis nula. En este caso, el *valor p* correspondiente al *estadístico F* en la <a href="#tbl-3-6" class="quarto-xref">Tabla&nbsp;3.6</a> es muy bajo, indicando clara evidencia de una relación entre la publicidad y las ventas.
+1. ¿Existe una relación entre las ventas (`sales`) y el presupuesto publicitario? Esta pregunta puede responderse ajustando un modelo de regresión múltiple de `sales` sobre `TV`, `radio` y `newspaper`, como en <a href="#eq-3-20" class="quarto-xref">(3.20)</a>, y contrastando la hipótesis $H_0: \beta_{\text{TV}} = \beta_{\text{radio}} = \beta_{\text{newspaper}} = 0$. En la Sección 3.2.2, mostramos que el *estadístico F* puede usarse para determinar si debemos o no rechazar esta hipótesis nula. En este caso, el *valor p* correspondiente al *estadístico F* en la <a href="#tbl-3-6" class="quarto-xref">Tabla&nbsp;3.6</a> es muy bajo, indicando clara evidencia de una relación entre la publicidad y las ventas.
 
 2. ¿Qué tan fuerte es la relación? Discutimos dos medidas de precisión del modelo en la Sección 3.1.3. Primero, el RSE estima la desviación estándar de la variable respuesta con respecto a la línea de regresión poblacional. Para los datos `Advertising`, el RSE es 1.69 unidades mientras que el valor medio de la variable respuesta es 14.022, indicando un error porcentual de aproximadamente 12%. Segundo, el estadístico $R^2$ registra el porcentaje de variabilidad en la variable respuesta que es explicado por los predictores. Los predictores explican casi el 90% de la varianza en `sales`. Las estadísticas RSE y $R^2$ se muestran en la <a href="#tbl-3-6" class="quarto-xref">Tabla&nbsp;3.6</a>.
 
@@ -794,7 +942,7 @@ Ahora volvemos brevemente a las siete preguntas sobre los datos `Advertising` qu
 
    Para evaluar la asociación de cada medio individualmente sobre las ventas, podemos realizar tres regresiones lineales simples separadas. Los resultados se muestran en las <a href="#tbl-3-1" class="quarto-xref">Tablas&nbsp;3.1</a> y <a href="#tbl-3-3" class="quarto-xref">3.3</a>. Hay evidencia de una asociación extremadamente fuerte entre `TV` y `sales` y entre `radio` y `sales`. Hay evidencia de una asociación leve entre `newspaper` y `sales`, cuando los valores de `TV` y `radio` son ignorados.
 
-5. ¿Con qué precisión podemos predecir las ventas futuras? La variable respuesta puede predecirse usando (3.21). La precisión asociada con esta estimación depende de si deseamos predecir una respuesta individual, $Y = f(X) + \epsilon$, o la respuesta promedio, $f(X)$ (Sección 3.2.2). Si es lo primero, usamos un *intervalo de predicción*, y si es lo segundo, usamos un *intervalo de confianza*. Los *intervalos de predicción* siempre serán más amplios que los *intervalos de confianza* porque tienen en cuenta la incertidumbre asociada con $\epsilon$, el *error irreducible*.
+5. ¿Con qué precisión podemos predecir las ventas futuras? La variable respuesta puede predecirse usando <a href="#eq-3-21" class="quarto-xref">(3.21)</a>. La precisión asociada con esta estimación depende de si deseamos predecir una respuesta individual, $Y = f(X) + \epsilon$, o la respuesta promedio, $f(X)$ (Sección 3.2.2). Si es lo primero, usamos un *intervalo de predicción*, y si es lo segundo, usamos un *intervalo de confianza*. Los *intervalos de predicción* siempre serán más amplios que los *intervalos de confianza* porque tienen en cuenta la incertidumbre asociada con $\epsilon$, el *error irreducible*.
 
 6. ¿Es lineal la relación? En la Sección 3.3.3, vimos que los gráficos de residuos pueden usarse para identificar la no linealidad. Si las relaciones son lineales, entonces los gráficos de residuos no deberían mostrar ningún patrón. En el caso de los datos `Advertising`, observamos un efecto no lineal en la <a href="#fig-3-5" class="quarto-xref">Figura&nbsp;3.5</a>, aunque este efecto también podría observarse en un gráfico de residuos. En la Sección 3.3.2, discutimos la inclusión de transformaciones de los predictores en el modelo de regresión lineal para dar cabida a relaciones no lineales.
 
