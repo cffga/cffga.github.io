@@ -42,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ea2c7f5f25cb2f106c68b43028de7506.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,36 +73,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<script>(function(){var t;try{t=localStorage.getItem('isl-theme')}catch(e){}if(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)t='dark';if(!t)t='light';document.documentElement.setAttribute('data-bs-theme',t)})();</script>
+<script>
+(function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
+
 
 </head>
 
@@ -280,344 +256,8 @@ window.Quarto = {
 </header>
 
 
-<section id="resumen" class="level2">
-<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
-<p>En este capítulo exploramos métodos para mejorar la regresión lineal. La regresión por mínimos cuadrados a menudo funciona bien, pero no siempre. Existen alternativas que pueden mejorar la precisión de predicción y la interpretabilidad. Estudiamos tres clases de métodos: <strong>selección de subconjuntos</strong>, <strong>regularización</strong> (ridge y lasso) y <strong>reducción de dimensionalidad</strong> (PCR y PLS). También discutimos los desafíos de trabajar con datos de alta dimensión.</p>
-</section>
-<section id="selección-de-subconjuntos" class="level2">
-<h2 class="anchored" data-anchor-id="selección-de-subconjuntos">Selección de Subconjuntos</h2>
-<section id="selección-del-mejor-subconjunto" class="level3">
-<h3 class="anchored" data-anchor-id="selección-del-mejor-subconjunto">Selección del Mejor Subconjunto</h3>
-<p>La <strong>selección del mejor subconjunto</strong> (best subset selection) consiste en ajustar modelos de regresión con todos los <span class="math inline">\(2^p\)</span> subconjuntos posibles de <span class="math inline">\(p\)</span> predictores y seleccionar el mejor según algún criterio. La <a href="#fig-6-1" class="quarto-xref">Figura&nbsp;1</a> muestra la RSS para todos los modelos posibles en el conjunto de datos <em>Credit</em>, ordenados por tamaño.</p>
-<div id="fig-6-1" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_1.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: RSS para todos los modelos posibles en el conjunto de datos Credit, ordenados por número de predictores. Cada curva representa un modelo diferente.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-2" class="quarto-xref">Figura&nbsp;2</a> muestra los coeficientes estimados para los mejores modelos de cada tamaño, ilustrando qué predictores son seleccionados en cada caso.</p>
-<div id="fig-6-2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_2.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Coeficientes estimados para los mejores modelos de cada tamaño en el conjunto de datos Credit. Los coeficientes no seleccionados aparecen en cero.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="selección-paso-a-paso" class="level3">
-<h3 class="anchored" data-anchor-id="selección-paso-a-paso">Selección Paso a Paso</h3>
-<p>La selección del mejor subconjunto es computacionalmente inviable para <span class="math inline">\(p\)</span> grande. Alternativas más eficientes son:</p>
-<ul>
-<li><strong>Selección hacia adelante</strong> (forward selection): comienza sin predictores y los agrega de a uno.</li>
-<li><strong>Selección hacia atrás</strong> (backward selection): comienza con todos los predictores y los elimina de a uno.</li>
-<li><strong>Selección paso a paso mixta</strong> (mixed selection): combina ambas estrategias.</li>
-</ul>
-</section>
-<section id="elección-del-modelo-óptimo" class="level3">
-<h3 class="anchored" data-anchor-id="elección-del-modelo-óptimo">Elección del Modelo Óptimo</h3>
-<p>Para seleccionar entre modelos de diferentes tamaños, usamos criterios como:</p>
-<ul>
-<li><strong><span class="math inline">\(C_p\)</span></strong> (Mallows): estima el error de prueba.</li>
-<li><strong>AIC</strong> (Akaike Information Criterion): similar a <span class="math inline">\(C_p\)</span>.</li>
-<li><strong>BIC</strong> (Bayesian Information Criterion): penaliza más la complejidad.</li>
-<li><strong><span class="math inline">\(R^2\)</span> ajustado</strong>: versión penalizada del <span class="math inline">\(R^2\)</span>.</li>
-<li><strong>Validación cruzada</strong>: estimación directa del error de prueba.</li>
-</ul>
-<p>La <a href="#fig-6-3" class="quarto-xref">Figura&nbsp;3</a> compara <span class="math inline">\(C_p\)</span>, BIC y <span class="math inline">\(R^2\)</span> ajustado para la selección de subconjuntos en los datos Credit.</p>
-<div id="fig-6-3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_3.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3: <span class="math inline">\(C_p\)</span>, BIC y <span class="math inline">\(R^2\)</span> ajustado para todos los modelos posibles en Credit. Las líneas verticales marcan el mínimo de cada criterio.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-4" class="quarto-xref">Figura&nbsp;4</a> compara la selección hacia adelante, hacia atrás y el mejor subconjunto.</p>
-<div id="fig-6-4" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_4.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Comparación de métodos de selección de subconjuntos: mejor subconjunto, hacia adelante y hacia atrás.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="métodos-de-regularización-shrinkage" class="level2">
-<h2 class="anchored" data-anchor-id="métodos-de-regularización-shrinkage">Métodos de Regularización (Shrinkage)</h2>
-<p>La regularización consiste en restringir los coeficientes de regresión para reducir la varianza a costa de un pequeño sesgo.</p>
-<section id="regresión-ridge" class="level3">
-<h3 class="anchored" data-anchor-id="regresión-ridge">Regresión Ridge</h3>
-<p>La regresión <strong>ridge</strong> minimiza una RSS penalizada:</p>
-<p><span class="math display">\[\sum_{i=1}^{n} (y_i - \beta_0 - \sum_{j=1}^{p} \beta_j x_{ij})^2 + \lambda \sum_{j=1}^{p} \beta_j^2\]</span></p>
-<p>El término <span class="math inline">\(\lambda \sum \beta_j^2\)</span> es la <strong>penalización <span class="math inline">\(L_2\)</span></strong> (o penalización de la norma al cuadrado). Cuando <span class="math inline">\(\lambda = 0\)</span>, ridge equivale a mínimos cuadrados; cuando <span class="math inline">\(\lambda \to \infty\)</span>, los coeficientes tienden a cero.</p>
-<p>La <a href="#fig-6-5" class="quarto-xref">Figura&nbsp;5</a> muestra los coeficientes de la regresión ridge en función de <span class="math inline">\(\lambda\)</span> para los datos Credit.</p>
-<div id="fig-6-5" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_5.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;5: Coeficientes de la regresión ridge en función de <span class="math inline">\(\lambda\)</span> para los datos Credit. Cada curva representa un predictor diferente.
-</figcaption>
-</figure>
-</div>
-<p>La elección de <span class="math inline">\(\lambda\)</span> es crítica. La <a href="#fig-6-6" class="quarto-xref">Figura&nbsp;6</a> muestra la validación cruzada para seleccionar <span class="math inline">\(\lambda\)</span> óptimo.</p>
-<div id="fig-6-6" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_6.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;6: Error de validación cruzada para la regresión ridge en función de <span class="math inline">\(\lambda\)</span> en los datos Credit.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="el-lasso" class="level3">
-<h3 class="anchored" data-anchor-id="el-lasso">El Lasso</h3>
-<p>El <strong>lasso</strong> (Least Absolute Shrinkage and Selection Operator) usa una penalización <span class="math inline">\(L_1\)</span>:</p>
-<p><span class="math display">\[\sum_{i=1}^{n} (y_i - \beta_0 - \sum_{j=1}^{p} \beta_j x_{ij})^2 + \lambda \sum_{j=1}^{p} |\beta_j|\]</span></p>
-<p>A diferencia de ridge, el lasso puede llevar algunos coeficientes exactamente a cero, realizando así <strong>selección de variables</strong>. La <a href="#fig-6-7" class="quarto-xref">Figura&nbsp;7</a> muestra los coeficientes del lasso en función de <span class="math inline">\(\lambda\)</span> para los datos Credit.</p>
-<div id="fig-6-7" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_7.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;7: Coeficientes del lasso en función de <span class="math inline">\(\lambda\)</span> para los datos Credit. Algunos coeficientes se vuelven exactamente cero.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-8" class="quarto-xref">Figura&nbsp;8</a> muestra la validación cruzada para seleccionar <span class="math inline">\(\lambda\)</span> en el lasso.</p>
-<div id="fig-6-8" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_8.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8: Error de validación cruzada para el lasso en función de <span class="math inline">\(\lambda\)</span> en los datos Credit.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-9" class="quarto-xref">Figura&nbsp;9</a> compara las regiones de restricción de ridge (círculo) y lasso (diamante), ilustrando por qué el lasso produce coeficientes exactamente cero.</p>
-<div id="fig-6-9" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_9.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;9: Regiones de restricción para ridge (círculo) y lasso (diamante). La forma de diamante del lasso favorece soluciones en los ejes.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-18" class="quarto-xref">Figura&nbsp;10</a> y <a href="#fig-6-19" class="quarto-xref">Figura&nbsp;11</a> comparan el rendimiento de ridge y lasso en diferentes escenarios simulados, mostrando el ECM de prueba.</p>
-<div id="fig-6-18" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_18.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10: Comparación del ECM de prueba para ridge y lasso en datos simulados.
-</figcaption>
-</figure>
-</div>
-<div id="fig-6-19" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_19.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;11: Selección de variables del lasso en datos simulados.
-</figcaption>
-</figure>
-</div>
-<section id="selección-del-parámetro-de-ajuste" class="level4">
-<h4 class="anchored" data-anchor-id="selección-del-parámetro-de-ajuste">Selección del Parámetro de Ajuste</h4>
-<p>El parámetro <span class="math inline">\(\lambda\)</span> se selecciona típicamente mediante validación cruzada. También se puede usar el criterio de información de Akaike (AIC) o BIC para el lasso.</p>
-</section>
-</section>
-</section>
-<section id="métodos-de-reducción-de-dimensionalidad" class="level2">
-<h2 class="anchored" data-anchor-id="métodos-de-reducción-de-dimensionalidad">Métodos de Reducción de Dimensionalidad</h2>
-<p>Los métodos de reducción de dimensionalidad transforman los <span class="math inline">\(p\)</span> predictores originales en <span class="math inline">\(M &lt; p\)</span> combinaciones lineales, y luego usan estas <span class="math inline">\(M\)</span> variables en la regresión.</p>
-<section id="regresión-por-componentes-principales-pcr" class="level3">
-<h3 class="anchored" data-anchor-id="regresión-por-componentes-principales-pcr">Regresión por Componentes Principales (PCR)</h3>
-<p>La <strong>regresión por componentes principales</strong> (Principal Components Regression, PCR) usa los primeros <span class="math inline">\(M\)</span> componentes principales como predictores. Las componentes principales son combinaciones lineales de los predictores originales que capturan la máxima varianza en <span class="math inline">\(X\)</span>.</p>
-<p>La <a href="#fig-6-10" class="quarto-xref">Figura&nbsp;12</a> muestra los coeficientes de PCR en función del número de componentes.</p>
-<div id="fig-6-10" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_10.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;12: Coeficientes de la regresión por componentes principales en función del número de componentes retenidos.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-11" class="quarto-xref">Figura&nbsp;13</a> muestra el error de validación cruzada para PCR en los datos Credit.</p>
-<div id="fig-6-11" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_11.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;13: Error de validación cruzada para PCR en función del número de componentes principales.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="mínimos-cuadrados-parciales-pls" class="level3">
-<h3 class="anchored" data-anchor-id="mínimos-cuadrados-parciales-pls">Mínimos Cuadrados Parciales (PLS)</h3>
-<p>Los <strong>mínimos cuadrados parciales</strong> (Partial Least Squares, PLS) es una alternativa a PCR que también construye combinaciones lineales de los predictores, pero usando también la respuesta <span class="math inline">\(Y\)</span> para guiar la construcción de las componentes.</p>
-<p>La <a href="#fig-6-12" class="quarto-xref">Figura&nbsp;14</a> compara PCR y PLS en datos simulados.</p>
-<div id="fig-6-12" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_12.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;14: Comparación de PCR y PLS en datos simulados. PLS puede requerir menos componentes.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="consideraciones-en-altas-dimensiones" class="level2">
-<h2 class="anchored" data-anchor-id="consideraciones-en-altas-dimensiones">Consideraciones en Altas Dimensiones</h2>
-<p>Los métodos de este capítulo son particularmente útiles cuando <span class="math inline">\(p\)</span> es grande o cuando <span class="math inline">\(p &gt; n\)</span> (más predictores que observaciones).</p>
-<section id="datos-de-alta-dimensión" class="level3">
-<h3 class="anchored" data-anchor-id="datos-de-alta-dimensión">Datos de Alta Dimensión</h3>
-<p>Cuando <span class="math inline">\(p &gt; n\)</span>, la regresión por mínimos cuadrados no tiene solución única. La <a href="#fig-6-13" class="quarto-xref">Figura&nbsp;15</a> ilustra un ejemplo de datos de alta dimensión.</p>
-<div id="fig-6-13" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_13.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;15: Ejemplo de datos de alta dimensión: más predictores que observaciones.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="qué-sale-mal-en-altas-dimensiones" class="level3">
-<h3 class="anchored" data-anchor-id="qué-sale-mal-en-altas-dimensiones">¿Qué Sale Mal en Altas Dimensiones?</h3>
-<p>En altas dimensiones, la varianza de las predicciones puede ser enorme. La <a href="#fig-6-14" class="quarto-xref">Figura&nbsp;16</a> y <a href="#fig-6-15" class="quarto-xref">Figura&nbsp;17</a> muestran los problemas que surgen.</p>
-<div id="fig-6-14" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_14.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;16: Problemas de la regresión en altas dimensiones: la varianza de las predicciones crece con <span class="math inline">\(p\)</span>.
-</figcaption>
-</figure>
-</div>
-<div id="fig-6-15" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_15.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;17: Ilustración adicional del comportamiento en altas dimensiones.
-</figcaption>
-</figure>
-</div>
-<p>Las <a href="#fig-6-16" class="quarto-xref">Figura&nbsp;18</a> y <a href="#fig-6-17" class="quarto-xref">Figura&nbsp;19</a> proporcionan más comparaciones de métodos en escenarios de alta dimensión.</p>
-<div id="fig-6-16" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_16.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;18: Comparación de métodos en alta dimensión.
-</figcaption>
-</figure>
-</div>
-<div id="fig-6-17" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_17.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19: Rendimiento de diferentes métodos a medida que aumenta la dimensionalidad.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="el-rol-de-la-regularización" class="level3">
-<h3 class="anchored" data-anchor-id="el-rol-de-la-regularización">El Rol de la Regularización</h3>
-<p>En altas dimensiones, la regularización (ridge, lasso) es esencial para obtener modelos estables y predictivos. La <a href="#fig-6-20" class="quarto-xref">Figura&nbsp;20</a>, <a href="#fig-6-21" class="quarto-xref">Figura&nbsp;21</a> y <a href="#fig-6-22" class="quarto-xref">Figura&nbsp;22</a> muestran el efecto de la regularización en escenarios de alta dimensión.</p>
-<div id="fig-6-20" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_20.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;20: Error de predicción para métodos regularizados en alta dimensión.
-</figcaption>
-</figure>
-</div>
-<div id="fig-6-21" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_21.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;21: Selección de modelos en alta dimensión con regularización.
-</figcaption>
-</figure>
-</div>
-<div id="fig-6-22" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_22.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;22: Comparación de ridge y lasso en alta dimensión.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-6-23" class="quarto-xref">Figura&nbsp;23</a> y <a href="#fig-6-24" class="quarto-xref">Figura&nbsp;24</a> presentan más comparaciones entre métodos de regularización y reducción de dimensionalidad.</p>
-<div id="fig-6-23" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_23.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;23: Comparación de PCR, ridge y lasso en diferentes escenarios.
-</figcaption>
-</figure>
-</div>
-<div id="fig-6-24" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-6-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter6/png/6_24.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;24: Criterios de selección de modelos en alta dimensión.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="laboratorio" class="level2">
-<h2 class="anchored" data-anchor-id="laboratorio">Laboratorio</h2>
-<p>Los laboratorios con el código completo de este capítulo están disponibles en el sitio oficial del libro: <a href="https://www.statlearning.com" target="_blank">statlearning.com</a>. También puedes acceder a los notebooks en el repositorio oficial de ISLP: <a href="https://github.com/intro-stat-learning/ISLP_labs" target="_blank">ISLP_labs en GitHub</a>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1033,6 +673,10 @@ Figura&nbsp;24: Criterios de selección de modelos en alta dimensión.
   </div>
 </nav>
 </div> <!-- /content -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9999">
+  <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>
+</div>
+<script>document.getElementById('theme-toggle-btn').textContent=(document.documentElement.getAttribute('data-bs-theme')||'light')==='dark'?'☀️':'🌙'</script>
 
 
 

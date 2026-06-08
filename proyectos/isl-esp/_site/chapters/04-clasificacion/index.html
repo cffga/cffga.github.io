@@ -42,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ea2c7f5f25cb2f106c68b43028de7506.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,36 +73,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<script>(function(){var t;try{t=localStorage.getItem('isl-theme')}catch(e){}if(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)t='dark';if(!t)t='light';document.documentElement.setAttribute('data-bs-theme',t)})();</script>
+<script>
+(function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
+
 
 </head>
 
@@ -280,333 +256,8 @@ window.Quarto = {
 </header>
 
 
-<section id="resumen" class="level2">
-<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
-<p>En este capítulo, abordamos problemas de <strong>clasificación</strong>, donde la variable respuesta es cualitativa o categórica. Predecir una respuesta cualitativa requiere un enfoque distinto al de la regresión lineal. Presentamos tres de los métodos de clasificación más utilizados: <strong>regresión logística</strong>, <strong>análisis de discriminante lineal</strong> (LDA) y <strong>análisis de discriminante cuadrático</strong> (QDA). También se discuten los <strong>K vecinos más cercanos</strong> (KNN), que fueron introducidos en el Capítulo 2. El capítulo concluye con un laboratorio práctico que aplica estos métodos al conjunto de datos <em>Smarket</em> y a datos de seguros.</p>
-</section>
-<section id="visión-general-de-la-clasificación" class="level2">
-<h2 class="anchored" data-anchor-id="visión-general-de-la-clasificación">Visión General de la Clasificación</h2>
-<p>La clasificación es probablemente la tarea de aprendizaje supervisado más utilizada. Aparece en campos como la medicina (diagnóstico), finanzas (detección de fraude), marketing (predicción de abandono), etc.</p>
-<p>Al igual que en regresión, tenemos un conjunto de entrenamiento <span class="math inline">\(\{(x_1, y_1), \ldots, (x_n, y_n)\}\)</span> donde cada <span class="math inline">\(x_i\)</span> es un vector de predictores y <span class="math inline">\(y_i\)</span> es la respuesta cualitativa, que puede tomar valores en un conjunto discreto de clases <span class="math inline">\(C_1, C_2, \ldots, C_K\)</span>.</p>
-<p>El objetivo es construir un clasificador <span class="math inline">\(f(X)\)</span> que asigne una observación a una de las <span class="math inline">\(K\)</span> clases. También nos interesa medir la <strong>incertidumbre</strong> de nuestras predicciones, por ejemplo a través de la <strong>probabilidad condicional</strong> <span class="math inline">\(P(Y = k \mid X = x_0)\)</span>.</p>
-</section>
-<section id="por-qué-no-regresión-lineal" class="level2">
-<h2 class="anchored" data-anchor-id="por-qué-no-regresión-lineal">¿Por Qué No Regresión Lineal?</h2>
-<p>Cuando la respuesta <span class="math inline">\(Y\)</span> es binaria (dos clases, codificadas como 0 y 1), la regresión lineal puede parecer un enfoque natural. Sin embargo, tiene varios inconvenientes:</p>
-<ol type="1">
-<li><strong>Predicciones fuera de rango</strong>: <span class="math inline">\(\hat{Y}\)</span> puede ser menor que 0 o mayor que 1, lo que no tiene sentido como probabilidad.</li>
-<li><strong>Interpretabilidad</strong>: con más de dos clases, la codificación numérica arbitraria (1, 2, 3) impone un orden que no necesariamente existe.</li>
-<li><strong>Mala calidad del ajuste</strong>: los errores no son homoscedásticos ni normales.</li>
-</ol>
-<p>Por estas razones, se prefieren métodos diseñados específicamente para clasificación.</p>
-</section>
-<section id="regresión-logística" class="level2">
-<h2 class="anchored" data-anchor-id="regresión-logística">Regresión Logística</h2>
-<section id="el-modelo-logístico" class="level3">
-<h3 class="anchored" data-anchor-id="el-modelo-logístico">El Modelo Logístico</h3>
-<p>En lugar de modelar <span class="math inline">\(Y\)</span> directamente, modelamos la <strong>probabilidad</strong> de que <span class="math inline">\(Y\)</span> pertenezca a una clase particular. Para la regresión logística simple con un predictor <span class="math inline">\(X\)</span>, usamos la <strong>función logística</strong>:</p>
-<p><span class="math display">\[p(X) = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}\]</span></p>
-<p>Esta función produce valores entre 0 y 1 para cualquier valor de <span class="math inline">\(X\)</span>. Reordenando, obtenemos las <strong>odds</strong>:</p>
-<p><span class="math display">\[\frac{p(X)}{1 - p(X)} = e^{\beta_0 + \beta_1 X}\]</span></p>
-<p>y el <strong>log-odds</strong> (logit):</p>
-<p><span class="math display">\[\log\left(\frac{p(X)}{1 - p(X)}\right) = \beta_0 + \beta_1 X\]</span></p>
-<p>El logit es lineal en <span class="math inline">\(X\)</span>, pero la probabilidad <span class="math inline">\(p(X)\)</span> no lo es.</p>
-<p>La <a href="#fig-4-1a" class="quarto-xref">Figura&nbsp;1</a> muestra la función logística ajustada a datos simulados, donde la respuesta binaria representa si un cliente incumplió o no un préstamo (datos <em>Default</em>). El panel izquierdo (<a href="#fig-4-1a" class="quarto-xref">Figura&nbsp;1</a>) usa el saldo como predictor en un rango limitado; el derecho (<a href="#fig-4-1b" class="quarto-xref">Figura&nbsp;2</a>) muestra la función logística completa.</p>
-<div id="fig-4-1a" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-1a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_1a.png" class="img-fluid figure-img" style="width:40.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-1a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Panel izquierdo: función logística ajustada a datos Default con saldo como predictor en el rango $0–$2000.
-</figcaption>
-</figure>
-</div>
-<div id="fig-4-1b" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-1b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_1b.png" class="img-fluid figure-img" style="width:40.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-1b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Panel derecho: función logística en el rango completo de saldo (hasta $3000).
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="estimación-de-los-coeficientes-de-regresión" class="level3">
-<h3 class="anchored" data-anchor-id="estimación-de-los-coeficientes-de-regresión">Estimación de los Coeficientes de Regresión</h3>
-<p>Los coeficientes <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> en (4.2) se estiman mediante <strong>máxima verosimilitud</strong> (EMV). La verosimilitud para una muestra de <span class="math inline">\(n\)</span> observaciones independientes es:</p>
-<p><span class="math display">\[\ell(\beta_0, \beta_1) = \prod_{i: y_i=1} p(x_i) \prod_{i: y_i=0} (1 - p(x_i))\]</span></p>
-<p>Maximizar esta función (o su logaritmo) produce las estimaciones <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span>. Este proceso se realiza numéricamente, ya que no existe una solución cerrada como en regresión lineal.</p>
-<p>En la Tabla 4.1 se muestran los coeficientes estimados para la regresión logística de <em>default</em> sobre <em>balance</em>, junto con sus errores estándar, estadísticos <span class="math inline">\(z\)</span> y valores <span class="math inline">\(p\)</span>.</p>
-</section>
-<section id="predicciones" class="level3">
-<h3 class="anchored" data-anchor-id="predicciones">Predicciones</h3>
-<p>Una vez estimados los coeficientes, podemos calcular la probabilidad de incumplimiento para un saldo dado:</p>
-<p><span class="math display">\[\hat{p}(X) = \frac{e^{\hat{\beta}_0 + \hat{\beta}_1 X}}{1 + e^{\hat{\beta}_0 + \hat{\beta}_1 X}}\]</span></p>
-<p>Por ejemplo, con un saldo de $1000, la probabilidad estimada de incumplimiento es 0.00576; con $2000, 0.586. Esta no linealidad es una característica clave de la regresión logística.</p>
-<p>La <a href="#fig-4-2" class="quarto-xref">Figura&nbsp;3</a> muestra la curva logística ajustada con los datos Default, con las observaciones reales superpuestas (con dispersión aleatoria para visualizar la densidad).</p>
-<div id="fig-4-2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_2.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3: Regresión logística en datos Default con saldo como predictor. Las marcas en la parte superior e inferior muestran observaciones de incumplidores y no incumplidores.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="regresión-logística-múltiple" class="level3">
-<h3 class="anchored" data-anchor-id="regresión-logística-múltiple">Regresión Logística Múltiple</h3>
-<p>Generalizamos la regresión logística a múltiples predictores:</p>
-<p><span class="math display">\[p(X) = \frac{e^{\beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p}}{1 + e^{\beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p}}\]</span></p>
-<p>o equivalentemente:</p>
-<p><span class="math display">\[\log\left(\frac{p(X)}{1 - p(X)}\right) = \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p\]</span></p>
-<p>Para los datos <em>Default</em>, usando saldo, estudiante (indicador) e ingresos como predictores, los coeficientes estimados se muestran en la Tabla 4.3. Un resultado interesante es que el coeficiente de <em>estudiante</em> es negativo (los estudiantes tienen menor riesgo cuando se controla por saldo e ingresos), aunque en el análisis univariado parecía positivo. Esto se debe a una <strong>variable de confusión</strong>: los estudiantes tienden a tener saldos más altos.</p>
-<p>La <a href="#fig-4-12" class="quarto-xref">Figura&nbsp;4</a> muestra la regresión logística múltiple con dos predictores (saldo y estudiante) en los datos Default, ilustrando cómo se combinan predictores cuantitativos y cualitativos.</p>
-<div id="fig-4-12" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_12.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Regresión logística múltiple con predictores de saldo y condición de estudiante para los datos Default.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="regresión-logística-multinomial" class="level3">
-<h3 class="anchored" data-anchor-id="regresión-logística-multinomial">Regresión Logística Multinomial</h3>
-<p>Para problemas con más de dos clases, usamos la <strong>regresión logística multinomial</strong>. Si <span class="math inline">\(Y\)</span> puede tomar valores <span class="math inline">\(1, 2, \ldots, K\)</span>, la probabilidad de pertenecer a la clase <span class="math inline">\(k\)</span> es:</p>
-<p><span class="math display">\[P(Y = k \mid X = x) = \frac{e^{\beta_{k0} + \beta_{k1} X_1 + \cdots + \beta_{kp} X_p}}{\sum_{\ell=1}^{K} e^{\beta_{\ell 0} + \beta_{\ell 1} X_1 + \cdots + \beta_{\ell p} X_p}}\]</span></p>
-<p>Se requieren <span class="math inline">\(K\)</span> conjuntos de coeficientes, pero solo <span class="math inline">\(K-1\)</span> son libres (por la restricción de que las probabilidades suman 1). En la práctica, se fija una clase de referencia, por ejemplo la clase <span class="math inline">\(K\)</span>, con coeficientes <span class="math inline">\(\beta_K = 0\)</span>.</p>
-</section>
-</section>
-<section id="modelos-generativos-para-clasificación" class="level2">
-<h2 class="anchored" data-anchor-id="modelos-generativos-para-clasificación">Modelos Generativos para Clasificación</h2>
-<p>Además de la regresión logística (que modela <span class="math inline">\(P(Y \mid X)\)</span> directamente), existen <strong>modelos generativos</strong> que modelan la <strong>distribución conjunta</strong> <span class="math inline">\(P(X, Y)\)</span> y luego usan el teorema de Bayes para obtener <span class="math inline">\(P(Y \mid X)\)</span>.</p>
-<section id="teorema-de-bayes-para-clasificación" class="level3">
-<h3 class="anchored" data-anchor-id="teorema-de-bayes-para-clasificación">Teorema de Bayes para Clasificación</h3>
-<p>Recordemos el teorema de Bayes para clasificación:</p>
-<p><span class="math display">\[P(Y = k \mid X = x) = \frac{\pi_k \, f_k(x)}{\sum_{\ell=1}^{K} \pi_\ell \, f_\ell(x)}\]</span></p>
-<p>donde:</p>
-<ul>
-<li><span class="math inline">\(\pi_k\)</span> es la <strong>probabilidad previa</strong> (prior) de la clase <span class="math inline">\(k\)</span> (proporción de observaciones de esa clase en la población)</li>
-<li><span class="math inline">\(f_k(x) = P(X = x \mid Y = k)\)</span> es la <strong>densidad</strong> de <span class="math inline">\(X\)</span> en la clase <span class="math inline">\(k\)</span></li>
-</ul>
-<p>Estimamos <span class="math inline">\(\pi_k\)</span> y <span class="math inline">\(f_k(x)\)</span> a partir de los datos de entrenamiento, y luego usamos Bayes para obtener <span class="math inline">\(P(Y = k \mid X = x)\)</span>. Asignamos una observación a la clase con mayor probabilidad posterior, lo que se conoce como el <strong>clasificador de Bayes</strong> (óptimo, pero inalcanzable porque no conocemos las distribuciones verdaderas).</p>
-<p>Diferentes supuestos sobre <span class="math inline">\(f_k(x)\)</span> dan lugar a diferentes métodos:</p>
-<ul>
-<li>Si <span class="math inline">\(X\)</span> es <strong>una dimensión</strong> y <span class="math inline">\(f_k(x)\)</span> es <strong>normal</strong> con varianza común <span class="math inline">\(\rightarrow\)</span> <strong>LDA univariado</strong></li>
-<li>Si <span class="math inline">\(X\)</span> es <strong>multivariante</strong> y <span class="math inline">\(f_k(x)\)</span> es normal <strong>con matriz de covarianza común</strong> <span class="math inline">\(\rightarrow\)</span> <strong>LDA</strong></li>
-<li>Si <span class="math inline">\(X\)</span> es <strong>multivariante</strong> y <span class="math inline">\(f_k(x)\)</span> es normal <strong>con matrices de covarianza distintas</strong> <span class="math inline">\(\rightarrow\)</span> <strong>QDA</strong></li>
-<li>Cada <span class="math inline">\(f_k(x)\)</span> se estima de forma no paramétrica <span class="math inline">\(\rightarrow\)</span> <strong>KNN</strong></li>
-</ul>
-</section>
-<section id="análisis-de-discriminante-lineal-para-p-1" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-de-discriminante-lineal-para-p-1">Análisis de Discriminante Lineal para <span class="math inline">\(p = 1\)</span></h3>
-<p>Cuando <span class="math inline">\(p = 1\)</span> y <span class="math inline">\(f_k(x)\)</span> es normal con media <span class="math inline">\(\mu_k\)</span> y varianza <span class="math inline">\(\sigma^2\)</span>, la probabilidad posterior se simplifica a:</p>
-<p><span class="math display">\[P(Y = k \mid X = x) = \frac{\pi_k \, \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{(x - \mu_k)^2}{2\sigma^2}\right)}{\sum_{\ell=1}^{K} \pi_\ell \, \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{(x - \mu_\ell)^2}{2\sigma^2}\right)}\]</span></p>
-<p>Tomando logaritmos y simplificando, la regla de clasificación asigna <span class="math inline">\(x\)</span> a la clase <span class="math inline">\(k\)</span> que maximiza:</p>
-<p><span class="math display">\[\delta_k(x) = x \cdot \frac{\mu_k}{\sigma^2} - \frac{\mu_k^2}{2\sigma^2} + \log(\pi_k)\]</span></p>
-<p>Esta es una <strong>función lineal</strong> en <span class="math inline">\(x\)</span>, de ahí el nombre de discriminante lineal. Los parámetros <span class="math inline">\(\mu_k\)</span>, <span class="math inline">\(\sigma^2\)</span> y <span class="math inline">\(\pi_k\)</span> se estiman a partir de los datos:</p>
-<ul>
-<li><span class="math inline">\(\hat{\pi}_k = n_k / n\)</span></li>
-<li><span class="math inline">\(\hat{\mu}_k = \frac{1}{n_k} \sum_{i: y_i=k} x_i\)</span></li>
-<li><span class="math inline">\(\hat{\sigma}^2 = \frac{1}{n - K} \sum_{k=1}^{K} \sum_{i: y_i=k} (x_i - \hat{\mu}_k)^2\)</span></li>
-</ul>
-<p>La <a href="#fig-4-5" class="quarto-xref">Figura&nbsp;5</a> ilustra el LDA univariado aplicado a los datos <em>Default</em> usando el saldo como predictor, mostrando las densidades normales ajustadas para cada clase y la frontera de decisión resultante.</p>
-<div id="fig-4-5" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_5.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;5: LDA univariado para los datos Default usando saldo como predictor. Se muestran las densidades normales ajustadas y la frontera de decisión.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="análisis-de-discriminante-lineal-para-p-1-1" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-de-discriminante-lineal-para-p-1-1">Análisis de Discriminante Lineal para <span class="math inline">\(p &gt; 1\)</span></h3>
-<p>Cuando <span class="math inline">\(p &gt; 1\)</span>, <span class="math inline">\(f_k(x)\)</span> se modela como una <strong>normal multivariante</strong> con media <span class="math inline">\(\mu_k\)</span> y matriz de covarianza común <span class="math inline">\(\Sigma\)</span> (compartida por todas las clases):</p>
-<p><span class="math display">\[f_k(x) = \frac{1}{(2\pi)^{p/2} |\Sigma|^{1/2}} \exp\left(-\frac{1}{2} (x - \mu_k)^T \Sigma^{-1} (x - \mu_k)\right)\]</span></p>
-<p>La función discriminante lineal es:</p>
-<p><span class="math display">\[\delta_k(x) = x^T \Sigma^{-1} \mu_k - \frac{1}{2} \mu_k^T \Sigma^{-1} \mu_k + \log \pi_k\]</span></p>
-<p>La frontera de decisión entre dos clases <span class="math inline">\(k\)</span> y <span class="math inline">\(\ell\)</span> es el conjunto de puntos donde <span class="math inline">\(\delta_k(x) = \delta_\ell(x)\)</span>, que es un <strong>hiperplano</strong> en el espacio de predictores.</p>
-<p>La <a href="#fig-4-6" class="quarto-xref">Figura&nbsp;6</a> muestra el LDA multivariante aplicado a los datos <em>Default</em> usando saldo e ingresos, con la frontera de decisión lineal que separa a los clientes que incumplen de los que no.</p>
-<div id="fig-4-6" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_6.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;6: LDA multivariante para los datos Default con dos predictores. La línea recta muestra la frontera de decisión lineal.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-4-4" class="quarto-xref">Figura&nbsp;7</a> compara la frontera de decisión del LDA (lineal) con la de QDA (cuadrática) en datos simulados, ilustrando cuándo cada una es más apropiada.</p>
-<div id="fig-4-4" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_4.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;7: Comparación de fronteras de decisión: LDA (lineal) vs QDA (cuadrática) en datos simulados.
-</figcaption>
-</figure>
-</div>
-<section id="tasa-de-error-de-clasificación-matriz-de-confusión" class="level4">
-<h4 class="anchored" data-anchor-id="tasa-de-error-de-clasificación-matriz-de-confusión">Tasa de Error de Clasificación (Matriz de Confusión)</h4>
-<p>Para evaluar el rendimiento de un clasificador, construimos una <strong>matriz de confusión</strong> que tabula las clasificaciones correctas e incorrectas. La <a href="#fig-4-3" class="quarto-xref">Figura&nbsp;8</a> muestra una matriz de confusión típica para un problema de clasificación binaria.</p>
-<div id="fig-4-3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_3.png" class="img-fluid figure-img" style="width:45.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8: Matriz de confusión que muestra verdaderos positivos, verdaderos negativos, falsos positivos y falsos negativos.
-</figcaption>
-</figure>
-</div>
-<p>A partir de la matriz de confusión, derivamos métricas como:</p>
-<ul>
-<li><strong>Tasa de error</strong> = (FP + FN) / total</li>
-<li><strong>Exactitud</strong> = (VP + VN) / total = 1 - tasa de error</li>
-<li><strong>Tasa de verdaderos positivos</strong> (sensibilidad) = VP / (VP + FN)</li>
-<li><strong>Tasa de falsos positivos</strong> = FP / (FP + VN)</li>
-<li><strong>Precisión positiva</strong> (precision) = VP / (VP + FP)</li>
-</ul>
-</section>
-</section>
-<section id="análisis-de-discriminante-cuadrático-qda" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-de-discriminante-cuadrático-qda">Análisis de Discriminante Cuadrático (QDA)</h3>
-<p>El QDA relaja el supuesto de covarianza común. Cada clase tiene su propia matriz de covarianza <span class="math inline">\(\Sigma_k\)</span>:</p>
-<p><span class="math display">\[f_k(x) = \frac{1}{(2\pi)^{p/2} |\Sigma_k|^{1/2}} \exp\left(-\frac{1}{2} (x - \mu_k)^T \Sigma_k^{-1} (x - \mu_k)\right)\]</span></p>
-<p>La función discriminante se vuelve <strong>cuadrática</strong> en <span class="math inline">\(x\)</span>:</p>
-<p><span class="math display">\[\delta_k(x) = -\frac{1}{2} (x - \mu_k)^T \Sigma_k^{-1} (x - \mu_k) - \frac{1}{2} \log |\Sigma_k| + \log \pi_k\]</span></p>
-<p>QDA es más flexible que LDA, pero requiere estimar más parámetros (cada <span class="math inline">\(\Sigma_k\)</span> tiene <span class="math inline">\(p(p+1)/2\)</span> parámetros), por lo que necesita más datos.</p>
-<p>La <a href="#fig-4-7" class="quarto-xref">Figura&nbsp;9</a> muestra la aplicación de QDA a datos simulados donde las clases tienen diferentes estructuras de covarianza, destacando la frontera de decisión curva.</p>
-<div id="fig-4-7" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_7.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;9: QDA aplicado a datos simulados con diferentes matrices de covarianza por clase. La frontera de decisión es curva (cuadrática).
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-4-13" class="quarto-xref">Figura&nbsp;10</a> y <a href="#fig-4-14" class="quarto-xref">Figura&nbsp;11</a> proporcionan una comparación visual más detallada de LDA y QDA en datos simulados adicionales, mostrando cómo la elección entre ambos depende de la estructura de covarianza de los datos.</p>
-<div id="fig-4-13" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_13.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10: Datos simulados para ilustrar la diferencia entre LDA y QDA.
-</figcaption>
-</figure>
-</div>
-<div id="fig-4-14" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_14.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;11: Comparación de fronteras de decisión LDA y QDA en datos simulados.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="naive-bayes" class="level3">
-<h3 class="anchored" data-anchor-id="naive-bayes">Naive Bayes</h3>
-<p><strong>Naive Bayes</strong> es un enfoque generativo alternativo que asume que los predictores son <strong>condicionalmente independientes</strong> dada la clase:</p>
-<p><span class="math display">\[f_k(x) = f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots \times f_{kp}(x_p)\]</span></p>
-<p>Cada <span class="math inline">\(f_{kj}\)</span> se estima por separado (por ejemplo, como normal univariada o mediante estimación de densidad no paramétrica). Este supuesto simplifica enormemente la estimación, aunque es poco realista en la práctica.</p>
-<p>Sorprendentemente, Naive Bayes puede funcionar muy bien incluso cuando la independencia condicional no se cumple, y es especialmente útil cuando <span class="math inline">\(p\)</span> es grande.</p>
-</section>
-</section>
-<section id="comparación-de-métodos-de-clasificación" class="level2">
-<h2 class="anchored" data-anchor-id="comparación-de-métodos-de-clasificación">Comparación de Métodos de Clasificación</h2>
-<p>La <a href="#fig-4-8" class="quarto-xref">Figura&nbsp;12</a> y <a href="#fig-4-9" class="quarto-xref">Figura&nbsp;13</a> comparan el rendimiento de varios clasificadores en diferentes escenarios, mostrando la tasa de error de prueba en función de la flexibilidad del modelo.</p>
-<div id="fig-4-8" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_8.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;12: Comparación de tasas de error de prueba para diferentes clasificadores en datos simulados.
-</figcaption>
-</figure>
-</div>
-<div id="fig-4-9" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_9.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;13: Tasa de error de prueba vs flexibilidad del modelo para varios métodos de clasificación.
-</figcaption>
-</figure>
-</div>
-<section id="curvas-roc" class="level3">
-<h3 class="anchored" data-anchor-id="curvas-roc">Curvas ROC</h3>
-<p>La <strong>curva ROC</strong> (Receiver Operating Characteristic) es una herramienta para visualizar el rendimiento de un clasificador binario variando el umbral de decisión. Representa la tasa de verdaderos positivos (sensibilidad) frente a la tasa de falsos positivos (1 – especificidad) para todos los umbrales posibles.</p>
-<p>La <a href="#fig-4-10a" class="quarto-xref">Figura&nbsp;14</a> y <a href="#fig-4-10b" class="quarto-xref">Figura&nbsp;15</a> muestran curvas ROC para la regresión logística en los datos <em>Default</em> (entrenamiento y prueba).</p>
-<div id="fig-4-10a" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-10a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_10a.png" class="img-fluid figure-img" style="width:40.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-10a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;14: Curva ROC para regresión logística en datos Default: conjunto de entrenamiento.
-</figcaption>
-</figure>
-</div>
-<div id="fig-4-10b" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-10b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_10b.png" class="img-fluid figure-img" style="width:40.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-10b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;15: Curva ROC para regresión logística en datos Default: conjunto de prueba.
-</figcaption>
-</figure>
-</div>
-<p>El <strong>AUC</strong> (área bajo la curva ROC) es una métrica resumen: un AUC de 1 indica un clasificador perfecto, mientras que 0.5 indica un clasificador aleatorio. En la práctica, valores superiores a 0.8 se consideran buenos.</p>
-<p>La <a href="#fig-4-11" class="quarto-xref">Figura&nbsp;16</a> compara KNN y regresión logística en datos simulados, mostrando que KNN puede superar a la regresión logística cuando la frontera de decisión verdadera es no lineal, pero requiere más datos y una buena elección de <span class="math inline">\(K\)</span>.</p>
-<div id="fig-4-11" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_11.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;16: Comparación de KNN vs regresión logística en datos simulados con frontera de decisión no lineal.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-4-15" class="quarto-xref">Figura&nbsp;17</a> compara las curvas ROC de diferentes clasificadores en un mismo conjunto de datos.</p>
-<div id="fig-4-15" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter4/png/4_15.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;17: Comparación de curvas ROC para diferentes métodos de clasificación.
-</figcaption>
-</figure>
-</div>
-<hr>
-</section>
-</section>
-<section id="laboratorio" class="level2">
-<h2 class="anchored" data-anchor-id="laboratorio">Laboratorio</h2>
-<p>Los laboratorios con el código completo de este capítulo están disponibles en el sitio oficial del libro: <a href="https://www.statlearning.com" target="_blank">statlearning.com</a>. También puedes acceder a los notebooks en el repositorio oficial de ISLP: <a href="https://github.com/intro-stat-learning/ISLP_labs" target="_blank">ISLP en GitHub</a>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1022,6 +673,10 @@ Figura&nbsp;17: Comparación de curvas ROC para diferentes métodos de clasifica
   </div>
 </nav>
 </div> <!-- /content -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9999">
+  <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>
+</div>
+<script>document.getElementById('theme-toggle-btn').textContent=(document.documentElement.getAttribute('data-bs-theme')||'light')==='dark'?'☀️':'🌙'</script>
 
 
 

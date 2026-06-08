@@ -22,14 +22,13 @@ Este proyecto comunitario, sin fines de lucro, busca hacer accesible el contenid
 
 ## Acerca de esta traducción
 
-Esta traducción **solo cubre el texto explicativo** de cada capítulo. Los **laboratorios prácticos** (código en Python) y los **ejercicios** no han sido traducidos ni incluidos en este sitio.
+Esta traducción **solo cubre el texto explicativo** de cada capítulo. Los **laboratorios prácticos** (código en Python) y los **ejercicios** no se incluyen.
 
-El libro original (ISLP) está disponible gratuitamente en PDF en el sitio oficial del libro, junto con materiales complementarios:
+El libro original está disponible gratuitamente en PDF junto con materiales complementarios:
 
 - Sitio oficial: [statlearning.com](https://www.statlearning.com){target="_blank"}
-- Repositorio de laboratorios (Jupyter Notebooks): [ISLP_labs en GitHub](https://github.com/intro-stat-learning/ISLP_labs){target="_blank"}
-- Paquete Python ISLP: [ISLP en PyPI](https://pypi.org/project/ISLP/){target="_blank"}
-- Repositorio del libro original (ISLR en R): [ISLR en GitHub](https://github.com/stat-learning/ISLR){target="_blank"}
+- Laboratorios (Jupyter Notebooks): [ISLP_labs en GitHub](https://github.com/intro-stat-learning/ISLP_labs){target="_blank"}
+- Paquete Python: [ISLP en PyPI](https://pypi.org/project/ISLP/){target="_blank"}
 
 Al final de cada capítulo encontrarás un enlace directo a los laboratorios correspondientes.
 

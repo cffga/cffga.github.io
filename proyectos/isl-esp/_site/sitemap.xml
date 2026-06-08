@@ -1,67 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/PROGRESS.html</loc>
-    <lastmod>2026-06-08T01:40:50.310Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/12-aprendizaje-no-supervisado/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.304Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/10-aprendizaje-profundo/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/08-arboles-decision/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/06-seleccion-modelos/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/04-clasificacion/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/02-aprendizaje-estadistico/index.html</loc>
-    <lastmod>2026-06-08T03:21:57.149Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/00-prefacio/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.297Z</lastmod>
-  </url>
-  <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/01-introduccion/index.html</loc>
-    <lastmod>2026-06-08T03:05:36.545Z</lastmod>
+    <loc>https://cffga.github.io/proyectos/isl-esp/NOTATION.html</loc>
+    <lastmod>2026-06-08T17:15:34.343Z</lastmod>
   </url>
   <url>
     <loc>https://cffga.github.io/proyectos/isl-esp/chapters/03-regresion-lineal/index.html</loc>
-    <lastmod>2026-06-08T03:34:19.339Z</lastmod>
+    <lastmod>2026-06-08T19:32:26.406Z</lastmod>
   </url>
   <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/05-metodos-remuestreo/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
+    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/01-introduccion/index.html</loc>
+    <lastmod>2026-06-08T18:48:37.502Z</lastmod>
   </url>
   <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/07-mas-alla-linealidad/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
+    <loc>https://cffga.github.io/proyectos/isl-esp/index.html</loc>
+    <lastmod>2026-06-08T17:17:15.861Z</lastmod>
   </url>
   <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/09-svm/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.303Z</lastmod>
+    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/00-prefacio/index.html</loc>
+    <lastmod>2026-06-08T17:59:16.409Z</lastmod>
   </url>
   <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/11-analisis-supervivencia/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.304Z</lastmod>
+    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/02-aprendizaje-estadistico/index.html</loc>
+    <lastmod>2026-06-08T19:05:39.895Z</lastmod>
   </url>
   <url>
-    <loc>https://cffga.github.io/proyectos/isl-esp/chapters/13-pruebas-multiples/index.html</loc>
-    <lastmod>2026-06-08T01:40:50.304Z</lastmod>
+    <loc>https://cffga.github.io/proyectos/isl-esp/PROGRESS.html</loc>
+    <lastmod>2026-06-08T19:08:22.686Z</lastmod>
   </url>
 </urlset>

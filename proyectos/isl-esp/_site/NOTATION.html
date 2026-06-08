@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11. Análisis de Supervivencia y Datos Censurados – ISL — Introducción al Aprendizaje Estadístico</title>
+<title>notation – ISL — Introducción al Aprendizaje Estadístico</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,26 +26,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../chapters/12-aprendizaje-no-supervisado/index.html" rel="next">
-<link href="../../chapters/10-aprendizaje-profundo/index.html" rel="prev">
-<link href="../../favicon.png" rel="icon" type="image/png">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -79,6 +77,35 @@ ul.task-list li input[type="checkbox"] {
 (function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -91,7 +118,9 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/01-introduccion/index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="../../chapters/11-analisis-supervivencia/index.html">11. Análisis de Supervivencia y Datos Censurados</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      ISL — Introducción al Aprendizaje Estadístico
+      </li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -106,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">ISL — Introducción al Aprendizaje Estadístico</a> 
+      <a href="./">ISL — Introducción al Aprendizaje Estadístico</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -127,13 +156,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Portada</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/00-prefacio/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/00-prefacio/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Prefacio</span></a>
   </div>
 </li>
@@ -150,79 +179,79 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/01-introduccion/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/01-introduccion/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">1. Introducción</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/02-aprendizaje-estadistico/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/02-aprendizaje-estadistico/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">2. Aprendizaje Estadístico</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/03-regresion-lineal/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/03-regresion-lineal/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">3. Regresión Lineal</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/04-clasificacion/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/04-clasificacion/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">4. Clasificación</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/05-metodos-remuestreo/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/05-metodos-remuestreo/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">5. Métodos de Remuestreo</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/06-seleccion-modelos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/06-seleccion-modelos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">6. Selección de Modelos Lineales y Regularización</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/07-mas-alla-linealidad/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/07-mas-alla-linealidad/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">7. Más Allá de la Linealidad</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/08-arboles-decision/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/08-arboles-decision/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">8. Métodos Basados en Árboles</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/09-svm/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/09-svm/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">9. Máquinas de Vectores de Soporte</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/10-aprendizaje-profundo/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/10-aprendizaje-profundo/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">10. Aprendizaje Profundo</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/11-analisis-supervivencia/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./chapters/11-analisis-supervivencia/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">11. Análisis de Supervivencia y Datos Censurados</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/12-aprendizaje-no-supervisado/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/12-aprendizaje-no-supervisado/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">12. Aprendizaje No Supervisado</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/13-pruebas-multiples/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/13-pruebas-multiples/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">13. Pruebas Múltiples</span></a>
   </div>
 </li>
@@ -235,29 +264,334 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/01-introduccion/index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="../../chapters/11-analisis-supervivencia/index.html">11. Análisis de Supervivencia y Datos Censurados</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">11. Análisis de Supervivencia y Datos Censurados</h1>
-</div>
-
-
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
 
+<section id="convenciones-notacionales" class="level1">
+<h1>Convenciones Notacionales</h1>
+<blockquote class="blockquote">
+<p>Este documento recoge las convenciones de notación establecidas en el capítulo 1 del libro original. <strong>Toda traducción debe respetarlas rigurosamente en todos los capítulos.</strong></p>
+</blockquote>
+<section id="observaciones-y-variables" class="level2">
+<h2 class="anchored" data-anchor-id="observaciones-y-variables">Observaciones y variables</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 59%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Símbolo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(n\)</span></td>
+<td>Número de observaciones (unidades muestrales)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(p\)</span></td>
+<td>Número de variables (predictores, características)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(x_{ij}\)</span></td>
+<td>Valor de la <span class="math inline">\(j\)</span>-ésima variable para la <span class="math inline">\(i\)</span>-ésima observación</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{X}\)</span></td>
+<td>Matriz <span class="math inline">\(n \times p\)</span> de predictores</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(x_i\)</span></td>
+<td>Vector fila que contiene los <span class="math inline">\(p\)</span> predictores de la <span class="math inline">\(i\)</span>-ésima observación</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{x}_j\)</span></td>
+<td>Vector columna que contiene las <span class="math inline">\(n\)</span> observaciones de la <span class="math inline">\(j\)</span>-ésima variable</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(y_i\)</span></td>
+<td>Valor de la respuesta para la <span class="math inline">\(i\)</span>-ésima observación</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathbf{y}\)</span></td>
+<td>Vector de respuestas de longitud <span class="math inline">\(n\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\hat{y}_i\)</span></td>
+<td>Predicción de <span class="math inline">\(y_i\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\hat{\beta}_j\)</span></td>
+<td>Coeficiente estimado para el <span class="math inline">\(j\)</span>-ésimo predictor</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tipografía" class="level2">
+<h2 class="anchored" data-anchor-id="tipografía">Tipografía</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 32%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Formato</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Escalares</td>
+<td>Redonda normal</td>
+<td><span class="math inline">\(a\)</span>, <span class="math inline">\(n\)</span>, <span class="math inline">\(p\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\hat{\beta}\)</span></td>
+</tr>
+<tr class="even">
+<td>Vectores de longitud <span class="math inline">\(n\)</span></td>
+<td>Negrita minúscula</td>
+<td><span class="math inline">\(\mathbf{a}\)</span>, <span class="math inline">\(\mathbf{x}\)</span>, <span class="math inline">\(\mathbf{y}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Vectores cortos (no <span class="math inline">\(n\)</span>)</td>
+<td>Redonda normal</td>
+<td><span class="math inline">\(a\)</span>, <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span></td>
+</tr>
+<tr class="even">
+<td>Matrices</td>
+<td>Negrita mayúscula</td>
+<td><span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{X}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Espacios ambientales</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+<td><span class="math inline">\(\mathbb{R}\)</span>, <span class="math inline">\(\mathbb{R}^n\)</span>, <span class="math inline">\(\mathbb{R}^{r \times s}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nota:</strong> <span class="math inline">\(a \in \mathbb{R}\)</span>, <span class="math inline">\(\mathbf{a} \in \mathbb{R}^n\)</span>, <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{r \times s}\)</span>.</p>
+</section>
+<section id="números-grandes" class="level2">
+<h2 class="anchored" data-anchor-id="números-grandes">Números grandes</h2>
+<p>Usar separador de miles con llaves: <span class="math inline">\(3{,}000\)</span>, <span class="math inline">\(10{,}000\)</span>, <span class="math inline">\(100{,}000\)</span>.</p>
+</section>
+<section id="ecuaciones" class="level2">
+<h2 class="anchored" data-anchor-id="ecuaciones">Ecuaciones</h2>
+<ul>
+<li>Las ecuaciones llevan numeración explícita con <code>\tag{2.1}</code> (número de capítulo + correlativo).</li>
+<li>Se referencian como <code>@eq-2-1</code> o simplemente “Ecuación 2.1”.</li>
+</ul>
+</section>
+<section id="formato-de-términos-específicos" class="level2">
+<h2 class="anchored" data-anchor-id="formato-de-términos-específicos">Formato de términos específicos</h2>
+<ul>
+<li>Variables (<span class="math inline">\(Y\)</span>, <span class="math inline">\(X\)</span>, <span class="math inline">\(X_1\)</span>), datasets (<code>Wage</code>, <code>Smarket</code>, <code>NCI60</code>), funciones (<code>lm()</code>, <code>predict()</code>, <code>summary()</code>) y parámetros en <strong>monospace</strong> con backticks: <code>`Y`</code>, <code>`X_1`</code>, <code>`lm()`</code>.</li>
+<li>Términos extranjeros sin traducción aceptada van en <em>cursiva</em> la primera vez en cada capítulo, seguidos de explicación entre paréntesis si es necesario.</li>
+<li>Las negritas y cursivas del original se preservan exactamente en la traducción.</li>
+</ul>
+</section>
+<section id="nombres-de-conjuntos-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="nombres-de-conjuntos-de-datos">Nombres de conjuntos de datos</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Wage</code></td>
+<td>Datos salariales (Cap. 1, 2, 3, 6, 7, 8)</td>
+</tr>
+<tr class="even">
+<td><code>Smarket</code></td>
+<td>Datos de mercado de valores (Cap. 1, 4, 9)</td>
+</tr>
+<tr class="odd">
+<td><code>NCI60</code></td>
+<td>Datos de expresión génica (Cap. 1, 10, 12)</td>
+</tr>
+<tr class="even">
+<td><code>Advertising</code></td>
+<td>Datos de publicidad y ventas (Cap. 2, 3, 4)</td>
+</tr>
+<tr class="odd">
+<td><code>Credit</code></td>
+<td>Datos de crédito bancario (Cap. 3, 6, 7)</td>
+</tr>
+<tr class="even">
+<td><code>Default</code></td>
+<td>Datos de impago bancario (Cap. 4)</td>
+</tr>
+<tr class="odd">
+<td><code>Boston</code></td>
+<td>Datos de vivienda en Boston (Cap. 2, 3, 5, 6, 8)</td>
+</tr>
+<tr class="even">
+<td><code>Caravan</code></td>
+<td>Datos de seguros (Cap. 4)</td>
+</tr>
+<tr class="odd">
+<td><code>Khan</code></td>
+<td>Datos de expresión génica (Cap. 4)</td>
+</tr>
+<tr class="even">
+<td><code>OJ</code></td>
+<td>Datos de jugo de naranja (Cap. 8)</td>
+</tr>
+<tr class="odd">
+<td><code>College</code></td>
+<td>Datos de universidades (Cap. 2, 6)</td>
+</tr>
+<tr class="even">
+<td><code>Auto</code></td>
+<td>Datos de automóviles (Cap. 2, 3, 5, 6, 7)</td>
+</tr>
+<tr class="odd">
+<td><code>Carseats</code></td>
+<td>Datos de sillas infantiles (Cap. 3)</td>
+</tr>
+<tr class="even">
+<td><code>Portfolio</code></td>
+<td>Datos financieros (Cap. 5)</td>
+</tr>
+<tr class="odd">
+<td><code>USArrests</code></td>
+<td>Datos de crímenes (Cap. 12)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="abreviaciones-estándar" class="level2">
+<h2 class="anchored" data-anchor-id="abreviaciones-estándar">Abreviaciones estándar</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Abrev.</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MSE</td>
+<td>Error Cuadrático Medio</td>
+</tr>
+<tr class="even">
+<td>RSS</td>
+<td>Suma de Cuadrados Residual</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(R^2\)</span></td>
+<td>Coeficiente de Determinación</td>
+</tr>
+<tr class="even">
+<td>EMV</td>
+<td>Estimación de Máxima Verosimilitud</td>
+</tr>
+<tr class="odd">
+<td>LDA</td>
+<td>Análisis Discriminante Lineal</td>
+</tr>
+<tr class="even">
+<td>QDA</td>
+<td>Análisis Discriminante Cuadrático</td>
+</tr>
+<tr class="odd">
+<td>KNN</td>
+<td><span class="math inline">\(K\)</span> Vecinos Más Cercanos</td>
+</tr>
+<tr class="even">
+<td>CV</td>
+<td>Validación Cruzada</td>
+</tr>
+<tr class="odd">
+<td>LOOCV</td>
+<td>Validación Cruzada Dejando Uno Fuera</td>
+</tr>
+<tr class="even">
+<td>AIC</td>
+<td>Criterio de Información de Akaike</td>
+</tr>
+<tr class="odd">
+<td>BIC</td>
+<td>Criterio de Información Bayesiano</td>
+</tr>
+<tr class="even">
+<td>PCA</td>
+<td>Análisis de Componentes Principales</td>
+</tr>
+<tr class="odd">
+<td>PCR</td>
+<td>Regresión por Componentes Principales</td>
+</tr>
+<tr class="even">
+<td>PLS</td>
+<td>Regresión por Mínimos Cuadrados Parciales</td>
+</tr>
+<tr class="odd">
+<td>GAM</td>
+<td>Modelo Aditivo Generalizado</td>
+</tr>
+<tr class="even">
+<td>SVM</td>
+<td>Máquina de Vectores de Soporte</td>
+</tr>
+<tr class="odd">
+<td>SVR</td>
+<td>Regresión por Vectores de Soporte</td>
+</tr>
+<tr class="even">
+<td>RBF</td>
+<td>Función de Base Radial</td>
+</tr>
+<tr class="odd">
+<td>CNN</td>
+<td>Red Neuronal Convolucional</td>
+</tr>
+<tr class="even">
+<td>RNN</td>
+<td>Red Neuronal Recurrente</td>
+</tr>
+<tr class="odd">
+<td>LSTM</td>
+<td>Memoria a Largo y Corto Plazo</td>
+</tr>
+<tr class="even">
+<td>GAN</td>
+<td>Red Generativa Antagónica</td>
+</tr>
+<tr class="odd">
+<td>VAE</td>
+<td>Autoencoder Variacional</td>
+</tr>
+<tr class="even">
+<td>FWER</td>
+<td>Tasa de Error por Familia</td>
+</tr>
+<tr class="odd">
+<td>FDR</td>
+<td>Tasa de Falsos Descubrimientos</td>
+</tr>
+<tr class="even">
+<td>ROC</td>
+<td>Característica Operativa del Receptor</td>
+</tr>
+<tr class="odd">
+<td>AUC</td>
+<td>Área Bajo la Curva ROC</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -660,18 +994,6 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../../chapters/10-aprendizaje-profundo/index.html" class="pagination-link" aria-label="10. Aprendizaje Profundo">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">10. Aprendizaje Profundo</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../chapters/12-aprendizaje-no-supervisado/index.html" class="pagination-link" aria-label="12. Aprendizaje No Supervisado">
-        <span class="nav-page-text">12. Aprendizaje No Supervisado</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 <div style="position:fixed;bottom:24px;right:24px;z-index:9999">
   <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>

@@ -1,24 +1,208 @@
 /*-- scss:defaults --*/
 
-// Color personalizado: un azul similar al del libro original
+// Colores del libro ISLP
+$body-color: #1a1a1a;
 $link-color: #1a5276;
 $navbar-bg: #1a5276;
 $sidebar-bg: #f8f9fa;
 
+// Familias tipográficas del libro original:
+//   Myriad Pro (títulos)       → Source Sans 3
+//   Latin Modern Roman (cuerpo) → Source Serif 4
+//   Latin Modern Mono (código)  → Source Code Pro
+$font-family-sans-serif: 'Source Sans 3', 'Myriad Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family-serif: 'Source Serif 4', 'Latin Modern Roman', Georgia, 'Times New Roman', Times, serif !default;
+$font-family-monospace: 'Source Code Pro', 'Latin Modern Mono', 'Courier New', Courier, monospace !default;
+
+$font-family-base: $font-family-serif !default;
+$headings-font-family: $font-family-sans-serif !default;
+$headings-font-weight: 600 !default;
+$headings-color: #111 !default;
+
 /*-- scss:rules --*/
 
-// Ajustes de tipografía para el cuerpo
+:root {
+  --bs-body-font-family: 'Source Serif 4', 'Latin Modern Roman', Georgia, 'Times New Roman', Times, serif;
+}
+
 body {
-  font-size: 1rem;
   line-height: 1.7;
 }
 
-// Títulos de capítulos
 h1, h2, h3, h4 {
   margin-top: 1.5em;
 }
 
-// Figuras
+code:not(pre code) {
+  font-size: 0.875em;
+  color: #a31515;
+}
+
+pre code {
+  font-size: 0.8rem;
+}
+
 .figure {
-  margin: 1em 0;
+  margin: 1.5em 0;
+}
+.figure img {
+  max-width: 80%;
+  height: auto;
+}
+
+/* Suprimir captions automáticas de Quarto (usamos HTML manual) */
+.quarto-uncaptioned {
+  display: none !important;
+}
+
+/* Tooltip hover para referencias a figuras */
+a.quarto-xref[data-preview] {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+a.quarto-xref[data-preview]:hover::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, 80vw);
+  aspect-ratio: 4 / 3;
+  background: var(--preview-img) center/contain no-repeat;
+  background-color: #fff;
+  border: 2px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+a.quarto-xref[data-preview-tbl]:hover::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(640px, 85vw);
+  background: var(--preview-img) center/contain no-repeat;
+  background-color: #fff;
+  border: 2px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  pointer-events: none;
+  padding: 8px;
+}
+
+/* Botón flotante de cambio de tema */
+#theme-toggle-btn:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  opacity: 1 !important;
+}
+
+/* --- Modo oscuro (manual, vía data-bs-theme) --- */
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #1a1a2e;
+  --bs-body-color: #d4d4d4;
+
+  body, .quarto-content, .page-columns {
+    background-color: #1a1a2e !important;
+    color: #d4d4d4;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #e8e8e8;
+  }
+
+  a {
+    color: #6ab0f3;
+  }
+  a:hover {
+    color: #89c4f7;
+  }
+
+  /* Navbar secundario (barra superior) */
+  .quarto-secondary-nav {
+    background-color: #0f1a3a !important;
+    border-bottom: 1px solid #2a2a4e;
+  }
+  .quarto-secondary-nav .btn {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+  .quarto-secondary-nav .breadcrumb-item,
+  .quarto-secondary-nav .breadcrumb-item a {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* Barra lateral */
+  .sidebar, #quarto-sidebar {
+    background-color: #16162e !important;
+    border-right: 1px solid #2a2a4e;
+  }
+  .sidebar * {
+    color: #c8c8d4;
+  }
+  .sidebar a {
+    color: #7ab8f0;
+  }
+
+  /* Código en línea */
+  code:not(pre code) {
+    background-color: #2a2a44 !important;
+    color: #ff6b6b !important;
+    padding: 0.15em 0.35em;
+    border-radius: 3px;
+  }
+
+  /* Bloques de código */
+  pre, pre code {
+    background-color: #12122a !important;
+    border-color: #2a2a4e !important;
+    color: #d4d4d4;
+  }
+
+  /* Tablas */
+  table, .table {
+    --bs-table-bg: transparent !important;
+    color: #d4d4d4;
+  }
+  table th, .table th {
+    background-color: #222244 !important;
+    color: #e0e0e0;
+  }
+  table td, .table td {
+    background-color: #1a1a34 !important;
+    border-color: #2a2a4e;
+  }
+
+  /* Celdas de salida de Python/gráficos */
+  .card, div.cell, .cell-output {
+    background-color: #1e1e3a !important;
+    border-color: #2a2a4e !important;
+  }
+
+  /* Tooltip de preview de figuras */
+  a.quarto-xref[data-preview]:hover::after,
+  a.quarto-xref[data-preview-tbl]:hover::after {
+    background-color: #1e1e3a !important;
+    border-color: #444;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Input de búsqueda */
+  .sidebar-search input, .quarto-search-inner input {
+    background-color: #222244 !important;
+    color: #d4d4d4 !important;
+    border-color: #3a3a5e !important;
+  }
+
+  /* Botón flotante del índice */
+  .quarto-btn-toggle {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
 }

@@ -42,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ea2c7f5f25cb2f106c68b43028de7506.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,36 +73,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<script>(function(){var t;try{t=localStorage.getItem('isl-theme')}catch(e){}if(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)t='dark';if(!t)t='light';document.documentElement.setAttribute('data-bs-theme',t)})();</script>
+<script>
+(function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
+
 
 </head>
 
@@ -280,228 +256,8 @@ window.Quarto = {
 </header>
 
 
-<section id="resumen" class="level2">
-<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
-<p>En este capítulo relajamos el supuesto de linealidad que ha sido central en los capítulos anteriores. Presentamos métodos que extienden el modelo lineal para capturar relaciones no lineales: <strong>regresión polinomial</strong>, <strong>funciones escalón</strong>, <strong>splines</strong>, <strong>splines de suavizado</strong>, <strong>regresión local</strong> y <strong>modelos aditivos generalizados</strong> (GAMs).</p>
-</section>
-<section id="regresión-polinomial" class="level2">
-<h2 class="anchored" data-anchor-id="regresión-polinomial">Regresión Polinomial</h2>
-<p>La <strong>regresión polinomial</strong> reemplaza el predictor <span class="math inline">\(X\)</span> por sus potencias:</p>
-<p><span class="math display">\[y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_d x_i^d + \epsilon_i\]</span></p>
-<p>La <a href="#fig-7-1" class="quarto-xref">Figura&nbsp;1</a> muestra ajustes polinomiales de diferentes grados para la relación entre <em>mpg</em> y <em>horsepower</em> en los datos <em>Auto</em>.</p>
-<div id="fig-7-1" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_1.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Regresión polinomial de grados 1 a 5 para la relación entre mpg y horsepower en los datos Auto.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="funciones-escalón" class="level2">
-<h2 class="anchored" data-anchor-id="funciones-escalón">Funciones Escalón</h2>
-<p>Las <strong>funciones escalón</strong> (step functions) dividen el rango de <span class="math inline">\(X\)</span> en intervalos y ajustan una constante en cada uno. Esto es equivalente a crear variables dummy para cada intervalo:</p>
-<p><span class="math display">\[C_0(x) = I(x &lt; c_1), \quad C_1(x) = I(c_1 \le x &lt; c_2), \quad \ldots, \quad C_{K-1}(x) = I(c_{K-1} \le x)\]</span></p>
-<p>La <a href="#fig-7-2" class="quarto-xref">Figura&nbsp;2</a> ilustra el ajuste de funciones escalón a los datos <em>Wage</em>, donde se aplicaron cortes en la variable <em>año</em>.</p>
-<div id="fig-7-2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_2.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Funciones escalón ajustadas a los datos Wage, con diferentes números de cortes.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="funciones-base" class="level2">
-<h2 class="anchored" data-anchor-id="funciones-base">Funciones Base</h2>
-<p>Tanto la regresión polinomial como las funciones escalón son casos particulares de <strong>funciones base</strong> (basis functions). En general, transformamos <span class="math inline">\(X\)</span> usando <span class="math inline">\(K\)</span> funciones <span class="math inline">\(b_1(X), b_2(X), \ldots, b_K(X)\)</span>:</p>
-<p><span class="math display">\[y_i = \beta_0 + \beta_1 b_1(x_i) + \beta_2 b_2(x_i) + \cdots + \beta_K b_K(x_i) + \epsilon_i\]</span></p>
-<p>Elegir funciones base adecuadas es clave para capturar la no linealidad de forma eficiente.</p>
-</section>
-<section id="splines-de-regresión" class="level2">
-<h2 class="anchored" data-anchor-id="splines-de-regresión">Splines de Regresión</h2>
-<section id="polinomios-por-partes" class="level3">
-<h3 class="anchored" data-anchor-id="polinomios-por-partes">Polinomios por Partes</h3>
-<p>Los <strong>polinomios por partes</strong> (piecewise polynomials) ajustan polinomios independientes en diferentes intervalos de <span class="math inline">\(X\)</span>. Sin embargo, pueden producir discontinuidades en los puntos de unión.</p>
-</section>
-<section id="restricciones-y-splines" class="level3">
-<h3 class="anchored" data-anchor-id="restricciones-y-splines">Restricciones y Splines</h3>
-<p>Un <strong>spline</strong> es un polinomio por partes con restricciones de continuidad y suavidad en los <strong>nodos</strong> (knots). Un spline cúbico impone continuidad de la función, la primera y segunda derivada en cada nodo. La <a href="#fig-7-3" class="quarto-xref">Figura&nbsp;3</a> muestra un spline cúbico con nodos en las edades de 50 y 60 años para los datos <em>Wage</em>.</p>
-<div id="fig-7-3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_3.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3: Spline cúbico con nodos en edades 50 y 60 ajustado a los datos Wage. La línea roja es el ajuste suave.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="representación-con-base-de-splines" class="level3">
-<h3 class="anchored" data-anchor-id="representación-con-base-de-splines">Representación con Base de Splines</h3>
-<p>Los splines se representan convenientemente usando <strong>base B-spline</strong> o base de splines naturales. La <a href="#fig-7-4" class="quarto-xref">Figura&nbsp;4</a> muestra diferentes bases de splines para los datos Wage.</p>
-<div id="fig-7-4" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_4.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Diferentes bases de splines ajustadas a los datos Wage. Los splines naturales tienen restricciones lineales en los extremos.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="elección-del-número-y-ubicación-de-los-nodos" class="level3">
-<h3 class="anchored" data-anchor-id="elección-del-número-y-ubicación-de-los-nodos">Elección del Número y Ubicación de los Nodos</h3>
-<p>La ubicación de los nodos puede basarse en cuantiles de <span class="math inline">\(X\)</span>. La <a href="#fig-7-5" class="quarto-xref">Figura&nbsp;5</a> compara splines con diferente número de grados de libertad (nodos).</p>
-<div id="fig-7-5" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_5.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;5: Splines con diferentes grados de libertad para los datos Wage. Más grados de libertad producen un ajuste más flexible.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="comparación-con-regresión-polinomial" class="level3">
-<h3 class="anchored" data-anchor-id="comparación-con-regresión-polinomial">Comparación con Regresión Polinomial</h3>
-<p>La <a href="#fig-7-6" class="quarto-xref">Figura&nbsp;6</a> compara splines cúbicos con regresión polinomial en los datos <em>Wage</em>, mostrando que los splines son más flexibles en regiones con variación y más estables en los extremos.</p>
-<div id="fig-7-6" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_6.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;6: Comparación de splines cúbicos vs regresión polinomial para los datos Wage. Los splines ofrecen un mejor equilibrio entre ajuste y estabilidad.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="splines-de-suavizado" class="level2">
-<h2 class="anchored" data-anchor-id="splines-de-suavizado">Splines de Suavizado</h2>
-<p>Los <strong>splines de suavizado</strong> (smoothing splines) surgen de minimizar una RSS penalizada:</p>
-<p><span class="math display">\[\sum_{i=1}^{n} (y_i - g(x_i))^2 + \lambda \int g''(t)^2 dt\]</span></p>
-<p>El parámetro <span class="math inline">\(\lambda\)</span> controla el balance entre ajuste y suavidad. La <a href="#fig-7-7" class="quarto-xref">Figura&nbsp;7</a> ilustra splines de suavizado con diferentes valores de <span class="math inline">\(\lambda\)</span> para los datos <em>Auto</em>.</p>
-<div id="fig-7-7" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_7.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;7: Splines de suavizado para mpg vs horsepower con diferentes valores del parámetro de suavizado <span class="math inline">\(\lambda\)</span>.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-7-8" class="quarto-xref">Figura&nbsp;8</a> compara splines de suavizado con splines de regresión, mostrando cómo ambos se relacionan.</p>
-<div id="fig-7-8" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_8.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8: Comparación de splines de suavizado y splines de regresión. Ambos métodos producen ajustes similares cuando se eligen adecuadamente los parámetros.
-</figcaption>
-</figure>
-</div>
-<section id="selección-del-parámetro-de-suavizado" class="level4">
-<h4 class="anchored" data-anchor-id="selección-del-parámetro-de-suavizado">Selección del Parámetro de Suavizado</h4>
-<p>El parámetro <span class="math inline">\(\lambda\)</span> se selecciona mediante validación cruzada. La <a href="#fig-7-9" class="quarto-xref">Figura&nbsp;9</a> muestra el error de validación cruzada en función de los grados de libertad efectivos.</p>
-<div id="fig-7-9" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_9.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;9: Error de validación cruzada para splines de suavizado en función de los grados de libertad efectivos en los datos Auto.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="regresión-local" class="level2">
-<h2 class="anchored" data-anchor-id="regresión-local">Regresión Local</h2>
-<p>La <strong>regresión local</strong> ajusta un modelo separado en cada punto de evaluación <span class="math inline">\(x_0\)</span>, usando solo las observaciones cercanas ponderadas por una función kernel. La <a href="#fig-7-10" class="quarto-xref">Figura&nbsp;10</a> ilustra la regresión local con diferentes anchos de ventana en los datos <em>Auto</em>.</p>
-<div id="fig-7-10" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_10.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10: Regresión local para mpg vs horsepower con diferentes anchos de ventana (span).
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-7-11" class="quarto-xref">Figura&nbsp;11</a> muestra la regresión local en datos simulados, comparando diferentes kernels y anchos de ventana.</p>
-<div id="fig-7-11" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_11.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;11: Regresión local en datos simulados con diferentes kernels y anchos de ventana.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="modelos-aditivos-generalizados-gams" class="level2">
-<h2 class="anchored" data-anchor-id="modelos-aditivos-generalizados-gams">Modelos Aditivos Generalizados (GAMs)</h2>
-<p>Los <strong>modelos aditivos generalizados</strong> (Generalized Additive Models, GAMs) extienden los modelos lineales permitiendo que cada predictor tenga una función no lineal:</p>
-<p><span class="math display">\[y_i = \beta_0 + f_1(x_{i1}) + f_2(x_{i2}) + \cdots + f_p(x_{ip}) + \epsilon_i\]</span></p>
-<p>Cada <span class="math inline">\(f_j\)</span> puede ser un spline, una regresión polinomial, o cualquier otra función suave. La aditividad del modelo mantiene la interpretabilidad.</p>
-<section id="gams-para-regresión" class="level3">
-<h3 class="anchored" data-anchor-id="gams-para-regresión">GAMs para Regresión</h3>
-<p>La <a href="#fig-7-12" class="quarto-xref">Figura&nbsp;12</a> muestra un GAM ajustado a los datos <em>Wage</em> con splines de suavizado para <em>año</em> y <em>edad</em>, y términos lineales para otras variables.</p>
-<div id="fig-7-12" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_12.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;12: GAM para los datos Wage. Cada panel muestra la contribución de una variable al logaritmo del salario.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-7-13" class="quarto-xref">Figura&nbsp;13</a> extiende el GAM con términos de interacción y términos cualitativos para los datos Wage.</p>
-<div id="fig-7-13" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_13.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;13: GAM extendido para los datos Wage, incluyendo términos de interacción entre predictores.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="gams-para-clasificación" class="level3">
-<h3 class="anchored" data-anchor-id="gams-para-clasificación">GAMs para Clasificación</h3>
-<p>Los GAMs también pueden utilizarse para clasificación. La <a href="#fig-7-14" class="quarto-xref">Figura&nbsp;14</a> muestra un GAM para clasificación binaria aplicado a datos simulados, donde se modela el logit de la probabilidad.</p>
-<div id="fig-7-14" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-7-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter7/png/7_14.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;14: GAM para clasificación. Cada panel muestra el efecto no lineal de un predictor sobre el logit de la probabilidad de pertenecer a la clase positiva.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="laboratorio" class="level2">
-<h2 class="anchored" data-anchor-id="laboratorio">Laboratorio</h2>
-<p>Los laboratorios con el código completo de este capítulo están disponibles en el sitio oficial del libro: <a href="https://www.statlearning.com" target="_blank">statlearning.com</a>. También puedes acceder a los notebooks en el repositorio oficial de ISLP: <a href="https://github.com/intro-stat-learning/ISLP_labs" target="_blank">ISLP_labs en GitHub</a>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -917,6 +673,10 @@ Figura&nbsp;14: GAM para clasificación. Cada panel muestra el efecto no lineal 
   </div>
 </nav>
 </div> <!-- /content -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9999">
+  <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>
+</div>
+<script>document.getElementById('theme-toggle-btn').textContent=(document.documentElement.getAttribute('data-bs-theme')||'light')==='dark'?'☀️':'🌙'</script>
 
 
 

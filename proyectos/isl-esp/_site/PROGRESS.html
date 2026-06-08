@@ -40,10 +40,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ea2c7f5f25cb2f106c68b43028de7506.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,36 +71,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<script>(function(){var t;try{t=localStorage.getItem('isl-theme')}catch(e){}if(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)t='dark';if(!t)t='light';document.documentElement.setAttribute('data-bs-theme',t)})();</script>
+<script>
+(function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
+
 
 </head>
 
@@ -273,11 +249,10 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 21%">
-<col style="width: 17%">
-<col style="width: 19%">
-<col style="width: 27%">
-<col style="width: 14%">
+<col style="width: 25%">
+<col style="width: 20%">
+<col style="width: 22%">
+<col style="width: 32%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -285,7 +260,6 @@ window.Quarto = {
 <th>Estado</th>
 <th>Figuras</th>
 <th>Laboratorio</th>
-<th>Notas</th>
 </tr>
 </thead>
 <tbody>
@@ -294,411 +268,147 @@ window.Quarto = {
 <td>✅ Completado</td>
 <td>—</td>
 <td>—</td>
-<td>Texto traducido</td>
 </tr>
 <tr class="even">
 <td>1. Introducción</td>
 <td>✅ Completado</td>
-<td>4/4</td>
+<td>4</td>
 <td>—</td>
-<td>Figs 1.1–1.4</td>
 </tr>
 <tr class="odd">
 <td>2. Aprendizaje Estadístico</td>
 <td>✅ Completado</td>
-<td>17/17</td>
+<td>17</td>
 <td>Externo</td>
-<td>Figs 2.1–2.17</td>
 </tr>
 <tr class="even">
 <td>3. Regresión Lineal</td>
-<td>✅ Completado</td>
-<td>20/20</td>
+<td>⏳ Pendiente</td>
+<td>21</td>
 <td>Externo</td>
-<td>Figs 3.1–3.20</td>
 </tr>
 <tr class="odd">
 <td>4. Clasificación</td>
-<td>✅ Completado</td>
-<td>17/17</td>
+<td>⏳ Pendiente</td>
+<td>17</td>
 <td>Externo</td>
-<td>Figs 4.1–4.15</td>
 </tr>
 <tr class="even">
 <td>5. Métodos de Remuestreo</td>
-<td>✅ Completado</td>
-<td>11/11</td>
+<td>⏳ Pendiente</td>
+<td>11</td>
 <td>Externo</td>
-<td>Figs 5.1–5.11</td>
 </tr>
 <tr class="odd">
-<td>6. Selección de Modelos</td>
-<td>✅ Completado</td>
-<td>24/24</td>
+<td>6. Selección de Modelos Lineales y Regularización</td>
+<td>⏳ Pendiente</td>
+<td>24</td>
 <td>Externo</td>
-<td>Figs 6.1–6.24</td>
 </tr>
 <tr class="even">
 <td>7. Más Allá de la Linealidad</td>
-<td>✅ Completado</td>
-<td>14/14</td>
+<td>⏳ Pendiente</td>
+<td>14</td>
 <td>Externo</td>
-<td>Figs 7.1–7.14</td>
 </tr>
 <tr class="odd">
-<td>8. Árboles de Decisión</td>
-<td>✅ Completado</td>
-<td>17/17</td>
+<td>8. Métodos Basados en Árboles</td>
+<td>⏳ Pendiente</td>
+<td>17</td>
 <td>Externo</td>
-<td>Figs 8.1–8.14</td>
 </tr>
 <tr class="even">
-<td>9. SVM</td>
-<td>✅ Completado</td>
-<td>12/12</td>
+<td>9. Máquinas de Vectores de Soporte</td>
+<td>⏳ Pendiente</td>
+<td>12</td>
 <td>Externo</td>
-<td>Figs 9.1–9.12</td>
 </tr>
 <tr class="odd">
 <td>10. Aprendizaje Profundo</td>
-<td>✅ Completado</td>
-<td>29/29</td>
+<td>⏳ Pendiente</td>
+<td>29</td>
 <td>Externo</td>
-<td>Figs 10.1–10.21</td>
 </tr>
 <tr class="even">
-<td>11. Análisis de Supervivencia</td>
-<td>✅ Completado</td>
-<td>9/9</td>
+<td>11. Análisis de Supervivencia y Datos Censurados</td>
+<td>⏳ Pendiente</td>
+<td>9</td>
 <td>Externo</td>
-<td>Figs 11.1–11.9</td>
 </tr>
 <tr class="odd">
 <td>12. Aprendizaje No Supervisado</td>
-<td>✅ Completado</td>
-<td>20/20</td>
+<td>⏳ Pendiente</td>
+<td>20</td>
 <td>Externo</td>
-<td>Figs 12.1–12.19</td>
 </tr>
 <tr class="even">
 <td>13. Pruebas Múltiples</td>
-<td>✅ Completado</td>
-<td>11/11</td>
+<td>⏳ Pendiente</td>
+<td>11</td>
 <td>Externo</td>
-<td>Figs 13.1–13.11</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> 14/14 capítulos completados, ~204 figuras. ¡Proyecto completo!</p>
-<hr>
 </section>
-<section id="detalle-por-capítulo" class="level2">
-<h2 class="anchored" data-anchor-id="detalle-por-capítulo">Detalle por Capítulo</h2>
-<section id="prefacio" class="level3">
-<h3 class="anchored" data-anchor-id="prefacio">Prefacio</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sin figuras ni código</label></li>
-</ul>
-</section>
-<section id="capítulo-1-introducción" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-1-introducción">Capítulo 1: Introducción</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Figura 1.1 — Datos Wage (3 paneles: edad, año, educación)</label></li>
-<li><label><input type="checkbox" checked="">Figura 1.2 — Datos Smarket (boxplots por lag)</label></li>
-<li><label><input type="checkbox" checked="">Figura 1.3 — QDA Smarket (boxplot probabilidades)</label></li>
-<li><label><input type="checkbox" checked="">Figura 1.4 — NCI60 (PCA + clustering)</label></li>
-<li><label><input type="checkbox" checked="">Colores fieles al libro ISLP (puntos negros, líneas azules)</label></li>
-</ul>
-</section>
-<section id="capítulo-2-aprendizaje-estadístico" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-2-aprendizaje-estadístico">Capítulo 2: Aprendizaje Estadístico</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 2.1.1 — ¿Por qué estimar f? (predicción e inferencia)</label></li>
-<li><label><input type="checkbox" checked="">Sección 2.1.2 — ¿Cómo estimamos f? (paramétrico, no paramétrico)</label></li>
-<li><label><input type="checkbox" checked="">Sección 2.1.3 — Compromiso precisión vs interpretabilidad</label></li>
-<li><label><input type="checkbox" checked="">Sección 2.1.4 — Supervisado vs no supervisado</label></li>
-<li><label><input type="checkbox" checked="">Sección 2.1.5 — Regresión vs clasificación</label></li>
-<li><label><input type="checkbox" checked="">Sección 2.2 — Evaluación de precisión del modelo</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.1 — Advertising (TV, radio, periódico)</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.2 — Income (observaciones + función subyacente)</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.3 — Income 3D (educación + antigüedad)</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.4 — Income ajuste lineal 3D</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.5 — Income thin-plate spline suave</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.6 — Income thin-plate spline rugoso</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.7 — Compromiso flexibilidad-interpretabilidad</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.8 — Clustering (2 grupos)</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.9 — MSE simulación</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.10 — MSE con f lineal</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.11 — MSE con f no lineal</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.12 — Sesgo-varianza</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.13 — Clasificación datos simulados</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.14 — Clasificador de Bayes</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.15 — KNN (ilustración)</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.16 — KNN frontera decisión</label></li>
-<li><label><input type="checkbox" checked="">Figura 2.17 — KNN error entrenamiento/prueba</label></li>
-</ul>
-<hr>
-</section>
-</section>
-<section id="convenciones-y-estilo" class="level2">
-<h2 class="anchored" data-anchor-id="convenciones-y-estilo">Convenciones y Estilo</h2>
-<ul>
-<li><strong>Puntos en gráficos</strong>: <code>c='black', alpha=0.3, s=5, edgecolors='none'</code></li>
-<li><strong>Líneas de ajuste</strong>: <code>'b-'</code> (azul), <code>linewidth=2</code></li>
-<li><strong>Boxplots</strong>: <code>facecolor='white', color='black'</code>, medianas en azul</li>
-<li><strong>Figuras multi-panel</strong>: <code>layout='constrained'</code>, <code>sharey=True</code></li>
-<li><strong>Etiquetas y títulos</strong>: siempre en español</li>
-<li><strong>Referencias</strong>: <code>@fig-label</code> para figuras, <code>@eq-label</code> para ecuaciones</li>
-<li><strong>Ecuaciones</strong>: <code>$$...$$</code> con <code>\tag{2.1}</code> para numeración</li>
-<li><strong>Laboratorios</strong>: no se incluyen. Se redirige al lector al sitio oficial del libro (<a href="https://www.statlearning.com" class="uri">https://www.statlearning.com</a>) y al repositorio de ISLP (<a href="https://github.com/intro-stat-learning/ISLP" class="uri">https://github.com/intro-stat-learning/ISLP</a>).</li>
-<li><strong>Ancho de figuras</strong>: 60% para figuras simples, 40% para paneles dobles laterales.</li>
-</ul>
-<section id="capítulo-3-regresión-lineal" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-3-regresión-lineal">Capítulo 3: Regresión Lineal</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto (~65 páginas)</label></li>
-<li><label><input type="checkbox" checked="">Sección 3.1 — Regresión Lineal Simple (3.1.1–3.1.3)</label></li>
-<li><label><input type="checkbox" checked="">Sección 3.2 — Regresión Lineal Múltiple (3.2.1–3.2.2)</label></li>
-<li><label><input type="checkbox" checked="">Sección 3.3 — Otras Consideraciones (3.3.1–3.3.3: predictores cualitativos, extensiones, problemas potenciales)</label></li>
-<li><label><input type="checkbox" checked="">Sección 3.4 — El Plan de Marketing</label></li>
-<li><label><input type="checkbox" checked="">Sección 3.5 — Comparación con KNN</label></li>
-<li><label><input type="checkbox" checked="">20 figuras originales del libro (Figs 3.1–3.20) en <code>Figures/Chapter3/</code></label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-4-clasificación" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-4-clasificación">Capítulo 4: Clasificación</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto (~60 páginas)</label></li>
-<li><label><input type="checkbox" checked="">Sección 4.1 — Visión General de la Clasificación</label></li>
-<li><label><input type="checkbox" checked="">Sección 4.2 — ¿Por Qué No Regresión Lineal?</label></li>
-<li><label><input type="checkbox" checked="">Sección 4.3 — Regresión Logística (4.3.1–4.3.5: modelo logístico, estimación EMV, predicciones, regresión múltiple, multinomial)</label></li>
-<li><label><input type="checkbox" checked="">Sección 4.4 — Modelos Generativos para Clasificación (4.4.1–4.4.4: Bayes, LDA univariado, LDA multivariado, QDA, Naive Bayes)</label></li>
-<li><label><input type="checkbox" checked="">Sección 4.5 — Comparación de Métodos de Clasificación (curvas ROC, AUC)</label></li>
-<li><label><input type="checkbox" checked="">17 figuras originales del libro (Figs 4.1–4.15) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-5-métodos-de-remuestreo" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-5-métodos-de-remuestreo">Capítulo 5: Métodos de Remuestreo</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 5.1 — Validación Cruzada (5.1.1–5.1.5: conjunto de validación, LOOCV, k-fold CV, sesgo-varianza, clasificación)</label></li>
-<li><label><input type="checkbox" checked="">Sección 5.2 — El Bootstrap</label></li>
-<li><label><input type="checkbox" checked="">11 figuras originales del libro (Figs 5.1–5.11) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-6-selección-de-modelos-lineales-y-regularización" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-6-selección-de-modelos-lineales-y-regularización">Capítulo 6: Selección de Modelos Lineales y Regularización</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 6.1 — Selección de Subconjuntos (6.1.1–6.1.3: mejor subconjunto, paso a paso, criterios de elección)</label></li>
-<li><label><input type="checkbox" checked="">Sección 6.2 — Métodos de Regularización (6.2.1–6.2.3: ridge, lasso, selección de <span class="math inline">\(\lambda\)</span>)</label></li>
-<li><label><input type="checkbox" checked="">Sección 6.3 — Reducción de Dimensionalidad (6.3.1–6.3.2: PCR, PLS)</label></li>
-<li><label><input type="checkbox" checked="">Sección 6.4 — Consideraciones en Altas Dimensiones</label></li>
-<li><label><input type="checkbox" checked="">24 figuras originales del libro (Figs 6.1–6.24) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-7-más-allá-de-la-linealidad" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-7-más-allá-de-la-linealidad">Capítulo 7: Más Allá de la Linealidad</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.1 — Regresión Polinomial</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.2 — Funciones Escalón</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.3 — Funciones Base</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.4 — Splines de Regresión (7.4.1–7.4.5: polinomios por partes, restricciones, base B-spline, nodos, comparación)</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.5 — Splines de Suavizado (7.5.1–7.5.2: definición, selección de <span class="math inline">\(\lambda\)</span>)</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.6 — Regresión Local</label></li>
-<li><label><input type="checkbox" checked="">Sección 7.7 — GAMs (7.7.1: regresión, 7.7.2: clasificación)</label></li>
-<li><label><input type="checkbox" checked="">14 figuras originales del libro (Figs 7.1–7.14) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-8-métodos-basados-en-árboles" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-8-métodos-basados-en-árboles">Capítulo 8: Métodos Basados en Árboles</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 8.1 — Árboles de Regresión (particionamiento recursivo, poda)</label></li>
-<li><label><input type="checkbox" checked="">Sección 8.2 — Árboles de Clasificación (Gini, entropía)</label></li>
-<li><label><input type="checkbox" checked="">Sección 8.3 — Bagging</label></li>
-<li><label><input type="checkbox" checked="">Sección 8.4 — Bosques Aleatorios</label></li>
-<li><label><input type="checkbox" checked="">Sección 8.5 — Boosting</label></li>
-<li><label><input type="checkbox" checked="">17 figuras originales del libro (Figs 8.1–8.14) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-9-máquinas-de-vectores-de-soporte" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-9-máquinas-de-vectores-de-soporte">Capítulo 9: Máquinas de Vectores de Soporte</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 9.1 — Clasificador de Máximo Margen (hiperplano separador, margen)</label></li>
-<li><label><input type="checkbox" checked="">Sección 9.2 — Clasificador de Vectores de Soporte (margen suave, parámetro <span class="math inline">\(C\)</span>)</label></li>
-<li><label><input type="checkbox" checked="">Sección 9.3 — SVM con Kernels (RBF, polinomial, parámetro <span class="math inline">\(\gamma\)</span>)</label></li>
-<li><label><input type="checkbox" checked="">Sección 9.4 — SVM multiclase y relaciones con otros métodos</label></li>
-<li><label><input type="checkbox" checked="">12 figuras originales del libro (Figs 9.1–9.12) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-10-aprendizaje-profundo" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-10-aprendizaje-profundo">Capítulo 10: Aprendizaje Profundo</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.1 — Redes Neuronales Simples (arquitectura, activaciones, XOR, entrenamiento)</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.2 — Redes Convolucionales (CNN: convolución, pooling, aumento de datos, visualización)</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.3 — Redes Recurrentes (RNN, LSTM)</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.4 — Autoencoders y VAE</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.5 — GANs</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.6 — Aprendizaje por Transferencia</label></li>
-<li><label><input type="checkbox" checked="">Sección 10.7 — Atención y Transformers</label></li>
-<li><label><input type="checkbox" checked="">29 figuras originales del libro (Figs 10.1–10.21) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-11-análisis-de-supervivencia-y-datos-censurados" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-11-análisis-de-supervivencia-y-datos-censurados">Capítulo 11: Análisis de Supervivencia y Datos Censurados</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 11.1 — Datos de Supervivencia y Censura</label></li>
-<li><label><input type="checkbox" checked="">Sección 11.2 — Estimador de Kaplan–Meier</label></li>
-<li><label><input type="checkbox" checked="">Sección 11.3 — Regresión de Cox (riesgos proporcionales, hazard ratio)</label></li>
-<li><label><input type="checkbox" checked="">Sección 11.4 — Extensiones (riesgos no proporcionales, estratificación)</label></li>
-<li><label><input type="checkbox" checked="">Sección 11.5 — Árboles y Bosques Aleatorios de Supervivencia</label></li>
-<li><label><input type="checkbox" checked="">Sección 11.6 — Aprendizaje Profundo para Supervivencia</label></li>
-<li><label><input type="checkbox" checked="">9 figuras originales del libro (Figs 11.1–11.9) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-12-aprendizaje-no-supervisado" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-12-aprendizaje-no-supervisado">Capítulo 12: Aprendizaje No Supervisado</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 12.1 — PCA (componentes principales, scree plot, biplot, NCI60)</label></li>
-<li><label><input type="checkbox" checked="">Sección 12.2 — Clustering (K-means, jerárquico, dendrograma, enlaces)</label></li>
-<li><label><input type="checkbox" checked="">Sección 12.3 — Temas avanzados (alta dimensión, visualización, t-SNE)</label></li>
-<li><label><input type="checkbox" checked="">20 figuras originales del libro (Figs 12.1–12.19) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-<section id="capítulo-13-pruebas-múltiples" class="level3">
-<h3 class="anchored" data-anchor-id="capítulo-13-pruebas-múltiples">Capítulo 13: Pruebas Múltiples</h3>
-<ul class="task-list">
-<li><label><input type="checkbox" checked="">Traducción completa del texto</label></li>
-<li><label><input type="checkbox" checked="">Sección 13.1 — El Problema de las Pruebas Múltiples (FWER, FDR)</label></li>
-<li><label><input type="checkbox" checked="">Sección 13.2 — Corrección de Bonferroni y Holm</label></li>
-<li><label><input type="checkbox" checked="">Sección 13.3 — Procedimiento de Benjamini–Hochberg</label></li>
-<li><label><input type="checkbox" checked="">Sección 13.4 — Aplicaciones Genómicas (volcano plot, Manhattan plot, GWAS)</label></li>
-<li><label><input type="checkbox" checked="">Sección 13.5 — Valores <span class="math inline">\(p\)</span> ajustados y dependencia entre pruebas</label></li>
-<li><label><input type="checkbox" checked="">11 figuras originales del libro (Figs 13.1–13.11) convertidas a PNG</label></li>
-<li><label><input type="checkbox" checked="">Laboratorio: referencia a fuentes oficiales (statlearning.com)</label></li>
-</ul>
-</section>
-</section>
-<section id="nota-sobre-las-figuras" class="level2">
-<h2 class="anchored" data-anchor-id="nota-sobre-las-figuras">Nota sobre las Figuras</h2>
-<p>A partir del 7 de junio de 2026, <strong>todas las figuras de los Capítulos 1–3 se han reemplazado por las originales del libro</strong>. Los PDF originales están en <code>Figures/ChapterX/</code> y se convirtieron a PNG (200 DPI, PyMuPDF) en <code>Figures/ChapterX/png/</code> porque los visores de PDF embebidos no funcionan de forma fiable en todos los navegadores. Las referencias en los QMD apuntan a los PNG. Ya no se genera código Python para las figuras. Esto reduce el tiempo de compilación y garantiza fidelidad absoluta con la obra original.</p>
-</section>
-<section id="historial-de-cambios" class="level2">
-<h2 class="anchored" data-anchor-id="historial-de-cambios">Historial de Cambios</h2>
+<section id="flujo-de-trabajo" class="level2">
+<h2 class="anchored" data-anchor-id="flujo-de-trabajo">Flujo de Trabajo</h2>
+<p>Cada capítulo se traduce siguiendo estas fases:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 46%">
-<col style="width: 53%">
+<col style="width: 22%">
+<col style="width: 29%">
+<col style="width: 48%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Fecha</th>
-<th>Cambio</th>
+<th>Fase</th>
+<th>Acción</th>
+<th>Verificación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2026-06-07</td>
-<td>Reemplazo: todas las figuras de Ch1–3 por originales del libro</td>
+<td>0</td>
+<td>Extraer texto del PDF (teoría, págs. según <code>CLAUDE.md</code>)</td>
+<td>Segmentos alineados con el original</td>
 </tr>
 <tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 3 completado (traducción + 20 figuras + lab completo)</td>
+<td>1</td>
+<td>Traducir párrafo a párrafo aplicando glosario y formato</td>
+<td><code>CLAUDE.md</code> criterios 1–9</td>
 </tr>
 <tr class="odd">
-<td>2026-06-07</td>
-<td>Capítulo 2 completado (traducción + 16 figuras)</td>
+<td>2</td>
+<td>Verificar terminología y notación contra <code>CLAUDE.md</code> y <code>NOTATION.md</code></td>
+<td>Consistencia interna</td>
 </tr>
 <tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 1 completado (traducción + 4 figuras, corrección solapamiento)</td>
+<td>3</td>
+<td>Pase de fluidez académica: eliminar calcos, reestructurar pasivas</td>
+<td>Lectura natural en español</td>
 </tr>
 <tr class="odd">
-<td>2026-06-07</td>
-<td>Prefacio + estructura inicial del proyecto</td>
+<td>4</td>
+<td><code>quarto render</code> + revisión visual de figuras, ecuaciones, tooltips</td>
+<td>Sin errores de compilación</td>
 </tr>
 <tr class="even">
-<td>2026-06-07</td>
-<td>Conversión: todas las figuras a PNG 200 DPI (PyMuPDF), ya que los PDF no se renderizan embebidos</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td>Arreglo: <code>@fig-advertising</code> (definido en Cap. 2) roto en Cap. 3 — reemplazado por texto plano “Figura 2.1”</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 4 completado: traducción + 17 figuras (PNG) + lab completo (Smarket + Caravan)</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td>Capítulo 5 completado: traducción + 11 figuras (PNG) + lab (validación cruzada + bootstrap)</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Decisión: se eliminan los laboratorios de todos los capítulos. Se reemplazan por referencias a las fuentes oficiales (statlearning.com, GitHub)</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td>Capítulo 6 completado: traducción + 24 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 7 completado: traducción + 14 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td>Capítulo 8 completado: traducción + 17 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 9 completado: traducción + 12 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td>Capítulo 10 completado: traducción + 29 figuras (PNG/JPG) + lab externo</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 11 completado: traducción + 9 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td>Capítulo 12 completado: traducción + 20 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Capítulo 13 completado: traducción + 11 figuras (PNG) + lab externo</td>
-</tr>
-<tr class="odd">
-<td>2026-06-07</td>
-<td><strong>¡Proyecto completo!</strong> Los 14 capítulos + prefacio están traducidos e integrados en el sitio Quarto.</td>
-</tr>
-<tr class="even">
-<td>2026-06-07</td>
-<td>Revisión de calidad de traducción en todos los capítulos (resultado: Excelente). Correcciones en Cap. 4: <code>Precisión</code> → <code>Exactitud</code> para Accuracy, <code>MLE</code> → <code>EMV</code>, <code>jittereados</code> → <code>con dispersión aleatoria</code>, unificación <code>multivariado</code> → <code>multivariante</code>. Corrección en Cap. 5: <code>k Iteraciones</code> → <code>k Pliegues</code>. Actualización de portada con sección informativa.</td>
+<td>5</td>
+<td>Marcar en PROGRESS.md y commit si aplica</td>
+<td>Capítulo completo</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="convenciones-del-sistema" class="level2">
+<h2 class="anchored" data-anchor-id="convenciones-del-sistema">Convenciones del Sistema</h2>
+<ul>
+<li><strong>Notación:</strong> <code>NOTATION.md</code> — vinculante para todos los capítulos.</li>
+<li><strong>Figuras:</strong> Originales del libro en <code>Figures/ChapterX/png/</code>.</li>
+<li><strong>Tooltip hover:</strong> Las referencias <code>@fig-*</code> a otros capítulos muestran vista previa al pasar el ratón.</li>
+<li><strong>Laboratorios:</strong> No se incluyen. Se redirige al sitio oficial.</li>
+<li><strong>Etiquetas de figuras:</strong> <code>@fig-{cap}-{num}</code> (ej: <code>@fig-2-1</code>).</li>
+</ul>
 
 
 </section>
@@ -1106,6 +816,10 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9999">
+  <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>
+</div>
+<script>document.getElementById('theme-toggle-btn').textContent=(document.documentElement.getAttribute('data-bs-theme')||'light')==='dark'?'☀️':'🌙'</script>
 
 
 

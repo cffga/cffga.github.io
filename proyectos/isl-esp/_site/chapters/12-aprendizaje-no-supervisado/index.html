@@ -42,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ea2c7f5f25cb2f106c68b43028de7506.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,36 +73,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<script>(function(){var t;try{t=localStorage.getItem('isl-theme')}catch(e){}if(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)t='dark';if(!t)t='light';document.documentElement.setAttribute('data-bs-theme',t)})();</script>
+<script>
+(function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
+
 
 </head>
 
@@ -280,289 +256,8 @@ window.Quarto = {
 </header>
 
 
-<section id="resumen" class="level2">
-<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
-<p>El <strong>aprendizaje no supervisado</strong> trabaja con datos que no tienen una variable respuesta. El objetivo es descubrir patrones, grupos o estructuras subyacentes. Cubrimos <strong>análisis de componentes principales</strong> (PCA), <strong>clustering</strong> (K-means, jerárquico) y métodos mixtos.</p>
-</section>
-<section id="análisis-de-componentes-principales-pca" class="level2">
-<h2 class="anchored" data-anchor-id="análisis-de-componentes-principales-pca">Análisis de Componentes Principales (PCA)</h2>
-<p>PCA es una técnica de reducción de dimensionalidad que encuentra las direcciones de máxima varianza en los datos. La primera <strong>componente principal</strong> es la combinación lineal de los predictores que maximiza la varianza:</p>
-<p><span class="math display">\[Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \cdots + \phi_{p1} X_p\]</span></p>
-<p>Las componentes principales están ordenadas por la cantidad de varianza que explican, y son <strong>ortogonales</strong> entre sí. Los valores <span class="math inline">\(\phi_{j1}\)</span> son los <strong>loadings</strong> (cargas) y los valores <span class="math inline">\(Z_1\)</span> son los <strong>scores</strong>.</p>
-<p>La <a href="#fig-12-1" class="quarto-xref">Figura&nbsp;1</a> ilustra la primera y segunda componente principal para datos simulados en dos dimensiones.</p>
-<div id="fig-12-1" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_1.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Primera y segunda componente principal para datos simulados en <span class="math inline">\(p = 2\)</span> dimensiones. La PC1 captura la dirección de máxima varianza.
-</figcaption>
-</figure>
-</div>
-<section id="proporción-de-varianza-explicada" class="level3">
-<h3 class="anchored" data-anchor-id="proporción-de-varianza-explicada">Proporción de Varianza Explicada</h3>
-<p>La <a href="#fig-12-2a" class="quarto-xref">Figura&nbsp;2</a> y <a href="#fig-12-2b" class="quarto-xref">Figura&nbsp;3</a> muestran la varianza explicada por cada componente principal y el <strong>scree plot</strong> para un conjunto de datos de expresión génica.</p>
-<div id="fig-12-2a" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-2a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_2a.png" class="img-fluid figure-img" style="width:49.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-2a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Varianza explicada por cada componente principal en datos de expresión génica.
-</figcaption>
-</figure>
-</div>
-<div id="fig-12-2b" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-2b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_2b.png" class="img-fluid figure-img" style="width:49.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-2b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3: Scree plot: varianza explicada acumulada por las primeras componentes principales.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="biplot" class="level3">
-<h3 class="anchored" data-anchor-id="biplot">Biplot</h3>
-<p>La <a href="#fig-12-3" class="quarto-xref">Figura&nbsp;4</a> muestra un <strong>biplot</strong> de PCA, que superpone las observaciones (scores) y las variables (loadings) en el mismo gráfico, permitiendo interpretar qué variables contribuyen a cada componente.</p>
-<div id="fig-12-3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_3.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Biplot de PCA para el conjunto de datos USArrests. Las flechas indican la dirección de cada variable original.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-12-4" class="quarto-xref">Figura&nbsp;5</a> aplica PCA a los datos <em>NCI60</em> de expresión génica, coloreando las observaciones por tipo de cáncer.</p>
-<div id="fig-12-4" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_4.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;5: PCA sobre datos NCI60. Cada punto es una línea celular, coloreada por tipo de cáncer. Se muestran las dos primeras componentes principales.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-12-5" class="quarto-xref">Figura&nbsp;6</a> muestra los loadings de las primeras componentes principales para los datos NCI60.</p>
-<div id="fig-12-5" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_5.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;6: Loadings de las primeras componentes principales para los datos NCI60. Muestran qué genes contribuyen más a cada componente.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="pca-con-escalamiento" class="level3">
-<h3 class="anchored" data-anchor-id="pca-con-escalamiento">PCA con Escalamiento</h3>
-<p>Es fundamental <strong>estandarizar</strong> las variables antes de aplicar PCA cuando están en escalas diferentes. La <a href="#fig-12-6" class="quarto-xref">Figura&nbsp;7</a> compara PCA con y sin estandarización en los datos <em>USArrests</em>.</p>
-<div id="fig-12-6" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_6.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;7: Comparación de PCA con y sin estandarización en USArrests. Sin estandarización, las variables con mayor magnitud dominan las componentes.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="clustering" class="level2">
-<h2 class="anchored" data-anchor-id="clustering">Clustering</h2>
-<p>El <strong>clustering</strong> busca agrupar observaciones similares. La <strong>similitud</strong> entre observaciones se mide típicamente con la distancia euclidiana.</p>
-<section id="clustering-con-k-medias" class="level3">
-<h3 class="anchored" data-anchor-id="clustering-con-k-medias">Clustering con K-Medias</h3>
-<p>El algoritmo de <strong>K-medias</strong> (K-means) particiona las <span class="math inline">\(n\)</span> observaciones en <span class="math inline">\(K\)</span> grupos, minimizando la <strong>varianza intra-cluster</strong>:</p>
-<p><span class="math display">\[\sum_{k=1}^{K} \frac{1}{|C_k|} \sum_{i, i' \in C_k} \sum_{j=1}^{p} (x_{ij} - x_{i'j})^2\]</span></p>
-<p>La <a href="#fig-12-7" class="quarto-xref">Figura&nbsp;8</a> ilustra el algoritmo K-means en datos simulados, mostrando la asignación inicial y la convergencia.</p>
-<div id="fig-12-7" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_7.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8: Algoritmo K-means en datos simulados: iteraciones del algoritmo hasta la convergencia. Cada color representa un cluster.
-</figcaption>
-</figure>
-</div>
-<section id="elección-de-k" class="level4">
-<h4 class="anchored" data-anchor-id="elección-de-k">Elección de <span class="math inline">\(K\)</span></h4>
-<p>La selección del número de clusters <span class="math inline">\(K\)</span> es un problema abierto. La <a href="#fig-12-8" class="quarto-xref">Figura&nbsp;9</a> muestra la varianza total intra-cluster en función de <span class="math inline">\(K\)</span> (método del codo) para datos simulados.</p>
-<div id="fig-12-8" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_8.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;9: Varianza total intra-cluster en función de <span class="math inline">\(K\)</span> para el algoritmo K-means. El punto de codo sugiere un valor adecuado.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="clustering-jerárquico" class="level3">
-<h3 class="anchored" data-anchor-id="clustering-jerárquico">Clustering Jerárquico</h3>
-<p>El <strong>clustering jerárquico</strong> produce una jerarquía de grupos representada en un <strong>dendrograma</strong>. A diferencia de K-means, no requiere especificar <span class="math inline">\(K\)</span> de antemano.</p>
-<p>La <a href="#fig-12-9" class="quarto-xref">Figura&nbsp;10</a> muestra un dendrograma para datos simulados en dos dimensiones, con las observaciones como hojas y la altura de las fusiones indicando la distancia entre grupos.</p>
-<div id="fig-12-9" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_9.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10: Dendrograma para datos simulados en dos dimensiones. Las observaciones similares se fusionan a baja altura.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-12-10" class="quarto-xref">Figura&nbsp;11</a> compara diferentes medidas de <strong>enlace</strong> (linkage: completa, promedio, simple) en el clustering jerárquico para los mismos datos.</p>
-<div id="fig-12-10" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_10.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;11: Comparación de enlace completo, promedio y simple en clustering jerárquico. Cada tipo de enlace produce dendrogramas diferentes.
-</figcaption>
-</figure>
-</div>
-<section id="cortes-en-el-dendrograma" class="level4">
-<h4 class="anchored" data-anchor-id="cortes-en-el-dendrograma">Cortes en el Dendrograma</h4>
-<p>La <a href="#fig-12-11" class="quarto-xref">Figura&nbsp;12</a> muestra cómo un corte horizontal en el dendrograma produce diferentes números de clusters según la altura del corte.</p>
-<div id="fig-12-11" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_11.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;12: Corte del dendrograma a diferentes alturas produce diferentes números y composiciones de clusters.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="aplicación-a-datos-nci60" class="level3">
-<h3 class="anchored" data-anchor-id="aplicación-a-datos-nci60">Aplicación a Datos NCI60</h3>
-<p>La <a href="#fig-12-12" class="quarto-xref">Figura&nbsp;13</a> aplica clustering jerárquico a los datos NCI60, mostrando cómo se agrupan las líneas celulares según su tipo de cáncer.</p>
-<div id="fig-12-12" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_12.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;13: Clustering jerárquico sobre los datos NCI60. Los colores indican el tipo de cáncer verdadero.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-12-13" class="quarto-xref">Figura&nbsp;14</a> compara los clusters obtenidos con K-means (para diferentes <span class="math inline">\(K\)</span>) con los tipos de cáncer verdaderos en NCI60.</p>
-<div id="fig-12-13" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_13.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;14: Comparación de clusters K-means con los tipos de cáncer reales en NCI60 para diferentes valores de <span class="math inline">\(K\)</span>.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="temas-avanzados" class="level2">
-<h2 class="anchored" data-anchor-id="temas-avanzados">Temas Avanzados</h2>
-<section id="pca-y-matrices-de-covarianza" class="level3">
-<h3 class="anchored" data-anchor-id="pca-y-matrices-de-covarianza">PCA y Matrices de Covarianza</h3>
-<p>La <a href="#fig-12-14" class="quarto-xref">Figura&nbsp;15</a> visualiza la matriz de covarianza y correlación de los datos NCI60, mostrando la estructura de dependencia entre genes.</p>
-<div id="fig-12-14" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_14.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;15: Matriz de correlación de los datos NCI60. Los patrones visuales revelan estructuras de coexpresión génica.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="pca-como-preprocesamiento" class="level3">
-<h3 class="anchored" data-anchor-id="pca-como-preprocesamiento">PCA como Preprocesamiento</h3>
-<p>PCA se usa frecuentemente como paso previo a métodos supervisados (como en PCR, Capítulo 6). La <a href="#fig-12-15" class="quarto-xref">Figura&nbsp;16</a> muestra el efecto de usar PCA como preprocesamiento en un problema de clasificación.</p>
-<div id="fig-12-15" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_15.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;16: PCA como preprocesamiento para clasificación. Reducir la dimensionalidad puede mejorar el rendimiento cuando <span class="math inline">\(p\)</span> es grande.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="visualización-de-altas-dimensiones" class="level3">
-<h3 class="anchored" data-anchor-id="visualización-de-altas-dimensiones">Visualización de Altas Dimensiones</h3>
-<p>La <a href="#fig-12-16" class="quarto-xref">Figura&nbsp;17</a> muestra diferentes formas de visualizar datos de alta dimensión, incluyendo PCA, MDS (escalamiento multidimensional) y t-SNE.</p>
-<div id="fig-12-16" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_16.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;17: Comparación de PCA, MDS y t-SNE para visualizar datos de alta dimensión en un plano.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="clustering-con-datos-de-alta-dimensión" class="level3">
-<h3 class="anchored" data-anchor-id="clustering-con-datos-de-alta-dimensión">Clustering con Datos de Alta Dimensión</h3>
-<p>La <a href="#fig-12-17" class="quarto-xref">Figura&nbsp;18</a> y <a href="#fig-12-18" class="quarto-xref">Figura&nbsp;19</a> muestran los desafíos del clustering en alta dimensión, donde las distancias euclidianas tienden a hacerse uniformes.</p>
-<div id="fig-12-17" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_17.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;18: Desafíos del clustering en alta dimensión: las distancias entre observaciones se vuelven cada vez más similares a medida que <span class="math inline">\(p\)</span> crece.
-</figcaption>
-</figure>
-</div>
-<div id="fig-12-18" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_18.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19: Comparación de métodos de clustering en datos de alta dimensión.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="matriz-de-cargas-y-contribución" class="level3">
-<h3 class="anchored" data-anchor-id="matriz-de-cargas-y-contribución">Matriz de Cargas y Contribución</h3>
-<p>La <a href="#fig-12-19" class="quarto-xref">Figura&nbsp;20</a> presenta la matriz de loadings de PCA para varios conjuntos de datos, mostrando qué variables contribuyen más a cada componente.</p>
-<div id="fig-12-19" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-12-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter12/png/12_19.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;20: Matriz de loadings de PCA: el color indica la magnitud y dirección de la contribución de cada variable a las componentes principales.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="laboratorio" class="level2">
-<h2 class="anchored" data-anchor-id="laboratorio">Laboratorio</h2>
-<p>Los laboratorios con el código completo de este capítulo están disponibles en el sitio oficial del libro: <a href="https://www.statlearning.com" target="_blank">statlearning.com</a>. También puedes acceder a los notebooks en el repositorio oficial de ISLP: <a href="https://github.com/intro-stat-learning/ISLP_labs" target="_blank">ISLP_labs en GitHub</a>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -978,6 +673,10 @@ Figura&nbsp;20: Matriz de loadings de PCA: el color indica la magnitud y direcci
   </div>
 </nav>
 </div> <!-- /content -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9999">
+  <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>
+</div>
+<script>document.getElementById('theme-toggle-btn').textContent=(document.documentElement.getAttribute('data-bs-theme')||'light')==='dark'?'☀️':'🌙'</script>
 
 
 

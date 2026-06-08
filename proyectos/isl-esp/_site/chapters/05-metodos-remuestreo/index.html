@@ -42,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-60d377fe6900cd239ff3993f5926f011.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ea2c7f5f25cb2f106c68b43028de7506.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f5ca02b64c29b44eb6291ef4a2df1de.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,36 +73,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<script>(function(){var t;try{t=localStorage.getItem('isl-theme')}catch(e){}if(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)t='dark';if(!t)t='light';document.documentElement.setAttribute('data-bs-theme',t)})();</script>
+<script>
+(function(){'use strict';var b='',m=document.querySelector('meta[name="quarto:site-url"]');if(m){b=m.getAttribute('content');if(!b.endsWith('/'))b+='/'}else{var p=window.location.pathname.split('/');var d=(window.location.pathname.match(/chapters\//g)||[]).length;b=window.location.origin+p.slice(0,-(d+1)||1).join('/')+'/'}var j=b+'figures-map.json';fetch(j).then(function(r){return r.json()}).then(function(map){document.querySelectorAll('a.quarto-xref').forEach(function(a){var h=a.getAttribute('href');if(!h)return;var m=h.match(/#(fig-[\w-]+)/);if(!m)return;var k=m[1];if(!map[k])return;var u=b+map[k];a.setAttribute('data-preview','');a.style.setProperty('--preview-img','url('+u+')')})}).catch(function(e){console.warn('preview: no se pudo cargar figures-map.json',e)})})();
 </script>
+
 
 </head>
 
@@ -280,181 +256,8 @@ window.Quarto = {
 </header>
 
 
-<section id="resumen" class="level2">
-<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
-<p>Los métodos de remuestreo (resampling) implican tomar muestras repetidas del conjunto de datos de entrenamiento. En este capítulo estudiamos dos métodos fundamentales: <strong>validación cruzada</strong> y <strong>bootstrap</strong>. La validación cruzada se utiliza para estimar el error de prueba de un modelo, mientras que bootstrap se usa para estimar la variabilidad de una estimación estadística. Ambos son herramientas esenciales en el aprendizaje estadístico moderno.</p>
-</section>
-<section id="validación-cruzada" class="level2">
-<h2 class="anchored" data-anchor-id="validación-cruzada">Validación Cruzada</h2>
-<section id="el-enfoque-del-conjunto-de-validación" class="level3">
-<h3 class="anchored" data-anchor-id="el-enfoque-del-conjunto-de-validación">El Enfoque del Conjunto de Validación</h3>
-<p>La forma más simple de estimar el error de prueba es dividir los datos en dos conjuntos: <strong>entrenamiento</strong> y <strong>validación</strong> (o prueba). Se ajusta el modelo en el conjunto de entrenamiento y se evalúa en el de validación.</p>
-<p>La <a href="#fig-5-1" class="quarto-xref">Figura&nbsp;1</a> ilustra este enfoque usando los datos <em>Auto</em>. Se ajustaron modelos polinomiales de grado 1 a 10 y se calculó el error cuadrático medio en el conjunto de validación. El panel izquierdo muestra el ajuste lineal y el derecho uno de mayor grado.</p>
-<div id="fig-5-1" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_1.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Enfoque del conjunto de validación aplicado a los datos Auto. Izquierda: ajuste lineal. Derecha: ajuste de mayor grado.
-</figcaption>
-</figure>
-</div>
-<p>La tasa de error de prueba estimada depende en gran medida de qué observaciones se incluyen en el conjunto de entrenamiento y cuáles en el de validación. Diferentes divisiones pueden producir resultados muy distintos, lo que hace que este enfoque sea muy variable.</p>
-</section>
-<section id="validación-cruzada-dejando-uno-fuera-loocv" class="level3">
-<h3 class="anchored" data-anchor-id="validación-cruzada-dejando-uno-fuera-loocv">Validación Cruzada Dejando Uno Fuera (LOOCV)</h3>
-<p>La <strong>validación cruzada dejando uno fuera</strong> (Leave-One-Out Cross-Validation, LOOCV) aborda el problema de la variabilidad del enfoque anterior. En LOOCV:</p>
-<ol type="1">
-<li>Se divide el conjunto de datos en <span class="math inline">\(n\)</span> partes, cada una con una sola observación.</li>
-<li>Para cada observación <span class="math inline">\(i\)</span>, se ajusta el modelo usando todas las observaciones excepto la <span class="math inline">\(i\)</span>, y se predice la observación <span class="math inline">\(i\)</span>.</li>
-<li>El error de prueba estimado es el promedio de los <span class="math inline">\(n\)</span> errores:</li>
-</ol>
-<p><span class="math display">\[CV_{(n)} = \frac{1}{n} \sum_{i=1}^{n} \text{MSE}_i\]</span></p>
-<p>LOOCV tiene la ventaja de ser aproximadamente insesgado, pero puede ser computacionalmente costoso porque requiere ajustar el modelo <span class="math inline">\(n\)</span> veces. Afortunadamente, para la regresión lineal por mínimos cuadrados, existe una fórmula cerrada:</p>
-<p><span class="math display">\[\text{MSE}_i = \left(\frac{y_i - \hat{y}_i}{1 - h_i}\right)^2\]</span></p>
-<p>donde <span class="math inline">\(h_i\)</span> es el apalancamiento de la observación <span class="math inline">\(i\)</span>.</p>
-<p>La <a href="#fig-5-2" class="quarto-xref">Figura&nbsp;2</a> muestra los resultados de LOOCV aplicado a los datos Auto para polinomios de grado 1 a 10.</p>
-<div id="fig-5-2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_2.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2: Error de prueba estimado por LOOCV para los datos Auto. El error es mínimo para un polinomio de grado 4 o 5.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="validación-cruzada-de-k-pliegues-k-fold-cv" class="level3">
-<h3 class="anchored" data-anchor-id="validación-cruzada-de-k-pliegues-k-fold-cv">Validación Cruzada de <span class="math inline">\(k\)</span> Pliegues (k-Fold CV)</h3>
-<p>La <strong>validación cruzada de <span class="math inline">\(k\)</span> pliegues</strong> (k-fold CV) es un compromiso entre el enfoque del conjunto de validación y LOOCV:</p>
-<ol type="1">
-<li>Se dividen los datos en <span class="math inline">\(k\)</span> grupos (folds) de aproximadamente igual tamaño.</li>
-<li>Para cada grupo <span class="math inline">\(j\)</span>, se ajusta el modelo usando todos los datos excepto el grupo <span class="math inline">\(j\)</span>, y se evalúa en el grupo <span class="math inline">\(j\)</span>.</li>
-<li>El error de prueba estimado es:</li>
-</ol>
-<p><span class="math display">\[CV_{(k)} = \frac{1}{k} \sum_{j=1}^{k} \text{MSE}_j\]</span></p>
-<p>Los valores típicos de <span class="math inline">\(k\)</span> son 5 o 10. La <a href="#fig-5-3" class="quarto-xref">Figura&nbsp;3</a> ilustra el esquema de k-fold CV.</p>
-<div id="fig-5-3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_3.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3: Esquema de validación cruzada de k iteraciones. Los datos se dividen en k grupos; cada grupo se usa una vez como conjunto de validación.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-5-7" class="quarto-xref">Figura&nbsp;4</a>, <a href="#fig-5-8" class="quarto-xref">Figura&nbsp;5</a> y <a href="#fig-5-9" class="quarto-xref">Figura&nbsp;6</a> comparan el rendimiento de LOOCV, validación cruzada de 10 iteraciones y el enfoque del conjunto de validación en los datos Auto.</p>
-<div id="fig-5-7" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_7.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Comparación de LOOCV, 10-fold CV y conjunto de validación para los datos Auto.
-</figcaption>
-</figure>
-</div>
-<div id="fig-5-8" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_8.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;5: Comparación adicional de métodos de validación cruzada.
-</figcaption>
-</figure>
-</div>
-<div id="fig-5-9" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_9.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;6: Evaluación comparativa de enfoques de remuestreo.
-</figcaption>
-</figure>
-</div>
-<section id="compromiso-sesgo-varianza-para-k-fold-cv" class="level4">
-<h4 class="anchored" data-anchor-id="compromiso-sesgo-varianza-para-k-fold-cv">Compromiso Sesgo-Varianza para k-Fold CV</h4>
-<p>LOOCV produce estimaciones aproximadamente insesgadas del error de prueba, pero tiene alta varianza. Por otro lado, k-fold CV con <span class="math inline">\(k\)</span> pequeño (como 5 o 10) tiene menor varianza pero mayor sesgo. En la práctica, <span class="math inline">\(k = 5\)</span> o <span class="math inline">\(k = 10\)</span> ofrecen un buen equilibrio entre sesgo y varianza.</p>
-</section>
-</section>
-<section id="validación-cruzada-en-problemas-de-clasificación" class="level3">
-<h3 class="anchored" data-anchor-id="validación-cruzada-en-problemas-de-clasificación">Validación Cruzada en Problemas de Clasificación</h3>
-<p>La validación cruzada se aplica de manera similar en problemas de clasificación, usando la <strong>tasa de error de clasificación</strong> en lugar del MSE. Para LOOCV:</p>
-<p><span class="math display">\[CV_{(n)} = \frac{1}{n} \sum_{i=1}^{n} \text{Err}_i\]</span></p>
-<p>donde <span class="math inline">\(\text{Err}_i = I(y_i \neq \hat{y}_i)\)</span>.</p>
-<p>La <a href="#fig-5-4" class="quarto-xref">Figura&nbsp;7</a> y <a href="#fig-5-11" class="quarto-xref">Figura&nbsp;8</a> muestran la validación cruzada aplicada a problemas de clasificación.</p>
-<div id="fig-5-4" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_4.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;7: Validación cruzada en problemas de clasificación.
-</figcaption>
-</figure>
-</div>
-<div id="fig-5-11" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_11.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8: Validación cruzada de k iteraciones para clasificación.
-</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="el-bootstrap" class="level2">
-<h2 class="anchored" data-anchor-id="el-bootstrap">El Bootstrap</h2>
-<p>El <strong>bootstrap</strong> es un método iterativo que permite estimar la variabilidad de una estimación estadística sin recurrir a supuestos distribucionales. Se basa en el concepto de <strong>muestreo con reemplazo</strong> de los datos originales.</p>
-<p>Procedimiento: 1. Seleccionar <span class="math inline">\(B\)</span> muestras bootstrap independientes, cada una de tamaño <span class="math inline">\(n\)</span>, obtenidas mediante muestreo con reemplazo de los datos originales. 2. Calcular la estimación de interés <span class="math inline">\(\hat{\theta}^{*b}\)</span> en cada muestra bootstrap. 3. Estimar el error estándar de <span class="math inline">\(\hat{\theta}\)</span> como la desviación estándar de las <span class="math inline">\(B\)</span> estimaciones bootstrap:</p>
-<p><span class="math display">\[\text{SE}_B(\hat{\theta}) = \sqrt{\frac{1}{B-1} \sum_{b=1}^{B} \left(\hat{\theta}^{*b} - \bar{\hat{\theta}}^{*}\right)^2}\]</span></p>
-<p>La <a href="#fig-5-5" class="quarto-xref">Figura&nbsp;9</a> ilustra el concepto de bootstrap aplicado a los datos <em>Portfolio</em> (cartera de inversiones), donde se estima la asignación óptima de activos para minimizar la varianza.</p>
-<div id="fig-5-5" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_5.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;9: Ilustración del bootstrap aplicado a los datos Portfolio. Cada panel muestra una muestra bootstrap diferente.
-</figcaption>
-</figure>
-</div>
-<p>La <a href="#fig-5-6" class="quarto-xref">Figura&nbsp;10</a> y <a href="#fig-5-10" class="quarto-xref">Figura&nbsp;11</a> muestran los resultados del bootstrap para diferentes estadísticos y tamaños de muestra.</p>
-<div id="fig-5-6" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_6.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10: Resultados del bootstrap para diferentes estimaciones.
-</figcaption>
-</figure>
-</div>
-<div id="fig-5-10" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../Figures/Chapter5/png/5_10.png" class="img-fluid figure-img" style="width:60.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;11: Error estándar bootstrap para diferentes configuraciones.
-</figcaption>
-</figure>
-</div>
-<hr>
-</section>
-<section id="laboratorio" class="level2">
-<h2 class="anchored" data-anchor-id="laboratorio">Laboratorio</h2>
-<p>Los laboratorios con el código completo de este capítulo están disponibles en el sitio oficial del libro: <a href="https://www.statlearning.com" target="_blank">statlearning.com</a>. También puedes acceder a los notebooks en el repositorio oficial de ISLP: <a href="https://github.com/intro-stat-learning/ISLP_labs" target="_blank">ISLP en GitHub</a>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -870,6 +673,10 @@ Figura&nbsp;11: Error estándar bootstrap para diferentes configuraciones.
   </div>
 </nav>
 </div> <!-- /content -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9999">
+  <button id="theme-toggle-btn" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--bs-border-color,#dee2e6);background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#1a1a1a);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;opacity:.85;transition:transform .2s,box-shadow .2s,opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro" onclick="var c=document.documentElement.getAttribute('data-bs-theme')||'light';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-bs-theme',n);try{localStorage.setItem('isl-theme',n)}catch(e){}document.getElementById('theme-toggle-btn').textContent=n==='dark'?'☀️':'🌙'">🌙</button>
+</div>
+<script>document.getElementById('theme-toggle-btn').textContent=(document.documentElement.getAttribute('data-bs-theme')||'light')==='dark'?'☀️':'🌙'</script>
 
 
 
