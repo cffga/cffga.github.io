@@ -62,7 +62,7 @@ pre code {
 
 /* Quarto centra el contenido de .quarto-figure-center > figure > div */
 /* Lo desactivamos para tablas para que las leyendas queden alineadas a la izquierda */
-[id^="tbl-"] .quarto-figure-center > figure > div {
+[id^="tbl-"] > figure > div {
   text-align: left !important;
 }
 
