@@ -318,7 +318,7 @@ Y \approx \beta_0 + \beta_1 X. \qquad (3.1)
 <p>Por ejemplo, <span class="math inline">\(X\)</span> puede representar la publicidad en <code>TV</code> e <span class="math inline">\(Y\)</span> puede representar las ventas (<code>sales</code>). Entonces podemos regresar <code>sales</code> sobre <code>TV</code> ajustando el modelo</p>
 <p><span class="math display">\[
 \text{sales} \approx \beta_0 + \beta_1 \times \text{TV}.\]</span></p>
-<p>En la Ecuación 3.1, <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> son dos constantes desconocidas que representan los términos de <em>intercepto</em> (<em>intercept</em>) y <em>pendiente</em> (<em>slope</em>) en el modelo lineal. En conjunto, <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> se conocen como los <em>coeficientes</em> (<em>coefficients</em>) o <em>parámetros</em> (<em>parameters</em>) del modelo. Una vez que hemos utilizado nuestros datos de entrenamiento para producir estimaciones <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> para los coeficientes del modelo, podemos predecir ventas futuras con base en un valor particular de publicidad en <code>TV</code> calculando</p>
+<p>En la <a href="#eq-3-1" class="quarto-xref">Ecuación&nbsp;3.1</a>, <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> son dos constantes desconocidas que representan los términos de <em>intercepto</em> (<em>intercept</em>) y <em>pendiente</em> (<em>slope</em>) en el modelo lineal. En conjunto, <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> se conocen como los <em>coeficientes</em> (<em>coefficients</em>) o <em>parámetros</em> (<em>parameters</em>) del modelo. Una vez que hemos utilizado nuestros datos de entrenamiento para producir estimaciones <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> para los coeficientes del modelo, podemos predecir ventas futuras con base en un valor particular de publicidad en <code>TV</code> calculando</p>
 <div id="eq-3-2">
 <p><span class="math display">\[
 \hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x, \qquad (3.2)
@@ -456,7 +456,7 @@ H_a: \text{ Existe alguna relación entre } X \text{ e } Y. \qquad (3.13)
 H_0: \beta_1 = 0\]</span></p>
 <p>frente a</p>
 <p><span class="math display">\[H_a: \beta_1 \neq 0,\]</span></p>
-<p>ya que si <span class="math inline">\(\beta_1 = 0\)</span> entonces el modelo (3.5) se reduce a <span class="math inline">\(Y = \beta_0 + \epsilon\)</span>, y <span class="math inline">\(X\)</span> no está asociado con <span class="math inline">\(Y\)</span>. Para contrastar la hipótesis nula, necesitamos determinar si <span class="math inline">\(\hat{\beta}_1\)</span>, nuestra estimación para <span class="math inline">\(\beta_1\)</span>, está suficientemente lejos de cero como para poder confiar en que <span class="math inline">\(\beta_1\)</span> es distinto de cero. ¿Qué tan lejos es suficientemente lejos? Esto, por supuesto, depende de la precisión de <span class="math inline">\(\hat{\beta}_1\)</span> —es decir, depende de <span class="math inline">\(\text{SE}(\hat{\beta}_1)\)</span>. Si <span class="math inline">\(\text{SE}(\hat{\beta}_1)\)</span> es pequeño, entonces incluso valores relativamente pequeños de <span class="math inline">\(\hat{\beta}_1\)</span> pueden proporcionar evidencia sólida de que <span class="math inline">\(\beta_1 \neq 0\)</span>, y por lo tanto de que existe una relación entre <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. En contraste, si <span class="math inline">\(\text{SE}(\hat{\beta}_1)\)</span> es grande, entonces <span class="math inline">\(\hat{\beta}_1\)</span> debe ser grande en valor absoluto para que podamos rechazar la hipótesis nula. En la práctica, calculamos un <em>estadístico t</em> (<em>t-statistic</em>), dado por</p>
+<p>ya que si <span class="math inline">\(\beta_1 = 0\)</span> entonces el modelo <a href="#eq-3-5" class="quarto-xref">(3.5)</a> se reduce a <span class="math inline">\(Y = \beta_0 + \epsilon\)</span>, y <span class="math inline">\(X\)</span> no está asociado con <span class="math inline">\(Y\)</span>. Para contrastar la hipótesis nula, necesitamos determinar si <span class="math inline">\(\hat{\beta}_1\)</span>, nuestra estimación para <span class="math inline">\(\beta_1\)</span>, está suficientemente lejos de cero como para poder confiar en que <span class="math inline">\(\beta_1\)</span> es distinto de cero. ¿Qué tan lejos es suficientemente lejos? Esto, por supuesto, depende de la precisión de <span class="math inline">\(\hat{\beta}_1\)</span> —es decir, depende de <span class="math inline">\(\text{SE}(\hat{\beta}_1)\)</span>. Si <span class="math inline">\(\text{SE}(\hat{\beta}_1)\)</span> es pequeño, entonces incluso valores relativamente pequeños de <span class="math inline">\(\hat{\beta}_1\)</span> pueden proporcionar evidencia sólida de que <span class="math inline">\(\beta_1 \neq 0\)</span>, y por lo tanto de que existe una relación entre <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. En contraste, si <span class="math inline">\(\text{SE}(\hat{\beta}_1)\)</span> es grande, entonces <span class="math inline">\(\hat{\beta}_1\)</span> debe ser grande en valor absoluto para que podamos rechazar la hipótesis nula. En la práctica, calculamos un <em>estadístico t</em> (<em>t-statistic</em>), dado por</p>
 <div id="eq-3-14">
 <p><span class="math display">\[
 t = \frac{\hat{\beta}_1 - 0}{\text{SE}(\hat{\beta}_1)}, \qquad (3.14)
@@ -1411,14 +1411,14 @@ Figura&nbsp;15
 </div>
 <p>Dado que la colinealidad reduce la precisión de las estimaciones de los coeficientes de regresión, hace que el error estándar para <span class="math inline">\(\hat{\beta}_j\)</span> aumente. Recordemos que el estadístico <span class="math inline">\(t\)</span> para cada predictor se calcula dividiendo <span class="math inline">\(\hat{\beta}_j\)</span> por su error estándar. En consecuencia, la colinealidad resulta en una disminución del estadístico <span class="math inline">\(t\)</span>. Como resultado, en presencia de colinealidad, podemos no rechazar <span class="math inline">\(H_0: \beta_j = 0\)</span>. Esto significa que la <em>potencia</em> (<em>power</em>) de la prueba de hipótesis —la probabilidad de detectar correctamente un coeficiente distinto de cero— se reduce por la colinealidad.</p>
 <p><a id="tbl-3-11"></a></p>
+<p><strong>Modelo 1: regresión de <code>balance</code> sobre <code>age</code> y <code>limit</code></strong></p>
 <table class="caption-top table">
-<caption>Tabla 3.11: Se muestran los resultados para dos modelos de regresión múltiple que involucran el conjunto de datos Credit. El Modelo 1 es una regresión de balance sobre age y limit, y el Modelo 2 una regresión de balance sobre rating y limit. El error estándar de <span class="math inline">\(\hat{\beta}_{\text{limit}}\)</span> aumenta 12 veces en la segunda regresión, debido a la colinealidad.</caption>
 <colgroup>
-<col style="width: 31%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 22%">
 <col style="width: 16%">
-<col style="width: 20%">
-<col style="width: 18%">
-<col style="width: 13%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1431,42 +1431,63 @@ Figura&nbsp;15
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Intercepto (Modelo 1)</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: center;"><span class="math inline">\(-173.411\)</span></td>
 <td style="text-align: center;">43.828</td>
 <td style="text-align: center;"><span class="math inline">\(-3.957\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(&lt; 0.0001\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">age (Modelo 1)</td>
+<td style="text-align: left;">age</td>
 <td style="text-align: center;"><span class="math inline">\(-2.292\)</span></td>
 <td style="text-align: center;">0.672</td>
 <td style="text-align: center;"><span class="math inline">\(-3.407\)</span></td>
 <td style="text-align: center;">0.0007</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">limit (Modelo 1)</td>
+<td style="text-align: left;">limit</td>
 <td style="text-align: center;">0.173</td>
 <td style="text-align: center;">0.005</td>
 <td style="text-align: center;">34.496</td>
 <td style="text-align: center;"><span class="math inline">\(&lt; 0.0001\)</span></td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Intercepto (Modelo 2)</td>
+</tbody>
+</table>
+<p><strong>Modelo 2: regresión de <code>balance</code> sobre <code>rating</code> y <code>limit</code></strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 22%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">Coeficiente</th>
+<th style="text-align: center;">Error estándar</th>
+<th style="text-align: center;">Estadístico t</th>
+<th style="text-align: center;">Valor p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: center;"><span class="math inline">\(-377.537\)</span></td>
 <td style="text-align: center;">45.254</td>
 <td style="text-align: center;"><span class="math inline">\(-8.343\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(&lt; 0.0001\)</span></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">rating (Modelo 2)</td>
+<tr class="even">
+<td style="text-align: left;">rating</td>
 <td style="text-align: center;">2.202</td>
 <td style="text-align: center;">0.952</td>
 <td style="text-align: center;">2.312</td>
 <td style="text-align: center;">0.0213</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">limit (Modelo 2)</td>
+<tr class="odd">
+<td style="text-align: left;">limit</td>
 <td style="text-align: center;">0.025</td>
 <td style="text-align: center;">0.064</td>
 <td style="text-align: center;">0.384</td>
@@ -1474,6 +1495,9 @@ Figura&nbsp;15
 </tr>
 </tbody>
 </table>
+<p class="figure-caption" style="margin-top:0.5em; text-align:center;">
+Tabla&nbsp;3.11: Se muestran los resultados para dos modelos de regresión múltiple que involucran el conjunto de datos Credit. El Modelo 1 es una regresión de balance sobre age y limit, y el Modelo 2 una regresión de balance sobre rating y limit. El error estándar de <span class="math inline">\(\hat{\beta}_{\text{limit}}\)</span> aumenta 12 veces en la segunda regresión, debido a la colinealidad.
+</p>
 <p>La <a href="#tbl-3-11" class="quarto-xref">Tabla&nbsp;3.11</a> compara las estimaciones de los coeficientes obtenidas de dos modelos de regresión múltiple separados. El primero es una regresión de <code>balance</code> sobre <code>age</code> y <code>limit</code>, y el segundo es una regresión de <code>balance</code> sobre <code>rating</code> y <code>limit</code>. En la primera regresión, tanto <code>age</code> como <code>limit</code> son altamente significativos con <em>valores p</em> muy pequeños. En la segunda, la colinealidad entre <code>limit</code> y <code>rating</code> ha causado que el error estándar para la estimación del coeficiente de <code>limit</code> aumente por un factor de 12 y que el <em>valor p</em> aumente a 0.701. En otras palabras, la importancia de la variable <code>limit</code> ha sido enmascarada debido a la presencia de colinealidad. Para evitar tal situación, es deseable identificar y abordar problemas potenciales de colinealidad mientras se ajusta el modelo.</p>
 <p>Una forma simple de detectar colinealidad es observar la matriz de correlación de los predictores. Un elemento de esta matriz que es grande en valor absoluto indica un par de variables altamente correlacionadas, y por lo tanto un problema de colinealidad en los datos. Desafortunadamente, no todos los problemas de colinealidad pueden detectarse mediante la inspección de la matriz de correlación: es posible que exista colinealidad entre tres o más variables incluso si ningún par de variables tiene una correlación particularmente alta. Llamamos a esta situación <em>multicolinealidad</em> (<em>multicollinearity</em>). En lugar de inspeccionar la matriz de correlación, una mejor manera de evaluar la <em>multicolinealidad</em> es calcular el <em>factor de inflación de la varianza</em> (<em>variance inflation factor</em>, VIF). El VIF es la razón entre la varianza de <span class="math inline">\(\hat{\beta}_j\)</span> al ajustar el modelo completo dividida por la varianza de <span class="math inline">\(\hat{\beta}_j\)</span> si se ajusta por sí solo. El valor más pequeño posible para el VIF es 1, lo que indica la ausencia completa de colinealidad. Típicamente en la práctica hay una pequeña cantidad de colinealidad entre los predictores. Como regla general, un valor de VIF que excede 5 o 10 indica una cantidad problemática de colinealidad. El VIF para cada variable puede calcularse usando la fórmula</p>
 <p><span class="math display">\[\text{VIF}(\hat{\beta}_j) = \frac{1}{1 - R^2_{X_j|X_{-j}}},\]</span></p>

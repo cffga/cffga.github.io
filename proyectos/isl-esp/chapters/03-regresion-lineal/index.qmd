@@ -44,7 +44,7 @@ Por ejemplo, $X$ puede representar la publicidad en `TV` e $Y$ puede representar
 $$
 \text{sales} \approx \beta_0 + \beta_1 \times \text{TV}.$$
 
-En la Ecuación 3.1, $\beta_0$ y $\beta_1$ son dos constantes desconocidas que representan los términos de *intercepto* (*intercept*) y *pendiente* (*slope*) en el modelo lineal. En conjunto, $\beta_0$ y $\beta_1$ se conocen como los *coeficientes* (*coefficients*) o *parámetros* (*parameters*) del modelo. Una vez que hemos utilizado nuestros datos de entrenamiento para producir estimaciones $\hat{\beta}_0$ y $\hat{\beta}_1$ para los coeficientes del modelo, podemos predecir ventas futuras con base en un valor particular de publicidad en `TV` calculando
+En la <a href="#eq-3-1" class="quarto-xref">Ecuación&nbsp;3.1</a>, $\beta_0$ y $\beta_1$ son dos constantes desconocidas que representan los términos de *intercepto* (*intercept*) y *pendiente* (*slope*) en el modelo lineal. En conjunto, $\beta_0$ y $\beta_1$ se conocen como los *coeficientes* (*coefficients*) o *parámetros* (*parameters*) del modelo. Una vez que hemos utilizado nuestros datos de entrenamiento para producir estimaciones $\hat{\beta}_0$ y $\hat{\beta}_1$ para los coeficientes del modelo, podemos predecir ventas futuras con base en un valor particular de publicidad en `TV` calculando
 
 <div id="eq-3-2">
 $$
@@ -201,7 +201,7 @@ frente a
 
 $$H_a: \beta_1 \neq 0,$$
 
-ya que si $\beta_1 = 0$ entonces el modelo (3.5) se reduce a $Y = \beta_0 + \epsilon$, y $X$ no está asociado con $Y$. Para contrastar la hipótesis nula, necesitamos determinar si $\hat{\beta}_1$, nuestra estimación para $\beta_1$, está suficientemente lejos de cero como para poder confiar en que $\beta_1$ es distinto de cero. ¿Qué tan lejos es suficientemente lejos? Esto, por supuesto, depende de la precisión de $\hat{\beta}_1$ —es decir, depende de $\text{SE}(\hat{\beta}_1)$. Si $\text{SE}(\hat{\beta}_1)$ es pequeño, entonces incluso valores relativamente pequeños de $\hat{\beta}_1$ pueden proporcionar evidencia sólida de que $\beta_1 \neq 0$, y por lo tanto de que existe una relación entre $X$ e $Y$. En contraste, si $\text{SE}(\hat{\beta}_1)$ es grande, entonces $\hat{\beta}_1$ debe ser grande en valor absoluto para que podamos rechazar la hipótesis nula. En la práctica, calculamos un *estadístico t* (*t-statistic*), dado por
+ya que si $\beta_1 = 0$ entonces el modelo <a href="#eq-3-5" class="quarto-xref">(3.5)</a> se reduce a $Y = \beta_0 + \epsilon$, y $X$ no está asociado con $Y$. Para contrastar la hipótesis nula, necesitamos determinar si $\hat{\beta}_1$, nuestra estimación para $\beta_1$, está suficientemente lejos de cero como para poder confiar en que $\beta_1$ es distinto de cero. ¿Qué tan lejos es suficientemente lejos? Esto, por supuesto, depende de la precisión de $\hat{\beta}_1$ —es decir, depende de $\text{SE}(\hat{\beta}_1)$. Si $\text{SE}(\hat{\beta}_1)$ es pequeño, entonces incluso valores relativamente pequeños de $\hat{\beta}_1$ pueden proporcionar evidencia sólida de que $\beta_1 \neq 0$, y por lo tanto de que existe una relación entre $X$ e $Y$. En contraste, si $\text{SE}(\hat{\beta}_1)$ es grande, entonces $\hat{\beta}_1$ debe ser grande en valor absoluto para que podamos rechazar la hipótesis nula. En la práctica, calculamos un *estadístico t* (*t-statistic*), dado por
 
 <div id="eq-3-14">
 $$
@@ -911,16 +911,23 @@ Dado que la colinealidad reduce la precisión de las estimaciones de los coefici
 
 <a id="tbl-3-11"></a>
 
-|                         | Coeficiente | Error estándar | Estadístico t | Valor p   |
-|:------------------------|:-----------:|:--------------:|:-------------:|:---------:|
-| Intercepto (Modelo 1)   |  $-173.411$ |     43.828     |    $-3.957$   | $< 0.0001$ |
-| age (Modelo 1)          |   $-2.292$  |      0.672     |    $-3.407$   |  0.0007   |
-| limit (Modelo 1)        |    0.173    |      0.005     |    34.496     | $< 0.0001$ |
-| Intercepto (Modelo 2)   |  $-377.537$ |     45.254     |    $-8.343$   | $< 0.0001$ |
-| rating (Modelo 2)       |    2.202    |      0.952     |     2.312     |  0.0213   |
-| limit (Modelo 2)        |    0.025    |      0.064     |     0.384     |  0.7012   |
+**Modelo 1: regresión de `balance` sobre `age` y `limit`**
 
-: Tabla 3.11: Se muestran los resultados para dos modelos de regresión múltiple que involucran el conjunto de datos Credit. El Modelo 1 es una regresión de balance sobre age y limit, y el Modelo 2 una regresión de balance sobre rating y limit. El error estándar de $\hat{\beta}_{\text{limit}}$ aumenta 12 veces en la segunda regresión, debido a la colinealidad.
+|             | Coeficiente | Error estándar | Estadístico t | Valor p   |
+|:------------|:-----------:|:--------------:|:-------------:|:---------:|
+| Intercepto  |  $-173.411$ |     43.828     |    $-3.957$   | $< 0.0001$ |
+| age         |   $-2.292$  |      0.672     |    $-3.407$   |  0.0007   |
+| limit       |    0.173    |      0.005     |    34.496     | $< 0.0001$ |
+
+**Modelo 2: regresión de `balance` sobre `rating` y `limit`**
+
+|             | Coeficiente | Error estándar | Estadístico t | Valor p   |
+|:------------|:-----------:|:--------------:|:-------------:|:---------:|
+| Intercepto  |  $-377.537$ |     45.254     |    $-8.343$   | $< 0.0001$ |
+| rating      |    2.202    |      0.952     |     2.312     |  0.0213   |
+| limit       |    0.025    |      0.064     |     0.384     |  0.7012   |
+
+<p class="figure-caption" style="margin-top:0.5em; text-align:center;">Tabla&nbsp;3.11: Se muestran los resultados para dos modelos de regresión múltiple que involucran el conjunto de datos Credit. El Modelo 1 es una regresión de balance sobre age y limit, y el Modelo 2 una regresión de balance sobre rating y limit. El error estándar de $\hat{\beta}_{\text{limit}}$ aumenta 12 veces en la segunda regresión, debido a la colinealidad.</p>
 
 La <a href="#tbl-3-11" class="quarto-xref">Tabla&nbsp;3.11</a> compara las estimaciones de los coeficientes obtenidas de dos modelos de regresión múltiple separados. El primero es una regresión de `balance` sobre `age` y `limit`, y el segundo es una regresión de `balance` sobre `rating` y `limit`. En la primera regresión, tanto `age` como `limit` son altamente significativos con *valores p* muy pequeños. En la segunda, la colinealidad entre `limit` y `rating` ha causado que el error estándar para la estimación del coeficiente de `limit` aumente por un factor de 12 y que el *valor p* aumente a 0.701. En otras palabras, la importancia de la variable `limit` ha sido enmascarada debido a la presencia de colinealidad. Para evitar tal situación, es deseable identificar y abordar problemas potenciales de colinealidad mientras se ajusta el modelo.
 
