@@ -30,3 +30,17 @@ Por esta razón, el curso solo alcanza su propósito *si se lee en orden y de ma
 ### [7. Comprensiones de listas](7_comprensiones.qmd)
 
 ### [8. Errores y excepciones](8_errores_excepciones.qmd)
+
+### [9. Objetos y métodos](9_objetos_metodos.qmd)
+
+### [10. Clases y atributos](10_clases_atributos.qmd)
+
+### [11. Métodos propios y representación](11_metodos_propios.qmd)
+
+### [12. Herencia y composición](12_herencia_composicion.qmd)
+
+### [13. Funciones como objetos: lambda y orden superior](13_funciones_objetos.qmd)
+
+### [14. Módulos y la biblioteca estándar](14_modulos.qmd)
+
+### [15. Lectura y escritura de archivos](15_archivos.qmd)

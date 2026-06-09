@@ -1,0 +1,213 @@
+---
+title: "Módulos y la biblioteca estándar"
+author: "Carlos Flores"
+format: html
+---
+
+Todo el código que hemos escrito hasta ahora se sostiene sobre dos fuentes: las funciones que Python trae incorporadas —`len`, `sum`, `sorted`, `print`— y las que nosotros mismos definimos. Cada vez que necesitábamos algo, o ya existía como función built-in, o lo construíamos desde cero. Pero hay un tercer recurso, mucho más amplio que los dos anteriores, que aún no hemos tocado.
+
+Raíces cuadradas, logaritmos, el número $\pi$, generación de números aleatorios, cálculo de la desviación estándar: son operaciones que millones de programas necesitan, y que alguien ya escribió, probó y dejó disponibles. Reimplementarlas sería absurdo y propenso a errores. Python organiza todo ese código ya hecho en *módulos*, y acceder a ellos es cuestión de una sola instrucción. Esta lección muestra cómo.
+
+## Qué es un módulo
+
+Un módulo es un archivo que contiene funciones, valores y clases listas para usar. La *biblioteca estándar* de Python es el conjunto de módulos que vienen incluidos con el lenguaje: no hay que instalar nada, solo pedirlos. Para usar un módulo, se *importa* con la palabra clave `import`.
+
+Empecemos con `math`, el módulo de funciones matemáticas:
+
+```{python}
+import math
+
+print(math.sqrt(16))     # raíz cuadrada
+print(math.pi)           # el número pi
+```
+
+Tras `import math`, el módulo queda disponible bajo el nombre `math`, y accedemos a su contenido con la notación de punto: `math.sqrt`, `math.pi`. Esa notación no es nueva. Es exactamente la misma que usamos para los métodos de un objeto y para los atributos de una instancia. Y la razón es que un módulo es, también, un objeto: `math` es un objeto cuyos atributos son sus funciones y valores. Cuando escribimos `math.sqrt`, accedemos al atributo `sqrt` del objeto `math`, igual que accedíamos a `ana.nombre` en la lección sobre clases. La idea de objeto que construimos a lo largo de la serie explica, retrospectivamente, por qué `import` y la notación de punto funcionan como lo hacen.
+
+## Las formas de `import`
+
+Hay tres maneras de importar, y conviene conocer las tres porque aparecen en todo el código de Python.
+
+La primera, `import modulo`, es la que acabamos de ver: importa el módulo completo y obliga a usar el prefijo. Es la más segura, porque deja claro de dónde viene cada función:
+
+```{python}
+import math
+print(math.factorial(5))
+```
+
+La segunda, `from modulo import nombre`, importa solo lo que se indica, y permite usarlo sin prefijo:
+
+```{python}
+from math import sqrt, pi
+print(sqrt(25))
+print(pi)
+```
+
+Esta forma es cómoda cuando se usa mucho una función concreta, pero tiene un riesgo: si dos módulos definen una función con el mismo nombre, importarlas sin prefijo provoca que una oculte a la otra. Por eso conviene reservarla para nombres que no generen confusión.
+
+La tercera, `import modulo as alias`, importa el módulo bajo un nombre más corto:
+
+```{python}
+import statistics as stats
+print(stats.mean([7.5, 9.0, 6.0, 8.5]))
+```
+
+Esta forma es especialmente común en ciencia de datos, donde por convención ciertos módulos se importan siempre con el mismo alias. Cuando lleguemos a las bibliotecas de análisis de datos, veremos `import numpy as np` y `import pandas as pd` en prácticamente todo el código; el alias corto se vuelve un estándar que todos reconocen.
+
+## Explorar un módulo
+
+¿Cómo saber qué ofrece un módulo? Con las mismas herramientas que usamos para explorar objetos en la lección correspondiente: `dir()` lista su contenido, y `help()` describe cada elemento.
+
+```{python}
+import math
+
+# Algunos de los nombres que ofrece math (filtramos los internos)
+disponibles = [nombre for nombre in dir(math) if not nombre.startswith("_")]
+print(disponibles)
+```
+
+Una vez localizada una función de interés, `help(math.sqrt)` muestra su documentación, igual que hacíamos con cualquier función desde la lección correspondiente. Explorar un módulo desconocido es, entonces, aplicar a un objeto nuevo herramientas que ya dominamos.
+
+## El módulo `math`
+
+`math` reúne las funciones matemáticas de uso frecuente. Para el público de esta serie, muchas serán viejas conocidas:
+
+```{python}
+import math
+
+print(math.sqrt(2))          # raíz cuadrada
+print(math.log(math.e))      # logaritmo natural; math.e es el número e
+print(math.log(1000, 10))    # logaritmo en base 10
+print(math.floor(3.7))       # redondeo hacia abajo
+print(math.ceil(3.2))        # redondeo hacia arriba
+print(math.factorial(6))     # factorial
+```
+
+Conviene notar la diferencia entre `math.floor`/`math.ceil` y la función `round()` que conocemos desde la lección sobre funciones. `round()` redondea al entero más cercano; `floor` siempre baja y `ceil` siempre sube, sin importar la parte decimal. Cada una responde a una necesidad distinta, y tenerlas disponibles evita reimplementarlas.
+
+## El módulo `statistics`
+
+Desde la lección sobre estructuras de datos venimos calculando promedios a mano, con `sum(valores) / len(valores)`. El módulo `statistics` ofrece esa operación y muchas otras con nombre propio:
+
+```{python}
+import statistics
+
+calificaciones = [9.2, 7.8, 6.1, 8.5, 9.7, 5.4]
+
+print(statistics.mean(calificaciones))     # media (promedio)
+print(statistics.median(calificaciones))   # mediana
+print(statistics.stdev(calificaciones))    # desviación estándar muestral
+print(statistics.variance(calificaciones)) # varianza muestral
+```
+
+`statistics.mean` hace exactamente lo que hacíamos con `sum() / len()`, pero con un nombre que comunica la intención. Más valiosas aún son `stdev` y `variance`: calcular una desviación estándar a mano requiere varios pasos y es fácil equivocarse; tenerla como función probada ahorra trabajo y errores. Para un público con formación en estadística o actuaría, este módulo será de uso constante.
+
+## El módulo `random`
+
+`random` genera valores aleatorios, lo que abre la puerta a la simulación —una herramienta central en estadística, física y finanzas. Sus funciones más usadas:
+
+```{python}
+import random
+
+random.seed(42)   # fija la semilla para que los resultados sean reproducibles
+
+print(random.random())         # un decimal aleatorio entre 0 y 1
+print(random.randint(1, 6))    # un entero aleatorio entre 1 y 6 (como un dado)
+print(random.choice(["cara", "cruz"]))   # un elemento al azar de una lista
+```
+
+La función `random.seed()` merece una mención. Los números aleatorios de una computadora son en realidad *pseudoaleatorios*: se generan con una fórmula que parte de un valor inicial, la *semilla*. Fijar la semilla con `seed()` hace que la secuencia sea reproducible, lo que es indispensable en experimentos y simulaciones que deben poder repetirse con los mismos resultados.
+
+Otra función útil es `shuffle`, que desordena una lista en su lugar —es un método que modifica, en el sentido de la lección sobre objetos:
+
+```{python}
+import random
+random.seed(7)
+
+baraja = ["A", "2", "3", "4", "5"]
+random.shuffle(baraja)
+print(baraja)
+```
+
+Como ejemplo de simulación, estimemos la probabilidad de que al lanzar dos dados la suma sea 7, repitiendo el experimento muchas veces y contando los aciertos:
+
+```{python}
+import random
+random.seed(0)
+
+intentos = 100000
+exitos = 0
+for _ in range(intentos):
+    dado1 = random.randint(1, 6)
+    dado2 = random.randint(1, 6)
+    if dado1 + dado2 == 7:
+        exitos += 1
+
+print(f"Probabilidad estimada: {exitos / intentos:.4f}")
+print(f"Probabilidad teórica:  {6/36:.4f}")
+```
+
+La estimación por simulación se acerca al valor teórico de $6/36$. Combinar `random` con los bucles y condicionales que conocemos permite atacar problemas de probabilidad que serían difíciles de resolver analíticamente. La variable de bucle `_` es una convención para indicar que no usamos su valor: solo nos importa repetir el experimento, no en qué número de iteración vamos.
+
+## El módulo `decimal`
+
+En la primera lección observamos algo desconcertante: `0.1 + 0.2` no da exactamente `0.3`, sino `0.30000000000000004`. Explicamos entonces que se debe a que los `float` son representaciones finitas de números reales, y dijimos que existían formas de trabajar con precisión exacta cuando el problema lo exige. El módulo `decimal` es esa forma:
+
+```{python}
+from decimal import Decimal
+
+print(0.1 + 0.2)                          # con float: impreciso
+print(Decimal("0.1") + Decimal("0.2"))    # con Decimal: exacto
+```
+
+`Decimal` representa los números decimales con precisión exacta, a costa de ser más lento que `float`. Para cálculos financieros o contables, donde un error de redondeo de una fracción de centavo es inaceptable, `Decimal` es la herramienta adecuada. Nótese que se construye a partir de una cadena, `Decimal("0.1")`, no de un `float`, precisamente para no arrastrar la imprecisión desde el origen. Cierra así, con la herramienta apropiada, una cuestión que quedó abierta desde el comienzo de la serie.
+
+## Más allá de la biblioteca estándar
+
+Los módulos que hemos visto vienen incluidos con Python. Pero existe un universo mucho más grande de módulos escritos por la comunidad, que no vienen de fábrica y deben instalarse por separado. Esos paquetes externos se instalan con una herramienta llamada `pip`, y entre ellos están las bibliotecas que dan a Python su lugar central en la ciencia de datos: NumPy para cálculo numérico, pandas para manejo de tablas de datos, Matplotlib para visualización.
+
+No los usaremos todavía, pero conviene saber que el mecanismo es el mismo que ya conocemos. Una vez instalado un paquete, se importa con `import` y se usa con la notación de punto, exactamente igual que `math` o `statistics`. Todo lo que hemos aprendido sobre módulos se aplicará sin cambios a esas bibliotecas; solo cambiará la riqueza de lo que ofrecen.
+
+## Ejemplo integrador
+
+Reunimos varios módulos en un pequeño estudio estadístico. Simulamos las calificaciones de un grupo grande de estudiantes, las analizamos con `statistics`, y usamos `math` para un cálculo auxiliar:
+
+```{python}
+import random
+import statistics
+import math
+
+random.seed(123)
+
+# Simulamos 200 calificaciones con una distribución centrada en 7.5
+calificaciones = []
+for _ in range(200):
+    nota = random.gauss(7.5, 1.5)        # distribución normal: media 7.5, desviación 1.5
+    nota = max(0.0, min(10.0, nota))     # la recortamos al rango válido [0, 10]
+    calificaciones.append(round(nota, 1))
+
+# Análisis estadístico
+media = statistics.mean(calificaciones)
+mediana = statistics.median(calificaciones)
+desviacion = statistics.stdev(calificaciones)
+
+print(f"Estudiantes:        {len(calificaciones)}")
+print(f"Media:              {media:.2f}")
+print(f"Mediana:            {mediana:.2f}")
+print(f"Desviación estándar:{desviacion:.2f}")
+
+# Error estándar de la media: desviación / raíz(n), usando math.sqrt
+error_estandar = desviacion / math.sqrt(len(calificaciones))
+print(f"Error estándar:     {error_estandar:.3f}")
+
+# Proporción de aprobados
+aprobados = len([c for c in calificaciones if c >= 6.0])
+print(f"Aprobados:          {aprobados} ({aprobados / len(calificaciones) * 100:.1f}%)")
+```
+
+El ejemplo combina tres módulos con todo lo que sabemos del lenguaje. `random.gauss` genera calificaciones según una distribución normal; los bucles, condicionales, comprensiones y la función `round()` que conocemos las procesan; `statistics` calcula los descriptivos; y `math.sqrt` interviene en el error estándar. Cada módulo aporta exactamente las operaciones que sería tedioso reimplementar, y el resto lo ponen las herramientas que ya teníamos.
+
+## Lo que sigue
+
+Con los módulos, podemos apoyarnos en el trabajo ya hecho por otros en lugar de partir siempre de cero. Es la última pieza del lenguaje que nos faltaba antes de poder trabajar con datos reales.
+
+Y los datos reales viven fuera del programa: en archivos. Hasta ahora todos nuestros datos —las temperaturas, las calificaciones, los grupos de estudiantes— los escribimos directamente en el código. Eso sirve para aprender, pero no para trabajar: los datos de verdad llegan en archivos de texto, hojas de cálculo exportadas, registros generados por instrumentos. La última lección de esta etapa muestra cómo leer datos desde un archivo y cómo guardar resultados en uno, dando al fin a nuestros programas la capacidad de comunicarse con el mundo exterior.

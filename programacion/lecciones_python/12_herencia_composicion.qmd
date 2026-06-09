@@ -1,0 +1,253 @@
+---
+title: "Herencia y composición"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior terminó con un problema concreto. La universidad distingue entre estudiantes de licenciatura y de posgrado. Ambos comparten casi todo —nombre, carrera, calificación, la forma de clasificarse— pero el de posgrado tiene además un director de tesis y una regla de aprobación más estricta. Con lo que sabemos, la única salida sería escribir una clase nueva y copiar en ella todo lo que ya está en `Estudiante`, cambiando solo lo que difiere.
+
+Copiar código es siempre una señal de alarma. Si mañana cambia la forma de clasificar una calificación, habría que corregirla en dos lugares y recordar que ambos existen; tarde o temprano uno queda desactualizado. Lo que necesitamos es expresar la relación real entre estas clases: un estudiante de posgrado *es* un estudiante, con algunas cosas añadidas. Esa relación se llama *herencia*, y es el mecanismo que evita la duplicación.
+
+## La idea de herencia
+
+La herencia permite definir una clase a partir de otra. La clase original se llama *clase base* o *padre*; la nueva, *clase derivada* o *hija*. La clase hija recibe automáticamente todos los atributos y métodos de la padre, y puede añadir los suyos o modificar los que hereda. No se copia nada: la hija simplemente dispone de todo lo que la padre define.
+
+Partimos de la clase `Estudiante` tal como quedó en la lección anterior, y definimos `EstudiantePosgrado` como una clase que hereda de ella. La herencia se indica escribiendo el nombre de la clase padre entre paréntesis después del nombre de la hija:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def clasificar(self):
+        if self.calificacion >= 9.0:
+            return "Sobresaliente"
+        elif self.calificacion >= 7.0:
+            return "Bien"
+        elif self.calificacion >= 6.0:
+            return "Suficiente"
+        else:
+            return "Reprobado"
+
+    def __str__(self):
+        return f"{self.nombre} ({self.carrera}): {self.calificacion}"
+
+
+class EstudiantePosgrado(Estudiante):
+    pass   # de momento, hereda todo sin cambios
+```
+
+Aunque `EstudiantePosgrado` no define nada propio, ya puede hacer todo lo que hace `Estudiante`, porque lo ha heredado:
+
+```{python}
+sofia = EstudiantePosgrado("Sofía", "Física", 9.7)
+print(sofia.nombre)         # atributo heredado, definido en Estudiante.__init__
+print(sofia.clasificar())   # método heredado
+print(sofia)                # usa el __str__ heredado
+```
+
+Sin escribir una sola línea de lógica, `EstudiantePosgrado` tiene constructor, atributos, método `clasificar()` y representación. Todo viene de `Estudiante`. Esto ya resuelve el problema de la duplicación: lo común se escribe una vez, en la clase padre.
+
+## Añadir y extender con `super()`
+
+Una clase hija que solo hereda no aporta nada. Lo interesante es que añada lo suyo. El estudiante de posgrado tiene un director de tesis, un atributo que el estudiante común no tiene. Para incorporarlo, la hija necesita su propio `__init__`.
+
+Aquí aparece una tensión. Si la hija define `__init__`, reemplaza al de la padre, y perderíamos la inicialización de `nombre`, `carrera` y `calificacion`. No queremos reescribir esa inicialización —eso sería volver a copiar—; queremos reutilizar la de la padre y solo añadir lo nuevo. Para eso existe `super()`, que da acceso a la clase padre desde la hija:
+
+```{python}
+class EstudiantePosgrado(Estudiante):
+    def __init__(self, nombre, carrera, calificacion, director):
+        super().__init__(nombre, carrera, calificacion)   # inicializa lo heredado
+        self.director = director                          # añade lo propio
+
+
+sofia = EstudiantePosgrado("Sofía", "Física", 9.7, "Dra. Ramírez")
+print(sofia.nombre)      # inicializado por el __init__ de la padre
+print(sofia.director)    # inicializado por el __init__ de la hija
+```
+
+La línea `super().__init__(nombre, carrera, calificacion)` llama al `__init__` de `Estudiante`, que se encarga de los tres atributos comunes. Después, la hija añade `self.director`. El resultado combina lo heredado y lo nuevo sin duplicar nada. Si algún día cambia cómo se inicializa un estudiante, el cambio en la clase padre se propaga automáticamente a la hija.
+
+## Sobrescribir métodos
+
+Además de añadir, la clase hija puede *sobrescribir*: redefinir un método que heredó, dándole un comportamiento distinto. El estudiante de posgrado aprueba con un criterio más estricto. Definimos en la hija un método con el mismo nombre que en la padre, y el de la hija tiene prioridad para sus instancias:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def aprueba(self):
+        return self.calificacion >= 6.0
+
+
+class EstudiantePosgrado(Estudiante):
+    def __init__(self, nombre, carrera, calificacion, director):
+        super().__init__(nombre, carrera, calificacion)
+        self.director = director
+
+    def aprueba(self):                          # sobrescribe el método heredado
+        return self.calificacion >= 8.0         # criterio más estricto
+
+
+lic = Estudiante("Luis", "Física", 7.8)
+pos = EstudiantePosgrado("Sofía", "Física", 7.8, "Dra. Ramírez")
+
+print(lic.aprueba())   # criterio de licenciatura: 6.0
+print(pos.aprueba())   # criterio de posgrado: 8.0
+```
+
+Las dos instancias tienen la misma calificación, `7.8`, pero responden distinto a `aprueba()` porque cada una usa el método de su propia clase. Python siempre busca el método primero en la clase de la instancia; solo si no lo encuentra ahí recurre a la padre. Como `EstudiantePosgrado` define su propio `aprueba()`, ese tiene prioridad para sus instancias.
+
+A veces la sobrescritura no quiere reemplazar el comportamiento heredado por completo, sino extenderlo. En ese caso `super()` también sirve dentro de un método cualquiera, no solo en `__init__`, para invocar la versión de la padre y añadirle algo:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def __str__(self):
+        return f"{self.nombre} ({self.carrera}): {self.calificacion}"
+
+
+class EstudiantePosgrado(Estudiante):
+    def __init__(self, nombre, carrera, calificacion, director):
+        super().__init__(nombre, carrera, calificacion)
+        self.director = director
+
+    def __str__(self):
+        base = super().__str__()                    # la representación de la clase padre
+        return f"{base} — dirige {self.director}"   # extendida con lo propio
+
+
+pos = EstudiantePosgrado("Sofía", "Física", 9.7, "Dra. Ramírez")
+print(pos)
+```
+
+`super().__str__()` obtiene la cadena que produciría la clase padre, y la hija la extiende añadiendo el director en lugar de reescribirla entera. Es el mismo patrón que `super().__init__()`: reutilizar lo que la padre ya sabe hacer y agregarle lo propio.
+
+## Verificar el tipo: `isinstance`
+
+Cuando trabajamos con clases relacionadas por herencia, a veces necesitamos saber de qué tipo es un objeto. La función `type()`, que vimos en la lección sobre objetos, devuelve el tipo exacto. Pero la herencia introduce un matiz: un `EstudiantePosgrado` también es, en cierto sentido, un `Estudiante`. La función `isinstance()` captura esa relación:
+
+```{python}
+sofia = EstudiantePosgrado("Sofía", "Física", 9.7, "Dra. Ramírez")
+luis = Estudiante("Luis", "Física", 7.8)
+
+print(isinstance(sofia, EstudiantePosgrado))   # True: es de esa clase
+print(isinstance(sofia, Estudiante))           # True: también es un Estudiante, por herencia
+print(isinstance(luis, EstudiantePosgrado))    # False: un Estudiante no es de posgrado
+```
+
+`isinstance(sofia, Estudiante)` es `True` porque la herencia establece que todo `EstudiantePosgrado` *es* un `Estudiante`. Esta es la diferencia con `type()`: `type(sofia) == Estudiante` sería `False`, porque el tipo exacto de `sofia` es `EstudiantePosgrado`. `isinstance()` respeta la jerarquía de herencia; `type()` mira solo el tipo exacto. En la práctica, `isinstance()` es casi siempre lo que se quiere, porque expresa "¿puede este objeto usarse como un `Estudiante`?", que es la pregunta relevante.
+
+## Composición: tener en lugar de ser
+
+La herencia expresa una relación de tipo "es un": un estudiante de posgrado *es* un estudiante. Pero no toda relación entre clases es de esa forma. Un grupo *no es* un estudiante; un grupo *tiene* estudiantes. Esa relación —"tiene un"— se expresa de otra manera, llamada *composición*: una clase contiene instancias de otra como atributos.
+
+De hecho, ya usamos composición sin nombrarla. La clase `Grupo` de la lección anterior contenía una lista de estudiantes:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+
+class Grupo:
+    def __init__(self, estudiantes):
+        self.estudiantes = estudiantes   # composición: el grupo TIENE estudiantes
+
+    def promedio(self):
+        calificaciones = [e.calificacion for e in self.estudiantes]
+        return sum(calificaciones) / len(calificaciones)
+
+
+grupo = Grupo([
+    Estudiante("Ana", "Matemáticas", 9.2),
+    Estudiante("Luis", "Física", 7.8),
+    Estudiante("María", "Matemáticas", 8.5),
+])
+print(f"Promedio del grupo: {grupo.promedio():.2f}")
+```
+
+`Grupo` no hereda de `Estudiante`: lo contiene. El atributo `self.estudiantes` guarda una lista de instancias de `Estudiante`, y los métodos de `Grupo` operan sobre ellas. Esta es la relación correcta, porque un grupo no es un tipo de estudiante; es una agrupación de estudiantes.
+
+La distinción entre herencia y composición se resume en una pregunta. Si la relación entre dos clases se describe naturalmente con "es un", corresponde herencia: un estudiante de posgrado es un estudiante, un círculo es una figura. Si se describe con "tiene un", corresponde composición: un grupo tiene estudiantes, un coche tiene un motor. Confundir las dos —hacer que `Grupo` herede de `Estudiante`, por ejemplo— produce jerarquías que no tienen sentido y que se complican a medida que el programa crece.
+
+## Por qué esto importa para lo que viene
+
+Las jerarquías de clases no son un asunto académico: son la forma en que están construidas las bibliotecas que usaremos en ciencia de datos. Cuando más adelante se trabaje con estructuras como los arreglos de NumPy o las tablas de pandas, se encontrará que sus tipos heredan de tipos más generales, y que la documentación describe esas relaciones constantemente. Leer una frase como "esta clase hereda de tal otra" dejará de ser opaco: significará que el objeto dispone de todo lo que la clase padre ofrece, más lo propio.
+
+Saber distinguir herencia de composición también ayuda a leer ese código con criterio. Una tabla de datos *tiene* columnas (composición); un tipo específico de tabla *es* una tabla con capacidades extra (herencia). Reconocer cuál es cuál hace que el diseño de esas bibliotecas resulte legible en lugar de arbitrario.
+
+## Ejemplo integrador
+
+Reunimos herencia y composición en un solo programa. Definimos `Estudiante` y `EstudiantePosgrado` mediante herencia, y un `Grupo` que los contiene mediante composición, capaz de manejar ambos tipos a la vez gracias a que un `EstudiantePosgrado` también es un `Estudiante`:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def aprueba(self):
+        return self.calificacion >= 6.0
+
+    def __str__(self):
+        marca = "✓" if self.aprueba() else "✗"
+        return f"{marca} {self.nombre} ({self.carrera}): {self.calificacion}"
+
+
+class EstudiantePosgrado(Estudiante):
+    def __init__(self, nombre, carrera, calificacion, director):
+        super().__init__(nombre, carrera, calificacion)
+        self.director = director
+
+    def aprueba(self):
+        return self.calificacion >= 8.0
+
+    def __str__(self):
+        marca = "✓" if self.aprueba() else "✗"
+        return f"{marca} {self.nombre} ({self.carrera}): {self.calificacion} — posgrado, dirige {self.director}"
+
+
+class Grupo:
+    def __init__(self, integrantes):
+        self.integrantes = integrantes
+
+    def aprobados(self):
+        return [e for e in self.integrantes if e.aprueba()]
+
+    def reporte(self):
+        for integrante in self.integrantes:
+            print(integrante)
+        total = len(self.integrantes)
+        print(f"\nAprobados: {len(self.aprobados())} de {total}")
+
+
+grupo = Grupo([
+    Estudiante("Ana", "Matemáticas", 9.2),
+    Estudiante("Luis", "Física", 7.4),
+    EstudiantePosgrado("Sofía", "Física", 7.8, "Dra. Ramírez"),
+    EstudiantePosgrado("Pedro", "Actuaría", 8.5, "Dr. Soto"),
+])
+
+grupo.reporte()
+```
+
+El detalle clave está en el método `aprobados()` de `Grupo`. Recorre `self.integrantes` y llama a `e.aprueba()` sobre cada uno, sin preguntar de qué tipo es. Cada objeto responde con su propio criterio: los estudiantes comunes con el umbral de `6.0`, los de posgrado con el de `8.0`. El mismo método `reporte()` imprime cada integrante usando su propio `__str__`. El `Grupo` no necesita saber qué tipo es cada integrante; confía en que cada objeto sabe clasificarse y representarse a sí mismo. Esa capacidad de tratar uniformemente objetos de tipos distintos pero relacionados es uno de los frutos más útiles de la herencia.
+
+## Lo que sigue
+
+Con esta lección cerramos la construcción de tipos propios: sabemos definir clases, dotarlas de datos y comportamiento, relacionarlas por herencia y combinarlas por composición. Es un conjunto completo de herramientas para organizar código alrededor de los objetos de un problema.
+
+Hasta ahora, sin embargo, hemos trabajado siempre con lo que Python trae de fábrica y con lo que nosotros mismos escribimos. Cada función la hemos definido desde cero. Pero gran parte de lo que un programa necesita —raíces cuadradas, números aleatorios, promedios y desviaciones, manejo de fechas— ya está escrito por otros, probado y disponible. Acceder a ese trabajo previo, en lugar de reinventarlo, es lo que permite el sistema de *módulos* de Python. La siguiente lección muestra cómo importar y usar esa enorme biblioteca de código ya hecho.

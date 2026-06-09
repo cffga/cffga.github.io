@@ -1,0 +1,285 @@
+---
+title: "Objetos y métodos"
+author: "Carlos Flores"
+format: html
+---
+
+A lo largo de toda la serie ha aparecido una notación que nunca se explicó del todo. En la lección sobre errores escribimos `texto.strip()` para limpiar una cadena; antes, en varias ocasiones, se mencionó que agregar elementos a una lista o recorrer las claves de un diccionario "requería métodos que veríamos más adelante". Ese punto y esos paréntesis —la forma `objeto.operación()`— no son una convención arbitraria de Python. Tienen una explicación precisa, y entenderla cambia la manera de ver todo lo que hemos hecho hasta ahora.
+
+La explicación parte de una idea que la lección anterior dejó enunciada: en Python, todo valor es un *objeto*. Un número es un objeto, una cadena es un objeto, una lista es un objeto. Y un objeto no es solo un dato: es un dato que lleva consigo las operaciones que pueden hacerse con él. La notación de punto es la forma de invocar esas operaciones.
+
+## Qué es un objeto
+
+Cuando guardamos `temperatura = 23.5`, no estamos guardando únicamente el número `23.5`. Estamos guardando un objeto de tipo `float` que, además del valor, conoce las operaciones que un número decimal puede realizar. Lo mismo ocurre con una lista: `[23.5, 24.0, 22.8]` es un objeto de tipo `list` que sabe cómo ordenarse, cómo agregar elementos, cómo invertirse.
+
+La función `type()`, que ya hemos usado de forma ocasional, revela el tipo de cualquier objeto:
+
+```{python}
+print(type(23.5))
+print(type("Python"))
+print(type([1, 2, 3]))
+print(type({"a": 1}))
+```
+
+Cada uno de estos tipos —`float`, `str`, `list`, `dict`— define qué datos puede contener el objeto y qué operaciones puede realizar. Esas operaciones asociadas a un objeto se llaman *métodos*.
+
+## La notación de punto
+
+Un método es una función que pertenece a un objeto. La diferencia con las funciones que ya conocemos es de pertenencia: `len(lista)` es una función independiente que recibe la lista como argumento, mientras que `lista.append(5)` es un método que pertenece a la lista y opera sobre ella.
+
+La sintaxis para invocar un método es `objeto.metodo(argumentos)`. El objeto a la izquierda del punto es sobre el que actúa el método; los argumentos entre paréntesis son la información adicional que el método necesita, igual que en cualquier función.
+
+Esta notación conecta directamente con la lección anterior. Vimos que una función puede recibir su objeto como primer argumento; un método hace exactamente eso, pero de forma implícita. Cuando escribimos `lista.append(5)`, Python entiende algo equivalente a "ejecuta la operación `append`, con `lista` como objeto sobre el que actúa y `5` como argumento". El objeto a la izquierda del punto es ese primer argumento que la función recibe sin necesidad de escribirlo dentro de los paréntesis.
+
+Para descubrir qué métodos tiene un objeto, la función `dir()` los lista. Combinada con `help()`, que ya conocemos, permite explorar cualquier tipo sin salir del notebook:
+
+```{python}
+# dir() lista todos los nombres asociados a un tipo
+print(dir(list))
+```
+
+La salida incluye muchos nombres rodeados de guiones bajos, como `__len__` o `__add__`: son métodos especiales internos de Python, que dejamos para más adelante. Los demás —`append`, `sort`, `count` y compañía— son las operaciones que cualquier lista sabe realizar, y las que veremos a continuación.
+
+## Métodos de las listas
+
+La lección sobre estructuras de datos prometió que agregar y eliminar elementos requería métodos. Ahora podemos cumplir esa promesa.
+
+El método `append()` agrega un elemento al final de la lista. A diferencia de la concatenación con `+` que usamos en la lección sobre bucles, `append()` modifica la lista existente en lugar de crear una nueva:
+
+```{python}
+temperaturas = [23.5, 24.0, 22.8]
+temperaturas.append(21.3)
+print(temperaturas)
+```
+
+Conviene detenerse en una diferencia importante. En la lección sobre bucles construíamos listas con `lista = lista + [elemento]`, lo que crea una lista nueva en cada paso. `append()` no crea nada nuevo: modifica directamente la lista sobre la que actúa. Por eso `temperaturas.append(21.3)` no se asigna a ninguna variable; el cambio ocurre dentro del objeto `temperaturas`. Escribir `temperaturas = temperaturas.append(21.3)` sería un error silencioso, porque `append()` no devuelve la lista modificada, sino `None`.
+
+Esta distinción —entre métodos que modifican el objeto y métodos que devuelven un valor nuevo— recorrerá toda la lección. Conviene tenerla presente desde el principio.
+
+El método `insert()` agrega un elemento en una posición específica, desplazando los demás:
+
+```{python}
+temperaturas.insert(0, 19.0)   # inserta 19.0 en la posición 0
+print(temperaturas)
+```
+
+El método `remove()` elimina la primera aparición de un valor, y `pop()` elimina y devuelve el elemento de una posición dada:
+
+```{python}
+temperaturas.remove(22.8)   # elimina el valor 22.8
+print(temperaturas)
+
+ultimo = temperaturas.pop()   # elimina y devuelve el último elemento
+print(ultimo)
+print(temperaturas)
+```
+
+`pop()` es un buen ejemplo de un método que hace dos cosas a la vez: modifica la lista y devuelve un valor. Por eso `ultimo = temperaturas.pop()` sí tiene sentido: el método devuelve el elemento que quitó, y lo guardamos.
+
+El método `sort()` ordena la lista en su lugar, y `reverse()` la invierte:
+
+```{python}
+calificaciones = [7.5, 9.0, 6.0, 10.0, 8.0]
+calificaciones.sort()
+print(calificaciones)
+
+calificaciones.reverse()
+print(calificaciones)
+```
+
+Aquí aparece de nuevo la distinción que vimos en la lección sobre listas. La función `sorted()`, que ya conocíamos, devuelve una lista nueva ordenada sin tocar la original. El método `sort()` hace lo contrario: modifica la lista original y no devuelve nada. La elección entre uno y otro depende de si queremos conservar el orden original o no.
+
+Finalmente, `index()` devuelve la posición de un valor y `count()` cuenta cuántas veces aparece:
+
+```{python}
+numeros = [3, 1, 4, 1, 5, 1, 9]
+print(numeros.index(4))   # posición de la primera aparición de 4
+print(numeros.count(1))   # cuántas veces aparece el 1
+```
+
+## Métodos de las cadenas
+
+Las cadenas también son objetos, y tienen métodos propios. Varios de ellos ya aparecieron en lecciones anteriores sin explicación; ahora reciben su lugar.
+
+Una particularidad importante: las cadenas son inmutables, como vimos en la lección sobre secuencias. Por eso ningún método de cadena modifica la cadena original. Todos devuelven una cadena nueva. Esto es lo contrario de lo que ocurre con las listas, y es coherente con la naturaleza inmutable de las cadenas.
+
+Los métodos `upper()` y `lower()` devuelven la cadena en mayúsculas o minúsculas:
+
+```{python}
+nombre = "Carlos"
+print(nombre.upper())
+print(nombre.lower())
+print(nombre)   # la original no cambió: las cadenas son inmutables
+```
+
+El método `strip()`, que usamos en la lección sobre errores, elimina espacios y saltos de línea al inicio y al final:
+
+```{python}
+entrada = "   23.5  \n"
+print(entrada.strip())
+```
+
+El método `replace()` devuelve una cadena con todas las apariciones de un fragmento sustituidas por otro:
+
+```{python}
+fecha = "2025/01/15"
+print(fecha.replace("/", "-"))
+```
+
+Los métodos `startswith()` y `endswith()` verifican si una cadena comienza o termina con un fragmento dado, y devuelven un booleano:
+
+```{python}
+archivo = "datos.csv"
+print(archivo.endswith(".csv"))
+print(archivo.startswith("datos"))
+```
+
+Los dos métodos más importantes para procesar texto son `split()` y `join()`, y son inversos entre sí. `split()` divide una cadena en una lista de fragmentos, usando un separador:
+
+```{python}
+linea = "Ana,20,9.2"
+campos = linea.split(",")
+print(campos)
+```
+
+`join()` hace lo contrario: une los elementos de una lista en una sola cadena, usando un separador. La sintaxis es algo inusual, porque el separador es el objeto sobre el que se invoca el método:
+
+```{python}
+palabras = ["Python", "es", "expresivo"]
+frase = " ".join(palabras)
+print(frase)
+```
+
+Que `join()` se escriba como `separador.join(lista)` y no como `lista.join(separador)` sorprende a primera vista. La razón es que `join()` es un método de las cadenas, no de las listas: la cadena `" "` es el objeto que sabe cómo unir una secuencia de fragmentos intercalándose entre ellos. Una vez visto así, la sintaxis tiene sentido.
+
+## Métodos de los diccionarios
+
+Los diccionarios tienen métodos que resuelven un problema concreto que arrastramos desde la lección sobre bucles. Cuando recorríamos un diccionario con `for clave in diccionario`, obteníamos solo las claves, y teníamos que escribir `diccionario[clave]` para llegar al valor. Los métodos de diccionario ofrecen una forma más directa.
+
+El método `keys()` devuelve las claves, `values()` devuelve los valores, e `items()` devuelve pares clave-valor:
+
+```{python}
+estudiante = {"nombre": "Ana", "edad": 20, "promedio": 9.2}
+
+print(list(estudiante.keys()))
+print(list(estudiante.values()))
+print(list(estudiante.items()))
+```
+
+El método `items()` es especialmente útil en un `for`, porque permite recibir la clave y el valor a la vez mediante el desempaquetado de tuplas que aprendimos en la lección sobre estructuras de datos:
+
+```{python}
+for clave, valor in estudiante.items():
+    print(f"{clave}: {valor}")
+```
+
+Esto reemplaza con ventaja el patrón `for clave in estudiante: ... estudiante[clave]` que usábamos antes. Cada par que produce `items()` es una tupla `(clave, valor)`, y el `for` la desempaqueta en dos variables, exactamente como hacíamos con `enumerate()` y `zip()` en la lección sobre bucles.
+
+El método `get()` resuelve otro problema que ya encontramos: acceder a una clave que no existe produce un `KeyError`, como vimos en la lección sobre errores. `get()` devuelve el valor de una clave si existe, y un valor por defecto si no:
+
+```{python}
+print(estudiante.get("promedio"))        # la clave existe
+print(estudiante.get("beca"))            # no existe: devuelve None
+print(estudiante.get("beca", "sin beca"))  # no existe: devuelve el valor por defecto
+```
+
+`get()` es una alternativa a las cláusulas de guarda con `in` que escribíamos en la lección sobre estructuras de control: en lugar de verificar `if "beca" in estudiante` antes de acceder, pedimos el valor directamente y dejamos que `get()` maneje la ausencia.
+
+## Métodos de los conjuntos
+
+Los conjuntos también son objetos con métodos. El método `add()` agrega un elemento y `discard()` lo elimina sin error si no existe:
+
+```{python}
+materias = {"Cálculo", "Álgebra"}
+materias.add("Física")
+print(materias)
+
+materias.discard("Álgebra")
+print(materias)
+```
+
+Las operaciones de conjuntos que vimos con operadores en la lección sobre estructuras de datos —unión, intersección, diferencia— también tienen su forma como método. `grupo_a | grupo_b` puede escribirse `grupo_a.union(grupo_b)`, y de forma análoga `intersection()` y `difference()`:
+
+```{python}
+manana = {"Ana", "Luis", "María"}
+tarde  = {"María", "Pedro"}
+
+print(manana.union(tarde))
+print(manana.intersection(tarde))
+print(manana.difference(tarde))
+```
+
+Que cada operación de conjunto exista tanto como operador (`|`, `&`, `-`) como método (`union`, `intersection`, `difference`) ilustra algo más profundo: los operadores que hemos usado desde la primera lección son, en el fondo, métodos disfrazados. Cuando escribimos `a + b`, Python invoca internamente un método del objeto `a`. Esa idea se vuelve central cuando definamos nuestros propios tipos.
+
+## Métodos que modifican y métodos que devuelven
+
+A lo largo de la lección ha reaparecido una distinción que conviene consolidar. Algunos métodos modifican el objeto sobre el que actúan y no devuelven nada útil: `lista.append()`, `lista.sort()`, `conjunto.add()`. Otros no modifican el objeto y devuelven un valor nuevo: `cadena.upper()`, `cadena.split()`, `diccionario.get()`.
+
+La regla general sigue la naturaleza del tipo. Las listas, los diccionarios y los conjuntos son mutables, así que tienen métodos que los modifican en su lugar. Las cadenas son inmutables, así que todos sus métodos devuelven cadenas nuevas y dejan la original intacta.
+
+El error más común al empezar es asignar el resultado de un método que modifica en su lugar:
+
+```{python}
+calificaciones = [7.5, 9.0, 6.0]
+resultado = calificaciones.sort()   # sort() modifica la lista y devuelve None
+print(resultado)                    # None, no la lista ordenada
+print(calificaciones)               # la lista sí quedó ordenada
+```
+
+`calificaciones.sort()` ordena la lista pero devuelve `None`. Guardar ese `None` en `resultado` es casi siempre un error. Cuando se necesita una lista ordenada como valor nuevo, la herramienta correcta es `sorted()`; cuando basta con ordenar la lista existente, es `sort()`.
+
+## Ejemplo integrador
+
+Reunimos los métodos de esta lección en un problema concreto. Tenemos una lista de registros de estudiantes en formato de texto, donde cada registro es una cadena con campos separados por comas. Queremos limpiarlos, convertirlos en diccionarios y producir un resumen por carrera.
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+registros = [
+    "  Ana , Matemáticas , 9.2 ",
+    "Luis,Física,7.8",
+    " María , Matemáticas , 8.5",
+    "Carlos, Actuaría ,6.1",
+]
+
+# Convertir cada cadena en un diccionario, limpiando los campos
+grupo = []
+for registro in registros:
+    campos = registro.split(",")
+    estudiante = {
+        "nombre":       campos[0].strip(),
+        "carrera":      campos[1].strip(),
+        "calificacion": float(campos[2].strip()),
+    }
+    grupo.append(estudiante)
+
+# Agrupar promedios por carrera usando un diccionario
+suma_por_carrera   = {}
+conteo_por_carrera = {}
+for estudiante in grupo:
+    carrera = estudiante["carrera"]
+    suma_por_carrera[carrera]   = suma_por_carrera.get(carrera, 0) + estudiante["calificacion"]
+    conteo_por_carrera[carrera] = conteo_por_carrera.get(carrera, 0) + 1
+
+# Reportar
+for carrera, suma in suma_por_carrera.items():
+    promedio = suma / conteo_por_carrera[carrera]
+    print(f"{carrera}: promedio {promedio:.2f}")
+```
+
+El ejemplo usa `split()` para separar los campos, `strip()` para limpiar los espacios, `append()` para construir la lista de estudiantes, `get()` para inicializar los acumuladores sin verificar previamente si la clave existe, e `items()` para recorrer el resumen final. Cada método cumple exactamente el papel para el que existe, y juntos resuelven un problema que antes habría requerido rodeos.
+
+## Lo que sigue
+
+Hemos visto que los tipos de Python —listas, cadenas, diccionarios, conjuntos— son objetos que combinan datos con las operaciones que pueden realizarse sobre ellos. Pero hasta ahora solo hemos usado los tipos que el lenguaje trae de fábrica. La pregunta natural es si podemos construir nuestros propios tipos: objetos hechos a la medida de un problema, que agrupen los datos que nos interesan y las operaciones que tienen sentido sobre ellos.
+
+A lo largo de la serie hemos representado a un estudiante como un diccionario con claves `nombre`, `carrera` y `calificacion`. Funciona, pero nada impide escribir mal una clave, olvidar un campo o mezclar tipos distintos. Lo que necesitamos es una forma de definir, de una vez por todas, qué es un estudiante: qué datos lo componen y qué se puede hacer con él. Eso es precisamente lo que permiten las *clases*, y es el tema de la siguiente lección.

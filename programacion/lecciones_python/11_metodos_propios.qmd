@@ -1,0 +1,264 @@
+---
+title: "Métodos propios y representación"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior dejó nuestras clases a medio camino. Sabemos definir un tipo `Estudiante` que garantiza qué datos contiene cada objeto, pero cuando queremos hacer algo con un estudiante —clasificar su calificación, comprobar si aprobó— seguimos recurriendo a funciones externas, como la función `clasificar()` que arrastramos desde la lección sobre estructuras de control. El dato vive dentro del objeto; la operación, fuera. Esa separación es artificial: clasificar una calificación es algo que un estudiante sabe hacer consigo mismo.
+
+En la lección sobre objetos vimos que una lista lleva consigo su `append()` y una cadena su `split()`: el dato y las operaciones que tienen sentido sobre él viajan juntos. Esta lección hace lo mismo con nuestras propias clases. Aprenderemos a definir *métodos propios*: operaciones que pertenecen al objeto y actúan sobre sus atributos.
+
+## Definir un método
+
+Un método es, simplemente, una función definida dentro de una clase. La única diferencia con las funciones que conocemos desde la lección sobre funciones es que recibe `self` como primer parámetro, igual que `__init__`. A través de `self`, el método tiene acceso a los atributos del objeto sobre el que actúa.
+
+Convertimos la vieja función `clasificar()` en un método de la clase `Estudiante`:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def clasificar(self):
+        if self.calificacion >= 9.0:
+            return "Sobresaliente"
+        elif self.calificacion >= 7.0:
+            return "Bien"
+        elif self.calificacion >= 6.0:
+            return "Suficiente"
+        else:
+            return "Reprobado"
+
+
+ana = Estudiante("Ana", "Matemáticas", 9.2)
+print(ana.clasificar())
+```
+
+El cambio respecto a la función original es revelador. La función `clasificar(calificacion)` recibía la calificación como argumento; el método `clasificar(self)` no recibe ninguna calificación, porque la toma de `self.calificacion`, el atributo del propio objeto. El método ya sabe sobre qué calificación operar: la suya.
+
+La llamada también cambia. Antes escribíamos `clasificar(ana.calificacion)`, pasando el dato a una función externa. Ahora escribimos `ana.clasificar()`, pidiéndole al objeto que se clasifique a sí mismo. La operación pertenece al objeto, y eso se refleja en la sintaxis.
+
+## Métodos que usan parámetros
+
+Un método puede recibir parámetros adicionales además de `self`, igual que cualquier función. Imaginemos un método que comprueba si el estudiante aprueba según un umbral que puede variar:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def aprueba(self, umbral=6.0):
+        return self.calificacion >= umbral
+
+
+carlos = Estudiante("Carlos", "Actuaría", 6.1)
+print(carlos.aprueba())       # umbral por defecto: 6.0
+print(carlos.aprueba(7.0))    # umbral exigente: 7.0
+```
+
+El método combina dos fuentes de información: `self.calificacion`, que es un atributo del objeto, y `umbral`, que es un parámetro de la llamada. El valor por defecto `umbral=6.0` usa la misma mecánica de argumentos por defecto que vimos en la lección sobre funciones. Cuando la llamada no especifica umbral, se usa `6.0`; cuando lo especifica, se usa el indicado.
+
+## Métodos que modifican el objeto
+
+En la lección sobre objetos distinguimos entre métodos que devuelven un valor y métodos que modifican el objeto sobre el que actúan. Nuestras clases pueden tener ambos tipos. Un método que modifica el objeto asigna nuevos valores a sus atributos a través de `self`:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def actualizar_calificacion(self, nueva):
+        self.calificacion = nueva
+
+    def clasificar(self):
+        if self.calificacion >= 9.0:
+            return "Sobresaliente"
+        elif self.calificacion >= 7.0:
+            return "Bien"
+        elif self.calificacion >= 6.0:
+            return "Suficiente"
+        else:
+            return "Reprobado"
+
+
+maria = Estudiante("María", "Matemáticas", 8.5)
+print(maria.clasificar())
+
+maria.actualizar_calificacion(9.3)   # modifica el atributo del objeto
+print(maria.clasificar())
+```
+
+`actualizar_calificacion()` no devuelve nada: su efecto es cambiar `self.calificacion` dentro del objeto. Es el equivalente, para nuestra clase, de lo que `append()` hace con una lista. Después de llamarlo, `maria` tiene una calificación distinta, y eso se refleja la próxima vez que se clasifica.
+
+Modificar atributos a través de un método, en lugar de asignarlos directamente con `maria.calificacion = 9.3`, permite que el objeto controle cómo cambia su propio estado. Un método de actualización podría, por ejemplo, rechazar valores fuera de rango o registrar el cambio. Esa capacidad de gobernar las propias transformaciones es una de las razones por las que las clases organizan el código con más solidez que los diccionarios.
+
+## La representación de un objeto
+
+Hay un problema práctico que aparece en cuanto trabajamos con objetos propios. Veamos qué ocurre al imprimir un estudiante directamente:
+
+```{python}
+ana = Estudiante("Ana", "Matemáticas", 9.2)
+print(ana)
+```
+
+El resultado es algo como `<__main__.Estudiante object at 0x...>`: el tipo del objeto y su dirección en memoria. Es información correcta pero inútil para un humano. Cuando imprimimos una lista vemos sus elementos, cuando imprimimos una cadena vemos su texto; quisiéramos que al imprimir un estudiante viéramos algo igualmente legible.
+
+Python resuelve esto con un método especial: `__str__`. Si una clase lo define, `print()` lo usa para obtener la representación textual del objeto. Los métodos especiales se reconocen por los dos guiones bajos a cada lado del nombre, igual que `__init__`:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def __str__(self):
+        return f"{self.nombre} ({self.carrera}): {self.calificacion}"
+
+
+ana = Estudiante("Ana", "Matemáticas", 9.2)
+print(ana)
+```
+
+`__str__` devuelve una cadena construida con un f-string a partir de los atributos del objeto, usando la misma sintaxis de f-strings que conocemos desde la lección sobre funciones. Ahora `print(ana)` produce una línea legible. No llamamos a `__str__` directamente; Python lo invoca por nosotros cuando el objeto necesita convertirse en texto, igual que invoca `__init__` al crear la instancia.
+
+## `__str__` y `__repr__`
+
+Python distingue entre dos representaciones textuales de un objeto, y conviene entender la diferencia. `__str__` produce una representación pensada para el usuario final: legible, amigable. Existe además `__repr__`, pensada para el programador: una representación precisa y, en lo posible, sin ambigüedad sobre qué es el objeto.
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def __str__(self):
+        return f"{self.nombre} ({self.carrera}): {self.calificacion}"
+
+    def __repr__(self):
+        return f"Estudiante('{self.nombre}', '{self.carrera}', {self.calificacion})"
+
+
+ana = Estudiante("Ana", "Matemáticas", 9.2)
+
+print(ana)        # usa __str__
+print(str(ana))   # también usa __str__
+print(repr(ana))  # usa __repr__
+```
+
+La distinción tiene una lógica clara. `__str__` responde a "¿cómo le muestro este objeto a una persona?"; `__repr__` responde a "¿cómo describo este objeto sin ambigüedad para alguien que programa?". Por eso `__repr__` suele tener la forma de la llamada que crearía el objeto. Cuando una clase define solo uno de los dos, conviene que sea `__repr__`, porque Python recurre a él como respaldo cuando `__str__` no existe.
+
+Un detalle revelador: al imprimir una lista de estudiantes, Python usa `__repr__` para cada elemento, no `__str__`:
+
+```{python}
+grupo = [
+    Estudiante("Ana", "Matemáticas", 9.2),
+    Estudiante("Luis", "Física", 7.8),
+]
+print(grupo)
+```
+
+Por eso definir `__repr__` es buena práctica: sin él, una lista de estudiantes volvería a mostrar las direcciones de memoria ilegibles.
+
+## Operadores como métodos especiales
+
+En la lección sobre objetos adelantamos una idea: los operadores que usamos desde la primera lección son, en el fondo, métodos. Ahora podemos comprobarlo. Cuando escribimos `a + b`, Python invoca un método especial llamado `__add__` sobre `a`. Cuando escribimos `len(x)`, invoca `__len__`. Definir estos métodos en nuestras clases les permite responder a los operadores y funciones del lenguaje.
+
+Construyamos una clase `Grupo` que contenga estudiantes y que sepa cuántos tiene mediante `len()`:
+
+```{python}
+class Grupo:
+    def __init__(self, estudiantes):
+        self.estudiantes = estudiantes
+
+    def __len__(self):
+        return len(self.estudiantes)
+
+
+grupo = Grupo([
+    Estudiante("Ana", "Matemáticas", 9.2),
+    Estudiante("Luis", "Física", 7.8),
+    Estudiante("María", "Matemáticas", 8.5),
+])
+
+print(len(grupo))   # Python invoca grupo.__len__()
+```
+
+`len(grupo)` funciona porque `Grupo` define `__len__`. Esto explica retroactivamente algo que usamos sin pensar desde la lección sobre funciones: `len(lista)` siempre funcionó porque las listas definen `__len__`. La función `len()` no es magia; es una forma corta de invocar el método especial `__len__` del objeto. Lo mismo vale para `+` y `__add__`, para `==` y `__eq__`, y para cada operador del lenguaje. Los operadores son una interfaz uniforme sobre métodos que cada tipo implementa a su manera.
+
+## Ejemplo integrador
+
+Reunimos todo en dos clases que trabajan juntas: `Estudiante`, con sus métodos propios y su representación, y `Grupo`, que contiene estudiantes y ofrece operaciones sobre el conjunto. Es la versión orientada a objetos del problema que ha recorrido toda la serie.
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def clasificar(self):
+        if self.calificacion >= 9.0:
+            return "Sobresaliente"
+        elif self.calificacion >= 7.0:
+            return "Bien"
+        elif self.calificacion >= 6.0:
+            return "Suficiente"
+        else:
+            return "Reprobado"
+
+    def aprueba(self, umbral=6.0):
+        return self.calificacion >= umbral
+
+    def __str__(self):
+        return f"{self.nombre} ({self.carrera}): {self.calificacion} — {self.clasificar()}"
+
+    def __repr__(self):
+        return f"Estudiante('{self.nombre}', '{self.carrera}', {self.calificacion})"
+
+
+class Grupo:
+    def __init__(self, estudiantes):
+        self.estudiantes = estudiantes
+
+    def __len__(self):
+        return len(self.estudiantes)
+
+    def promedio(self):
+        calificaciones = [e.calificacion for e in self.estudiantes]
+        return sum(calificaciones) / len(calificaciones)
+
+    def aprobados(self):
+        return [e for e in self.estudiantes if e.aprueba()]
+
+    def reporte(self):
+        print(f"Grupo de {len(self)} estudiantes — promedio {self.promedio():.2f}")
+        for estudiante in self.estudiantes:
+            print(f"  {estudiante}")
+
+
+grupo = Grupo([
+    Estudiante("Ana", "Matemáticas", 9.2),
+    Estudiante("Luis", "Física", 7.8),
+    Estudiante("Carlos", "Actuaría", 5.4),
+    Estudiante("María", "Matemáticas", 8.5),
+])
+
+grupo.reporte()
+print(f"\nAprobados: {len(grupo.aprobados())} de {len(grupo)}")
+```
+
+El método `reporte()` de `Grupo` usa `len(self)` —que funciona gracias a `__len__`—, `self.promedio()` —otro método de la misma clase— y la representación `__str__` de cada estudiante al imprimirlo. Los métodos `promedio()` y `aprobados()` aplican comprensiones de lista sobre `self.estudiantes`, accediendo al atributo `calificacion` y al método `aprueba()` de cada estudiante. Toda la lógica que antes vivía dispersa en funciones sueltas ahora pertenece a los objetos que le dan sentido: un estudiante sabe clasificarse, un grupo sabe calcular su promedio.
+
+## Lo que sigue
+
+Nuestras clases ya combinan datos y comportamiento: un `Estudiante` sabe clasificarse, un `Grupo` sabe reportarse. Pero supongamos que la universidad distingue entre estudiantes de licenciatura y de posgrado. Ambos comparten casi todo —nombre, carrera, calificación, la forma de clasificarse— pero el de posgrado tiene además un director de tesis y una regla de aprobación más estricta.
+
+Con lo que sabemos, la única salida sería escribir una clase nueva y copiar en ella todo lo que ya está en `Estudiante`, cambiando solo lo que difiere. Copiar código es siempre una señal de alarma: si mañana cambia la forma de clasificar, habría que corregirla en dos lugares y recordar que existen ambos. Lo que necesitamos es una forma de decir "un estudiante de posgrado es un estudiante, con algunas cosas añadidas". Esa relación entre clases —donde una se construye a partir de otra— es la *herencia*, y es el tema de la siguiente lección.

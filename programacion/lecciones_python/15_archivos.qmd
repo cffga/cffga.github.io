@@ -1,0 +1,386 @@
+---
+title: "Lectura y escritura de archivos"
+author: "Carlos Flores"
+format: html
+---
+
+Todo el código que hemos escrito a lo largo de la serie trabaja con datos que existen únicamente mientras el programa se ejecuta: una lista de calificaciones definida en el código, un grupo de estudiantes construido a mano. Cuando el programa termina, esos datos desaparecen. Eso sirve para aprender, pero no refleja cómo se trabaja en la práctica, donde los datos llegan desde fuera —un archivo generado por un instrumento, una hoja de cálculo exportada, un registro acumulado durante meses— y los resultados deben guardarse en algún lugar que persista.
+
+Esta lección cierra esa brecha. Aprenderemos a leer datos desde un archivo y a escribir resultados en uno, dando a nuestros programas la capacidad de comunicarse con el mundo exterior. Llegamos a este punto con todo lo necesario ya en nuestro repertorio: los métodos de cadena para procesar texto, el manejo de errores para los fallos inevitables, los módulos para los formatos estructurados. Nada de lo que aparece aquí queda pendiente de explicación.
+
+Para que los ejemplos funcionen de forma autónoma, empezamos creando los archivos de muestra que usaremos. En la práctica ya existirían en disco; crearlos aquí permite ejecutar la lección completa sin depender de archivos externos.
+
+```{python}
+import json
+
+# Archivo de temperaturas con comentarios y alguna línea inválida
+with open("leccion_temperatura.txt", "w", encoding="utf-8") as f:
+    f.write("# Registro de temperaturas - Estación Toluca\n")
+    f.write("# Fecha: 2024-01-15\n")
+    f.write("23.5\n")
+    f.write("24.0\n")
+    f.write("22.8\n")
+    f.write("no_valido\n")
+    f.write("19.0\n")
+    f.write("\n")
+    f.write("21.3\n")
+
+# Archivo CSV de calificaciones
+with open("leccion_calificaciones.csv", "w", encoding="utf-8") as f:
+    f.write("nombre,carrera,calificacion\n")
+    f.write("Ana,Matemáticas,9.2\n")
+    f.write("Luis,Física,7.8\n")
+    f.write("María,Matemáticas,8.5\n")
+    f.write("Carlos,Actuaría,6.1\n")
+    f.write("Sofía,Física,9.7\n")
+
+# Archivo JSON de estudiantes
+estudiantes_datos = [
+    {"nombre": "Ana", "carrera": "Matemáticas", "calificacion": 9.2},
+    {"nombre": "Luis", "carrera": "Física", "calificacion": 7.8},
+]
+with open("leccion_estudiantes.json", "w", encoding="utf-8") as f:
+    json.dump(estudiantes_datos, f, ensure_ascii=False, indent=4)
+
+print("Archivos de muestra creados.")
+```
+
+Estas líneas ya usan todo lo que la lección desarrollará en detalle. Las explicamos a continuación, una a una.
+
+## Abrir y cerrar un archivo: `open()` y `with`
+
+La función `open()` recibe la ruta de un archivo y devuelve un objeto que representa la conexión con ese archivo en disco. Como todo objeto, tiene métodos —para leer, para escribir— que invocamos con la notación de punto que conocemos desde la lección sobre objetos. Pero esa conexión debe cerrarse cuando se termina de usar: si no, los datos escritos pueden no guardarse y el sistema retiene el recurso innecesariamente.
+
+Cerrar el archivo a mano es fácil de olvidar, sobre todo si ocurre un error en medio. En la lección sobre errores vimos que la cláusula `finally` garantizaba la ejecución de código pase lo que pase, y mencionamos que habría una forma más elegante de cerrar archivos. Esa forma es el bloque `with`:
+
+```python
+with open("datos.txt", "r", encoding="utf-8") as f:
+    contenido = f.read()
+# al salir del bloque, el archivo se cierra automáticamente, haya error o no
+```
+
+`with open(...) as f` abre el archivo, lo asigna al nombre `f` mientras dure el bloque, y lo cierra automáticamente al salir, incluso si ocurre una excepción dentro. Hace lo que haríamos con `try`/`finally`, pero de forma concisa y sin posibilidad de olvido. Es la forma que se usa siempre en la práctica.
+
+El argumento `encoding="utf-8"` indica la codificación del texto. UTF-8 es el estándar para texto en español y casi cualquier idioma; omitirlo puede causar problemas con tildes y la ñ según el sistema operativo, así que conviene incluirlo siempre.
+
+### Los modos de apertura
+
+El segundo argumento de `open()` es el *modo*, que indica qué se pretende hacer con el archivo:
+
+| Modo | Significado | Si no existe | Si existe |
+|:----:|:------------|:-------------|:----------|
+| `"r"` | Lectura | Lanza `FileNotFoundError` | Lo abre |
+| `"w"` | Escritura | Lo crea | Borra su contenido |
+| `"a"` | Añadir | Lo crea | Conserva e incorpora al final |
+
+El modo `"r"` es el predeterminado. La diferencia entre `"w"` y `"a"` es crucial: `"w"` destruye el contenido previo sin avisar, mientras que `"a"` lo conserva y agrega al final. Confundirlos es una fuente común de pérdida accidental de datos.
+
+## Leer archivos
+
+Para leer, la forma más natural y eficiente es recorrer el objeto archivo con un `for`, que entrega una línea por iteración sin cargar todo en memoria:
+
+```{python}
+with open("leccion_temperatura.txt", "r", encoding="utf-8") as f:
+    for linea in f:
+        print(repr(linea))   # repr muestra el salto de línea \n explícitamente
+```
+
+Cada línea llega con un `\n` al final, el carácter de salto de línea. Para eliminarlo usamos `strip()`, el método de cadena que vimos en la lección sobre objetos, que quita espacios y saltos de línea de los extremos:
+
+```{python}
+with open("leccion_temperatura.txt", "r", encoding="utf-8") as f:
+    for linea in f:
+        linea = linea.strip()
+        print(linea)
+```
+
+Un patrón habitual en archivos de datos es ignorar líneas vacías o de comentario. Con los métodos de cadena y el `continue` que conocemos, se resuelve directamente:
+
+```{python}
+with open("leccion_temperatura.txt", "r", encoding="utf-8") as f:
+    for linea in f:
+        linea = linea.strip()
+        if linea == "" or linea.startswith("#"):
+            continue   # saltamos vacías y comentarios
+        print(linea)
+```
+
+Reunimos esto en una función que lee las temperaturas, descarta lo que no corresponde, convierte cada valor a número y maneja los errores de conversión con las herramientas de la lección sobre errores:
+
+```{python}
+def leer_temperaturas(ruta):
+    temperaturas = []
+    invalidas = 0
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            for linea in f:
+                linea = linea.strip()
+                if linea == "" or linea.startswith("#"):
+                    continue
+                try:
+                    temperaturas.append(float(linea))
+                except ValueError:
+                    invalidas += 1
+    except FileNotFoundError:
+        raise FileNotFoundError(f"No se encontró el archivo: {ruta}")
+
+    if invalidas > 0:
+        print(f"Advertencia: {invalidas} línea(s) no se pudieron convertir.")
+    return temperaturas
+
+
+temperaturas = leer_temperaturas("leccion_temperatura.txt")
+print(f"Lecturas válidas: {len(temperaturas)}")
+print(f"Promedio: {sum(temperaturas) / len(temperaturas):.2f} °C")
+```
+
+El `try` exterior captura el caso de que el archivo no exista; el interior captura, línea por línea, los valores que no se pueden convertir, dejando que el resto del proceso continúe. Es el patrón de acumular errores sin detenerse que ya practicamos. Usamos `append()`, el método de lista de la lección sobre objetos, para construir la lista de temperaturas.
+
+## Escribir archivos
+
+Para escribir, se abre el archivo en modo `"w"` o `"a"` y se usa el método `write()`, que recibe una cadena. A diferencia de `print()`, `write()` no añade salto de línea: hay que incluir `\n` explícitamente.
+
+```{python}
+resultado = {
+    "lecturas": len(temperaturas),
+    "promedio": round(sum(temperaturas) / len(temperaturas), 2),
+    "minima": min(temperaturas),
+    "maxima": max(temperaturas),
+}
+
+with open("leccion_resumen.txt", "w", encoding="utf-8") as f:
+    f.write("=== Resumen de temperaturas ===\n")
+    f.write(f"Lecturas válidas: {resultado['lecturas']}\n")
+    f.write(f"Promedio:         {resultado['promedio']} °C\n")
+    f.write(f"Mínima:           {resultado['minima']} °C\n")
+    f.write(f"Máxima:           {resultado['maxima']} °C\n")
+
+# Verificamos leyendo lo que acabamos de escribir
+with open("leccion_resumen.txt", "r", encoding="utf-8") as f:
+    print(f.read())
+```
+
+El método `read()` que usamos al final lee el archivo entero como una sola cadena, útil cuando el contenido es pequeño y queremos verlo de una vez.
+
+## El formato CSV
+
+El CSV (*valores separados por comas*) es el formato más común para datos tabulares: cada línea es un registro y los campos van separados por comas. Es lo que exportan las hojas de cálculo. Para leerlo, separamos cada línea con `split(",")`, el método de cadena que conocemos:
+
+```{python}
+def leer_csv(ruta):
+    registros = []
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            lineas = [linea.strip() for linea in f if linea.strip() != ""]
+    except FileNotFoundError:
+        raise FileNotFoundError(f"No se encontró el archivo: {ruta}")
+
+    if not lineas:
+        return []
+
+    encabezado = lineas[0].split(",")          # primera línea: nombres de columna
+    for linea in lineas[1:]:
+        valores = linea.split(",")
+        registro = {}
+        for clave, valor in zip(encabezado, valores):
+            registro[clave] = valor
+        registros.append(registro)
+    return registros
+
+
+grupo = leer_csv("leccion_calificaciones.csv")
+for alumno in grupo:
+    print(alumno)
+```
+
+La función combina varias herramientas conocidas. Una comprensión de lista con filtro recoge las líneas no vacías; `split(",")` separa los campos; `zip()`, de la lección sobre bucles, empareja cada nombre de columna con su valor; y `append()` construye la lista de registros. El resultado es la lista de diccionarios que hemos usado durante toda la serie.
+
+Un detalle importante: los valores leídos de un CSV son siempre cadenas. Para usar la calificación como número hay que convertirla:
+
+```{python}
+for alumno in grupo:
+    calificacion = float(alumno["calificacion"])
+    print(f"{alumno['nombre']}: {calificacion:.1f}")
+```
+
+Que el CSV no conserve los tipos es una de sus limitaciones, y una de las razones por las que, en ciencia de datos, se usan bibliotecas como pandas que infieren los tipos automáticamente. Pero entender lo que esas bibliotecas hacen por dentro empieza por saber leer un CSV a mano.
+
+Escribir un CSV es el proceso inverso: unir los campos de cada registro con comas mediante `join()`, el método inverso de `split()`:
+
+```{python}
+def escribir_csv(ruta, registros, columnas):
+    with open(ruta, "w", encoding="utf-8") as f:
+        f.write(",".join(columnas) + "\n")              # encabezado
+        for registro in registros:
+            valores = [str(registro[col]) for col in columnas]
+            f.write(",".join(valores) + "\n")
+
+
+nuevos = [
+    {"nombre": "Ana", "carrera": "Matemáticas", "calificacion": 9.5},
+    {"nombre": "Luis", "carrera": "Física", "calificacion": 8.0},
+]
+escribir_csv("leccion_actualizado.csv", nuevos, ["nombre", "carrera", "calificacion"])
+
+with open("leccion_actualizado.csv", "r", encoding="utf-8") as f:
+    print(f.read())
+```
+
+La comprensión `[str(registro[col]) for col in columnas]` convierte cada valor a cadena, porque `join()` requiere que todos los elementos lo sean. Es la misma clase de comprensión que usamos a lo largo de la serie.
+
+## El formato JSON
+
+JSON es el otro formato universal de intercambio de datos. Su gran ventaja sobre el CSV es que su estructura coincide casi exactamente con la de los diccionarios y listas de Python, y conserva los tipos. Para trabajar con él usamos el módulo `json` de la biblioteca estándar, que importamos como aprendimos en la lección sobre módulos:
+
+```{python}
+import json
+
+def leer_json(ruta):
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"No se encontró el archivo: {ruta}")
+    except json.JSONDecodeError as e:
+        raise ValueError(f"El archivo no contiene JSON válido: {e}")
+
+
+estudiantes = leer_json("leccion_estudiantes.json")
+for e in estudiantes:
+    print(f"{e['nombre']} ({e['carrera']}): {e['calificacion']}")
+```
+
+`json.load(f)` lee el archivo y lo convierte automáticamente al tipo de Python correspondiente: un objeto JSON se vuelve diccionario, una lista se vuelve lista, los números se vuelven `int` o `float`. La conversión manual que necesitábamos con el CSV aquí es automática. El módulo es un objeto, y `json.load` es uno de sus métodos, accedido con la notación de punto de siempre.
+
+Para escribir, `json.dump()` convierte un objeto de Python a JSON y lo guarda:
+
+```{python}
+import json
+
+resumen = {
+    "estacion": "Toluca",
+    "lecturas": len(temperaturas),
+    "promedio": round(sum(temperaturas) / len(temperaturas), 2),
+}
+
+with open("leccion_resumen.json", "w", encoding="utf-8") as f:
+    json.dump(resumen, f, ensure_ascii=False, indent=4)
+
+with open("leccion_resumen.json", "r", encoding="utf-8") as f:
+    print(f.read())
+```
+
+`ensure_ascii=False` permite que las tildes se guarden tal cual en lugar de como secuencias de escape, e `indent=4` produce un archivo legible con sangría. Estos son argumentos por nombre, como los que conocemos desde la lección sobre funciones.
+
+## Verificar que un archivo existe
+
+A veces conviene comprobar si un archivo existe antes de abrirlo. El módulo `os` ofrece `os.path.exists()` para eso:
+
+```{python}
+import os
+
+def leer_si_existe(ruta):
+    if not os.path.exists(ruta):
+        print(f"El archivo '{ruta}' no existe.")
+        return None
+    with open(ruta, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+contenido = leer_si_existe("leccion_temperatura.txt")
+if contenido is not None:
+    print(f"Leídos {len(contenido)} caracteres.")
+
+leer_si_existe("no_existe.txt")
+```
+
+Verificar con `os.path.exists()` antes de abrir es una cláusula de guarda, como las de la lección sobre estructuras de control. La alternativa —intentar abrir y capturar el `FileNotFoundError`— es igualmente válida; vimos esa preferencia por "intentar y manejar el error" en la lección sobre errores. Cuál usar depende de si la ausencia del archivo es un caso esperado o verdaderamente excepcional.
+
+## Ejemplo integrador
+
+Cerramos la lección, y la etapa de Python puro, con un programa que reúne casi todo: lee un CSV de calificaciones, organiza los datos en objetos usando una clase, calcula estadísticas con un módulo y guarda el resultado como JSON.
+
+```{python}
+import json
+import statistics
+
+
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+    def clasificar(self):
+        if self.calificacion >= 9.0:
+            return "Sobresaliente"
+        elif self.calificacion >= 7.0:
+            return "Bien"
+        elif self.calificacion >= 6.0:
+            return "Suficiente"
+        else:
+            return "Reprobado"
+
+
+def leer_csv(ruta):
+    with open(ruta, "r", encoding="utf-8") as f:
+        lineas = [linea.strip() for linea in f if linea.strip() != ""]
+    encabezado = lineas[0].split(",")
+    registros = []
+    for linea in lineas[1:]:
+        valores = linea.split(",")
+        registro = {}
+        for clave, valor in zip(encabezado, valores):
+            registro[clave] = valor
+        registros.append(registro)
+    return registros
+
+
+def analizar(ruta_csv, ruta_salida):
+    # Leer el CSV y construir objetos Estudiante
+    registros = leer_csv(ruta_csv)
+    estudiantes = []
+    for r in registros:
+        try:
+            estudiantes.append(Estudiante(r["nombre"], r["carrera"], float(r["calificacion"])))
+        except ValueError:
+            print(f"Calificación inválida para {r['nombre']}, se omite.")
+
+    # Estadísticas por carrera
+    carreras = {e.carrera for e in estudiantes}
+    resultado = {}
+    for carrera in sorted(carreras):
+        califs = [e.calificacion for e in estudiantes if e.carrera == carrera]
+        alumnos = [
+            {"nombre": e.nombre, "calificacion": e.calificacion, "nivel": e.clasificar()}
+            for e in estudiantes if e.carrera == carrera
+        ]
+        resultado[carrera] = {
+            "promedio": round(statistics.mean(califs), 2),
+            "total": len(califs),
+            "alumnos": alumnos,
+        }
+
+    # Guardar como JSON
+    with open(ruta_salida, "w", encoding="utf-8") as f:
+        json.dump(resultado, f, ensure_ascii=False, indent=4)
+
+    return resultado
+
+
+reporte = analizar("leccion_calificaciones.csv", "leccion_reporte.json")
+
+for carrera in reporte:
+    datos = reporte[carrera]
+    print(f"\n{carrera} — promedio {datos['promedio']} ({datos['total']} alumnos)")
+    for alumno in datos["alumnos"]:
+        print(f"  {alumno['nombre']:<8} {alumno['calificacion']}  {alumno['nivel']}")
+```
+
+Este programa es un compendio de la serie completa. Lee datos de un archivo con `open` y los métodos de cadena; los organiza en instancias de la clase `Estudiante`, que lleva su propio método `clasificar`; agrupa con comprensiones de lista y de conjunto; calcula el promedio con el módulo `statistics`; maneja los errores de conversión; y guarda el resultado estructurado como JSON. Cada herramienta que aparece fue introducida en su momento, motivada por una necesidad concreta, y aquí todas convergen en un programa que hace algo genuinamente útil. Nada queda sin explicar.
+
+## El final del camino, y lo que abre
+
+Con esta lección termina la construcción de Python como lenguaje. Hemos recorrido un camino completo: empezamos haciendo aritmética como con una calculadora, y terminamos leyendo datos de archivos, organizándolos en objetos de tipos que nosotros diseñamos, y apoyándonos en bibliotecas de código ya hecho. Cada concepto apareció porque el anterior se quedaba corto, y cada uno se construyó sobre los que vinieron antes.
+
+Lo que sigue ya no es aprender más Python, sino usarlo. Las herramientas de la ciencia de datos —NumPy para cálculo numérico, pandas para manejar tablas de datos, Matplotlib para visualizar— se construyen enteramente sobre los cimientos que esta serie ha colocado. Cuando se importe `numpy`, será con el `import` de la lección sobre módulos; cuando se acceda a un método de un arreglo, será con la notación de punto de la lección sobre objetos; cuando se filtre una tabla, será con la lógica de las comprensiones y condiciones que practicamos sin descanso. No habrá que aprender un lenguaje nuevo, sino un vocabulario nuevo dentro del mismo lenguaje. Y para eso, ya estás listo.

@@ -1,0 +1,229 @@
+---
+title: "Funciones como objetos: `lambda` y orden superior"
+author: "Carlos Flores"
+format: html
+---
+
+A lo largo de las últimas lecciones hemos tratado casi todo en Python como un objeto: los números, las cadenas, las listas, los diccionarios, y finalmente los tipos que nosotros mismos definimos con clases. Queda un caso que hemos usado constantemente sin examinarlo bajo esa luz: las funciones. En esta lección veremos que las funciones también son objetos, en el mismo sentido técnico que una lista o una instancia de una clase. Y esa idea, que parece menor, abre una forma de programar que aparece por todas partes en las herramientas de ciencia de datos.
+
+Que una función sea un objeto significa que puede tratarse como cualquier otro valor: asignarse a una variable, guardarse en una lista, y —lo más importante— pasarse como argumento a otra función. Esta última posibilidad es la que da nombre a las *funciones de orden superior*, y la que motiva una sintaxis nueva, la *expresión lambda*, para escribir funciones pequeñas sobre la marcha.
+
+## Las funciones son objetos
+
+Cuando definimos una función con `def`, Python crea un objeto función y le asigna un nombre, exactamente igual que cuando escribimos `x = 10` crea un objeto entero y le asigna el nombre `x`. El nombre de la función es solo una etiqueta que apunta al objeto; el objeto existe por sí mismo.
+
+La prueba es que podemos asignar una función a otra variable sin llamarla, y usarla a través de ese nuevo nombre:
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+evaluar = clasificar      # asignamos la función, sin paréntesis: no la llamamos
+print(evaluar(8.5))       # la usamos a través del nuevo nombre
+```
+
+La clave está en la línea `evaluar = clasificar`, sin paréntesis. Con paréntesis, `clasificar(8.5)` *llama* a la función y obtiene su resultado. Sin paréntesis, `clasificar` es el objeto función mismo, que podemos asignar a otra variable. Ahora `evaluar` y `clasificar` son dos nombres para el mismo objeto función, y ambos funcionan igual.
+
+Como cualquier objeto, una función puede guardarse en una estructura de datos. Una lista de funciones es perfectamente válida:
+
+```{python}
+def doble(x):
+    return x * 2
+
+def cuadrado(x):
+    return x * x
+
+
+operaciones = [doble, cuadrado]   # una lista de funciones
+
+for op in operaciones:
+    print(op(5))                  # llamamos a cada función de la lista
+```
+
+Recorremos la lista con un `for`, y en cada vuelta `op` es una función distinta que llamamos con `op(5)`. Las funciones se comportan como cualquier otro elemento de una lista, porque son objetos como cualquier otro.
+
+## Pasar funciones como argumentos
+
+Si una función puede asignarse a una variable y guardarse en una lista, también puede pasarse como argumento a otra función. Una función que recibe otra función como argumento se llama *función de orden superior*.
+
+Esto no es tan exótico como suena: ya usamos una sin darnos cuenta. En la lección sobre estructuras de datos ordenamos con `sorted()`, y esa función acepta un argumento llamado `key` que es, precisamente, una función. La idea es que `sorted()` no decide por sí mismo cómo comparar los elementos: le pasamos una función que, dado un elemento, devuelve el valor por el que queremos ordenar.
+
+Veámoslo con la lista de estudiantes que conocemos, representados como diccionarios. Para ordenarlos por calificación, le damos a `sorted()` una función que extrae la calificación de cada uno:
+
+```{python}
+def obtener_calificacion(estudiante):
+    return estudiante["calificacion"]
+
+
+grupo = [
+    {"nombre": "Ana", "calificacion": 9.2},
+    {"nombre": "Luis", "calificacion": 7.8},
+    {"nombre": "Carlos", "calificacion": 6.1},
+]
+
+ordenados = sorted(grupo, key=obtener_calificacion)
+
+for e in ordenados:
+    print(f"{e['nombre']}: {e['calificacion']}")
+```
+
+`sorted()` llama a `obtener_calificacion` por nosotros, una vez por cada elemento, y usa el resultado para ordenar. Nótese que pasamos `key=obtener_calificacion` sin paréntesis: le entregamos el objeto función para que `sorted()` la llame cuando lo necesite, no el resultado de llamarla. Esta distinción —pasar la función frente a llamarla— es exactamente la misma que vimos al asignar `evaluar = clasificar`.
+
+## Expresiones `lambda`
+
+Definir una función completa con `def` solo para pasarla a `sorted()` es algo aparatoso, sobre todo cuando la función es tan simple como "devuelve la calificación". Para estos casos Python ofrece las *expresiones lambda*: una forma de escribir una función pequeña en una sola línea, sin darle nombre.
+
+La sintaxis es `lambda parámetros: expresión`. La expresión a la derecha de los dos puntos es lo que la función devuelve; no se escribe `return`, porque una lambda siempre devuelve el valor de su única expresión. El ejemplo anterior se reescribe así:
+
+```{python}
+grupo = [
+    {"nombre": "Ana", "calificacion": 9.2},
+    {"nombre": "Luis", "calificacion": 7.8},
+    {"nombre": "Carlos", "calificacion": 6.1},
+]
+
+ordenados = sorted(grupo, key=lambda e: e["calificacion"])
+
+for e in ordenados:
+    print(f"{e['nombre']}: {e['calificacion']}")
+```
+
+`lambda e: e["calificacion"]` es una función anónima que recibe un parámetro `e` y devuelve `e["calificacion"]`. Hace exactamente lo mismo que la función `obtener_calificacion` de antes, pero sin necesidad de definirla aparte ni ponerle nombre. Se lee casi como lenguaje natural: "para cada `e`, devuelve su calificación".
+
+Una lambda es una función como cualquier otra; lo único especial es su brevedad. Puede asignarse a una variable, aunque en ese caso suele ser más claro usar `def`:
+
+```{python}
+distancia = lambda x, y: ((x ** 2) + (y ** 2)) ** 0.5
+print(distancia(3, 4))
+```
+
+La regla práctica es sencilla. Una lambda conviene cuando la función es muy corta y se usa en un solo lugar, típicamente como argumento de otra función. Cuando la lógica es más larga, necesita varias líneas, o se va a reutilizar, conviene una función con `def` y un nombre descriptivo. La lambda gana en concisión; `def` gana en claridad. La elección depende de cuál de las dos importa más en cada caso.
+
+## Ordenar con criterios más ricos
+
+El verdadero valor de pasar funciones aparece cuando el criterio de ordenamiento no es trivial. Como la lambda puede contener cualquier expresión, podemos ordenar por criterios compuestos. Por ejemplo, ordenar primero por carrera y, dentro de cada carrera, por calificación, devolviendo una tupla como clave —Python ordena las tuplas comparando primero el primer elemento, luego el segundo, como vimos en la lección sobre estructuras de datos:
+
+```{python}
+grupo = [
+    {"nombre": "Ana", "carrera": "Matemáticas", "calificacion": 9.2},
+    {"nombre": "Luis", "carrera": "Física", "calificacion": 7.8},
+    {"nombre": "María", "carrera": "Matemáticas", "calificacion": 8.5},
+    {"nombre": "Sofía", "carrera": "Física", "calificacion": 9.7},
+]
+
+ordenados = sorted(grupo, key=lambda e: (e["carrera"], -e["calificacion"]))
+
+for e in ordenados:
+    print(f"{e['carrera']:<12} {e['nombre']:<8} {e['calificacion']}")
+```
+
+La clave `(e["carrera"], -e["calificacion"])` ordena alfabéticamente por carrera y, dentro de cada una, por calificación de mayor a menor —usando el truco de negar la calificación que ya empleamos en la lección sobre comprensiones, donde el menor valor negativo corresponde a la mayor calificación. Un criterio así, expresado en una sola lambda, sería tedioso de implementar a mano.
+
+## `map` y `filter`
+
+Pasar funciones como argumento es la base de dos funciones de orden superior que aparecen con frecuencia: `map` y `filter`. Ambas reciben una función y una colección, y aplican la función a cada elemento.
+
+`map` aplica una función a cada elemento de una colección y produce los resultados. Para obtener una lista hay que envolverlo en `list()`:
+
+```{python}
+celsius = [0, 20, 37, 100]
+
+fahrenheit = list(map(lambda c: c * 9 / 5 + 32, celsius))
+print(fahrenheit)
+```
+
+`filter` conserva solo los elementos para los que una función devuelve `True`:
+
+```{python}
+calificaciones = [9.2, 5.4, 7.8, 6.1, 4.0, 8.5]
+
+aprobadas = list(filter(lambda c: c >= 6.0, calificaciones))
+print(aprobadas)
+```
+
+Conviene reconocer que `map` y `filter` hacen lo mismo que las comprensiones de lista que aprendimos en su momento. La conversión de Celsius a Fahrenheit con `map` equivale a `[c * 9 / 5 + 32 for c in celsius]`, y el filtrado de aprobadas equivale a `[c for c in calificaciones if c >= 6.0]`. En Python, las comprensiones suelen considerarse más legibles, y son la opción preferida para escribir código nuevo. Pero `map` y `filter` aparecen mucho en código existente y en documentación, sobre todo cuando la función a aplicar ya tiene nombre, así que conviene saber leerlas.
+
+## Funciones que devuelven funciones
+
+Si una función puede recibir otra función como argumento, también puede devolver una función como resultado. Esto permite *fabricar* funciones a medida. Veamos una función que, dado un umbral de aprobación, construye y devuelve una función clasificadora con ese umbral:
+
+```{python}
+def crear_aprobador(umbral):
+    def aprueba(calificacion):
+        return calificacion >= umbral
+    return aprueba          # devolvemos la función interna, sin llamarla
+
+
+aprueba_licenciatura = crear_aprobador(6.0)
+aprueba_posgrado = crear_aprobador(8.0)
+
+print(aprueba_licenciatura(7.5))   # True: 7.5 >= 6.0
+print(aprueba_posgrado(7.5))       # False: 7.5 < 8.0
+```
+
+`crear_aprobador` define una función interna `aprueba` y la devuelve. Lo notable es que la función devuelta recuerda el valor de `umbral` que tenía cuando se creó: `aprueba_licenciatura` recuerda `6.0`, y `aprueba_posgrado` recuerda `8.0`, aunque `crear_aprobador` ya terminó de ejecutarse en ambos casos. Esa capacidad de una función de recordar el entorno en que fue creada se llama *clausura*.
+
+La clausura conecta de forma natural con lo que vimos en la lección sobre herencia. Allí, distintos tipos de estudiante aprobaban con umbrales distintos mediante sobrescritura de métodos. Aquí logramos algo parecido sin clases: generamos funciones especializadas a partir de una plantilla común. Son dos formas de evitar la duplicación —una con objetos, otra con funciones—, y conocer ambas amplía el repertorio para elegir la más adecuada según el problema.
+
+## Ejemplo integrador
+
+Reunimos todo en una función que genera reportes flexibles de un grupo de estudiantes. Recibe funciones como argumentos para decidir qué estudiantes incluir y cómo ordenarlos, lo que la hace adaptable a muchas necesidades sin cambiar su código:
+
+```{python}
+def clasificar(calificacion):
+    if calificacion >= 9.0:
+        return "Sobresaliente"
+    elif calificacion >= 7.0:
+        return "Bien"
+    elif calificacion >= 6.0:
+        return "Suficiente"
+    else:
+        return "Reprobado"
+
+
+grupo = [
+    {"nombre": "Ana", "carrera": "Matemáticas", "calificacion": 9.2},
+    {"nombre": "Luis", "carrera": "Física", "calificacion": 7.8},
+    {"nombre": "Carlos", "carrera": "Actuaría", "calificacion": 5.4},
+    {"nombre": "María", "carrera": "Matemáticas", "calificacion": 8.5},
+    {"nombre": "Sofía", "carrera": "Física", "calificacion": 9.7},
+]
+
+
+def reporte(estudiantes, incluir, ordenar_por):
+    """
+    incluir:     función que decide si un estudiante entra en el reporte
+    ordenar_por: función que devuelve la clave de ordenamiento
+    """
+    seleccionados = list(filter(incluir, estudiantes))
+    seleccionados = sorted(seleccionados, key=ordenar_por)
+    for e in seleccionados:
+        print(f"  {e['nombre']:<8} {e['carrera']:<12} {e['calificacion']}  {clasificar(e['calificacion'])}")
+
+
+print("Aprobados, ordenados por calificación (mayor a menor):")
+reporte(grupo,
+        incluir=lambda e: e["calificacion"] >= 6.0,
+        ordenar_por=lambda e: -e["calificacion"])
+
+print("\nSolo Física, ordenados por nombre:")
+reporte(grupo,
+        incluir=lambda e: e["carrera"] == "Física",
+        ordenar_por=lambda e: e["nombre"])
+```
+
+La función `reporte` no sabe de antemano qué estudiantes mostrará ni en qué orden: esas decisiones llegan como funciones en los argumentos `incluir` y `ordenar_por`. Con la misma función `reporte` producimos dos informes muy distintos solo cambiando las lambdas que le pasamos. Internamente, `filter` aplica el criterio de inclusión y `sorted` aplica el de ordenamiento, ambos recibiendo funciones como `key` o como filtro. Es la forma de orden superior llevada a un caso práctico: el comportamiento del reporte se configura desde fuera, pasándole las funciones que lo definen.
+
+## Lo que sigue
+
+Hemos visto que las funciones son objetos de pleno derecho, y que pasarlas y devolverlas habilita patrones expresivos como las funciones de orden superior y las clausuras. Con esto completamos nuestra comprensión de las piezas fundamentales del lenguaje: datos, estructuras, control de flujo, funciones, objetos y clases.
+
+Todo lo que hemos escrito hasta ahora, sin embargo, lo hemos construido desde cero. Pero raíces cuadradas, logaritmos, números aleatorios, promedios y desviaciones estándar son operaciones que alguien ya programó, probó y dejó disponibles para todos. Acceder a ese trabajo previo en lugar de reinventarlo es lo que ofrece el sistema de *módulos* de Python, una colección enorme de código ya hecho que se incorpora con una sola instrucción. La siguiente lección muestra cómo importar y usar esos módulos.

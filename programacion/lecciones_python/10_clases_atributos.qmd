@@ -1,0 +1,170 @@
+---
+title: "Clases y atributos"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior terminó con una pregunta concreta. Hemos representado a un estudiante como un diccionario con claves `nombre`, `carrera` y `calificacion`, y funciona, pero es frágil: nada impide escribir mal una clave, olvidar un campo o asignar un texto donde debería ir un número. Cada vez que creamos un estudiante repetimos la misma estructura a mano, y si en algún punto cambia lo que entendemos por estudiante, hay que corregir cada lugar donde lo construimos.
+
+Lo que falta es una forma de definir, una sola vez, qué es un estudiante: qué datos lo componen y cómo se crea. A esa definición Python la llama *clase*. Una clase es un molde para fabricar objetos del mismo tipo, igual que `list` es el molde de todas las listas y `str` el de todas las cadenas. La diferencia es que ahora el molde lo definimos nosotros.
+
+## La idea de clase
+
+En la lección anterior vimos que cada objeto tiene un tipo: `type([1, 2])` es `list`, `type("hola")` es `str`. Ese tipo determina qué datos contiene el objeto y qué métodos tiene. Definir una clase es, exactamente, crear un tipo nuevo.
+
+La analogía matemática es útil. Una clase es como la definición de una función: describe una regla general, una plantilla. Un objeto concreto creado a partir de la clase —lo que se llama una *instancia*— es como evaluar esa función en un valor concreto. La clase `Estudiante` describe qué es un estudiante en general; la instancia que representa a Ana es un caso particular de esa descripción.
+
+Una clase se define con la palabra clave `class`, seguida del nombre y dos puntos. Por convención, los nombres de clase empiezan con mayúscula, lo que los distingue a simple vista de las variables y funciones:
+
+```{python}
+class Estudiante:
+    pass   # de momento, una clase vacía
+```
+
+La palabra `pass` es un marcador que indica "aquí no hay nada todavía"; Python la acepta donde se espera un bloque pero aún no queremos escribir su contenido. Esta clase no hace nada útil, pero ya es un tipo válido del que podemos crear instancias:
+
+```{python}
+a = Estudiante()
+print(type(a))
+```
+
+`Estudiante()`, con paréntesis, crea una instancia nueva. El resultado es un objeto cuyo tipo es `Estudiante`, igual que `[1, 2]` es un objeto cuyo tipo es `list`. Hemos fabricado el primer objeto de un tipo que no existía hasta hace un momento.
+
+## El constructor `__init__`
+
+Una clase vacía no sirve de mucho: queremos que cada estudiante nazca con su nombre, su carrera y su calificación. Para eso existe un método especial llamado `__init__`, que Python ejecuta automáticamente cada vez que se crea una instancia. Su nombre viene de *initialize*, inicializar, y su trabajo es preparar el objeto recién creado con los datos que lo definen.
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+```
+
+Hay dos elementos nuevos que conviene explicar con calma.
+
+El primero es `self`. Cuando creamos una instancia con `Estudiante("Ana", "Matemáticas", 9.2)`, Python crea un objeto vacío y se lo pasa a `__init__` como primer argumento. Ese objeto es `self`: una referencia al objeto que se está construyendo. La lección sobre objetos explicó que un método recibe su objeto como primer argumento implícito; en `__init__` ese argumento aparece explícito, y por convención universal se llama `self`. No es una palabra reservada de Python —podría llamarse de otro modo—, pero todo el mundo usa `self`, y apartarse de esa convención solo genera confusión.
+
+El segundo es la asignación `self.nombre = nombre`. El lado izquierdo, `self.nombre`, crea un *atributo* dentro del objeto: un dato que queda guardado en la instancia y vive mientras ella viva. El lado derecho, `nombre`, es el parámetro que recibió `__init__`. La línea dice "guarda dentro de este objeto, bajo el nombre `nombre`, el valor que me pasaron". Los tres atributos —`nombre`, `carrera`, `calificacion`— quedan así grabados en cada instancia.
+
+Conviene notar que los parámetros de `__init__` (a la derecha) y los atributos (a la izquierda del punto) pueden llamarse igual o distinto; son cosas diferentes que coinciden en el nombre por claridad. `self.nombre` es el atributo permanente del objeto; `nombre` a secas es el parámetro temporal que desaparece cuando `__init__` termina, exactamente como las variables locales de cualquier función que vimos en la lección sobre funciones.
+
+## Crear y usar instancias
+
+Con `__init__` definido, crear un estudiante es directo. Los argumentos que pasamos entre paréntesis corresponden, en orden, a los parámetros de `__init__` después de `self` —que Python rellena solo:
+
+```{python}
+class Estudiante:
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+
+ana = Estudiante("Ana", "Matemáticas", 9.2)
+luis = Estudiante("Luis", "Física", 7.8)
+```
+
+No pasamos nada para `self`: Python se encarga de ese primer argumento automáticamente al crear la instancia. Por eso, aunque `__init__` declara cuatro parámetros, la llamada recibe solo tres.
+
+Para leer los atributos de una instancia usamos la notación de punto, la misma que usábamos para los métodos, pero ahora sin paréntesis porque accedemos a un dato, no invocamos una operación:
+
+```{python}
+print(ana.nombre)
+print(ana.calificacion)
+print(luis.carrera)
+```
+
+`ana` y `luis` son objetos independientes. Cada uno guarda sus propios atributos: modificar uno no afecta al otro, igual que dos listas distintas son independientes entre sí.
+
+Los atributos también pueden modificarse después de crear el objeto, asignándoles un valor nuevo:
+
+```{python}
+ana.calificacion = 9.5   # Ana mejoró su calificación
+print(ana.calificacion)
+```
+
+Esto evidencia la ventaja sobre el diccionario. Con un diccionario, `ana["calificación"]` con tilde y `ana["calificacion"]` sin tilde serían dos claves distintas, y el error pasaría inadvertido hasta provocar un `KeyError` mucho después. Con una clase, los atributos están fijados por `__init__`: la estructura del objeto está garantizada desde su creación.
+
+## Comparación directa con el diccionario
+
+Vale la pena ver lado a lado las dos formas de representar a un estudiante, la que usábamos y la nueva, para apreciar qué cambia:
+
+```{python}
+# Antes: diccionario
+ana_dict = {"nombre": "Ana", "carrera": "Matemáticas", "calificacion": 9.2}
+print(ana_dict["nombre"])
+
+# Ahora: instancia de una clase
+ana_obj = Estudiante("Ana", "Matemáticas", 9.2)
+print(ana_obj.nombre)
+```
+
+A primera vista la diferencia parece cosmética: `ana_dict["nombre"]` frente a `ana_obj.nombre`. Pero hay una distinción de fondo. El diccionario acepta cualquier clave: puedo escribir `ana_dict["edd"] = 20` y crear una clave mal escrita sin que nada proteste. La clase, en cambio, define una estructura: todo `Estudiante` tiene exactamente `nombre`, `carrera` y `calificacion` porque así lo establece `__init__`. La clase convierte una convención que había que recordar en una garantía que el código impone.
+
+Esa garantía es la primera ventaja. La segunda, que veremos en la lección siguiente, es aún mayor: una clase puede contener no solo datos, sino también las operaciones que tienen sentido sobre ellos.
+
+## Atributos de clase
+
+Los atributos que hemos visto pertenecen a cada instancia: el nombre de Ana es suyo, el de Luis es suyo. Pero a veces hay datos que son comunes a todas las instancias de una clase, no propios de cada una. Para eso existen los *atributos de clase*, que se definen directamente en el cuerpo de la clase, fuera de cualquier método:
+
+```{python}
+class Estudiante:
+    institucion = "Universidad Nacional"   # atributo de clase: compartido por todos
+
+    def __init__(self, nombre, carrera, calificacion):
+        self.nombre = nombre
+        self.carrera = carrera
+        self.calificacion = calificacion
+
+
+ana = Estudiante("Ana", "Matemáticas", 9.2)
+luis = Estudiante("Luis", "Física", 7.8)
+
+print(ana.institucion)
+print(luis.institucion)
+```
+
+`institucion` no se define dentro de `__init__` ni se asocia a `self`: es un único valor que todas las instancias comparten. Tiene sentido para datos que no varían de un estudiante a otro, como la institución a la que todos pertenecen. Si la institución cambiara, bastaría modificarla en un solo lugar en lugar de en cada instancia.
+
+La distinción es clara: un atributo de instancia, creado con `self.x` en `__init__`, es propio de cada objeto y puede ser distinto en cada uno. Un atributo de clase, definido en el cuerpo de la clase, es uno solo, compartido por todas las instancias.
+
+## Ejemplo integrador
+
+Construimos una clase para representar lecturas de un sensor de temperatura, el hilo de datos que nos ha acompañado desde el principio. Cada lectura tiene un valor, una hora y una ubicación; todas comparten la unidad de medida:
+
+```{python}
+class Lectura:
+    unidad = "°C"   # atributo de clase: todas las lecturas usan Celsius
+
+    def __init__(self, valor, hora, ubicacion):
+        self.valor = valor
+        self.hora = hora
+        self.ubicacion = ubicacion
+
+
+# Creamos varias lecturas y las guardamos en una lista
+lecturas = [
+    Lectura(23.5, 8, "Toluca"),
+    Lectura(24.0, 9, "Toluca"),
+    Lectura(22.8, 10, "Toluca"),
+    Lectura(19.0, 11, "Toluca"),
+]
+
+# Las recorremos con un for y accedemos a sus atributos
+for lectura in lecturas:
+    print(f"{lectura.hora}:00 — {lectura.valor} {Lectura.unidad} en {lectura.ubicacion}")
+
+# Calculamos el promedio usando los atributos de cada objeto
+valores = [lectura.valor for lectura in lecturas]
+print(f"\nPromedio: {sum(valores) / len(valores):.2f} {Lectura.unidad}")
+```
+
+Cada `Lectura` es un objeto independiente con sus propios atributos, pero todas comparten la unidad. La lista de lecturas se recorre con un `for` exactamente como recorríamos listas de diccionarios, y la comprensión que extrae los valores es la misma que usábamos antes, ahora accediendo a `lectura.valor` en lugar de `lectura["valor"]`. La estructura del programa no cambia; lo que cambia es que los datos ahora tienen un tipo propio, con una forma garantizada.
+
+## Lo que sigue
+
+Una clase nos permite agrupar datos bajo un tipo con estructura garantizada. Pero por ahora nuestras clases son contenedores pasivos: guardan información, y nada más. Cuando queremos hacer algo con un estudiante —clasificar su calificación, comprobar si aprobó— seguimos recurriendo a funciones externas, como la función `clasificar()` que arrastramos desde la lección sobre estructuras de control.
+
+Eso deja la operación separada del dato sobre el que actúa, cuando en realidad pertenecen juntos: clasificar es algo que un estudiante sabe hacer consigo mismo. La verdadera potencia de las clases aparece cuando los objetos no solo guardan datos, sino que llevan consigo las operaciones que tienen sentido sobre ellos, igual que una lista lleva su `append()` y una cadena su `split()`. Esas operaciones propias son los *métodos*, y construirlos para nuestras propias clases es el tema de la siguiente lección.

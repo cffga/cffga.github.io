@@ -8,7 +8,7 @@
 
 <meta name="author" content="Carlos Flores">
 
-<title>Introducción a Google Colab y Python – Python</title>
+<title>Clases y atributos – Python</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -112,35 +112,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -349,10 +320,13 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#google-colab" id="toc-google-colab" class="nav-link active" data-scroll-target="#google-colab">Google Colab</a></li>
-  <li><a href="#python-como-calculadora" id="toc-python-como-calculadora" class="nav-link" data-scroll-target="#python-como-calculadora">Python como calculadora</a></li>
-  <li><a href="#tipos-de-números-en-python" id="toc-tipos-de-números-en-python" class="nav-link" data-scroll-target="#tipos-de-números-en-python">Tipos de números en Python</a></li>
-  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
+  <li><a href="#la-idea-de-clase" id="toc-la-idea-de-clase" class="nav-link active" data-scroll-target="#la-idea-de-clase">La idea de clase</a></li>
+  <li><a href="#el-constructor-__init__" id="toc-el-constructor-__init__" class="nav-link" data-scroll-target="#el-constructor-__init__">El constructor <code>__init__</code></a></li>
+  <li><a href="#crear-y-usar-instancias" id="toc-crear-y-usar-instancias" class="nav-link" data-scroll-target="#crear-y-usar-instancias">Crear y usar instancias</a></li>
+  <li><a href="#comparación-directa-con-el-diccionario" id="toc-comparación-directa-con-el-diccionario" class="nav-link" data-scroll-target="#comparación-directa-con-el-diccionario">Comparación directa con el diccionario</a></li>
+  <li><a href="#atributos-de-clase" id="toc-atributos-de-clase" class="nav-link" data-scroll-target="#atributos-de-clase">Atributos de clase</a></li>
+  <li><a href="#ejemplo-integrador" id="toc-ejemplo-integrador" class="nav-link" data-scroll-target="#ejemplo-integrador">Ejemplo integrador</a></li>
+  <li><a href="#lo-que-sigue" id="toc-lo-que-sigue" class="nav-link" data-scroll-target="#lo-que-sigue">Lo que sigue</a></li>
   </ul>
 </nav>
     </div>
@@ -362,7 +336,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Introducción a Google Colab y Python</h1>
+<h1 class="title">Clases y atributos</h1>
 </div>
 
 
@@ -385,143 +359,167 @@ window.Quarto = {
 </header>
 
 
-<section id="google-colab" class="level2">
-<h2 class="anchored" data-anchor-id="google-colab">Google Colab</h2>
-<p>A lo largo de estas lecciones te encontrarás con una secuencia de ideas que no solo se explican, sino que se ponen en juego de inmediato. Cada sección está pensada para que avances entendiendo, pero también probando: lo que aquí aparece no está cerrado, sino que se abre a que lo ejecutes, lo modifiques y observes cómo responde. En ese proceso (más que en la lectura misma) es donde se construye la comprensión.</p>
-<p>Para ello utilizaremos <em>Google Colab</em>, que es una plataforma que funciona directamente en el navegador y permite escribir y ejecutar código sin necesidad de instalar nada. No es necesario que tengas experiencia previa en programación: empezaremos desde lo más básico. A lo largo del material, encontrarás fragmentos de código que podrás copiar y ejecutar ahí mismo, modificándolos y observando qué ocurre en cada caso.</p>
-<p>Si nunca has usado Google Colab, es muy recomendable ver los dos videos que aparecen a continuación.</p>
-<ul>
-<li><p><strong>Introducción a Google Colab y su uso básico</strong> En este video se explica qué es Google Colab, cómo funciona un notebook y cómo ejecutar celdas. <a href="https://youtu.be/8VFYs3Ot_aA?si=K0dIhDmHpP0H9Ivt">https://youtu.be/8VFYs3Ot_aA?si=K0dIhDmHpP0H9Ivt</a></p></li>
-<li><p><strong>Cómo escribir expresiones matemáticas en LaTeX</strong> Aquí se muestra cómo introducir fórmulas matemáticas dentro de un notebook de forma clara y ordenada. <a href="https://youtu.be/_eSNtDh6ecI?si=bML0DvE0WQ8ZQyLM">https://youtu.be/_eSNtDh6ecI?si=bML0DvE0WQ8ZQyLM</a></p></li>
-</ul>
-<p>Estos videos sirven como apoyo inicial para que puedas trabajar el material de manera más fluida en tu propio entorno de práctica.</p>
-<p>El objetivo de estas lecciones es enseñar los elementos fundamentales del lenguaje Python de forma progresiva, partiendo siempre de la intuición antes de llegar a la definición formal. Están pensados para estudiantes cuya formación es en matemáticas, física o actuaría, perfiles que se acercan a la programación no como un objeto de estudio en sí mismo, sino como una herramienta para modelar, analizar y resolver problemas.</p>
-<p>Cada concepto que se introduce en estas lecciones existe porque resuelve un problema concreto, y ese problema se presenta antes de mostrar la solución. El objetivo final no es memorizar sintaxis, sino construir una base sólida desde la cual dar el paso hacia áreas más especializadas como ciencia de datos, aprendizaje automático y otros campos donde Python se utiliza de manera intensiva.</p>
+<p>La lección anterior terminó con una pregunta concreta. Hemos representado a un estudiante como un diccionario con claves <code>nombre</code>, <code>carrera</code> y <code>calificacion</code>, y funciona, pero es frágil: nada impide escribir mal una clave, olvidar un campo o asignar un texto donde debería ir un número. Cada vez que creamos un estudiante repetimos la misma estructura a mano, y si en algún punto cambia lo que entendemos por estudiante, hay que corregir cada lugar donde lo construimos.</p>
+<p>Lo que falta es una forma de definir, una sola vez, qué es un estudiante: qué datos lo componen y cómo se crea. A esa definición Python la llama <em>clase</em>. Una clase es un molde para fabricar objetos del mismo tipo, igual que <code>list</code> es el molde de todas las listas y <code>str</code> el de todas las cadenas. La diferencia es que ahora el molde lo definimos nosotros.</p>
+<section id="la-idea-de-clase" class="level2">
+<h2 class="anchored" data-anchor-id="la-idea-de-clase">La idea de clase</h2>
+<p>En la lección anterior vimos que cada objeto tiene un tipo: <code>type([1, 2])</code> es <code>list</code>, <code>type("hola")</code> es <code>str</code>. Ese tipo determina qué datos contiene el objeto y qué métodos tiene. Definir una clase es, exactamente, crear un tipo nuevo.</p>
+<p>La analogía matemática es útil. Una clase es como la definición de una función: describe una regla general, una plantilla. Un objeto concreto creado a partir de la clase —lo que se llama una <em>instancia</em>— es como evaluar esa función en un valor concreto. La clase <code>Estudiante</code> describe qué es un estudiante en general; la instancia que representa a Ana es un caso particular de esa descripción.</p>
+<p>Una clase se define con la palabra clave <code>class</code>, seguida del nombre y dos puntos. Por convención, los nombres de clase empiezan con mayúscula, lo que los distingue a simple vista de las variables y funciones:</p>
+<div id="b550e9c0" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Estudiante:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span>   <span class="co"># de momento, una clase vacía</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>La palabra <code>pass</code> es un marcador que indica “aquí no hay nada todavía”; Python la acepta donde se espera un bloque pero aún no queremos escribir su contenido. Esta clase no hace nada útil, pero ya es un tipo válido del que podemos crear instancias:</p>
+<div id="283e8b67" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> Estudiante()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(a))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class '__main__.Estudiante'&gt;</code></pre>
+</div>
+</div>
+<p><code>Estudiante()</code>, con paréntesis, crea una instancia nueva. El resultado es un objeto cuyo tipo es <code>Estudiante</code>, igual que <code>[1, 2]</code> es un objeto cuyo tipo es <code>list</code>. Hemos fabricado el primer objeto de un tipo que no existía hasta hace un momento.</p>
 </section>
-<section id="python-como-calculadora" class="level2">
-<h2 class="anchored" data-anchor-id="python-como-calculadora">Python como calculadora</h2>
-<p>El punto de partida más natural para aprender a programar es también el más inmediato: hacer cuentas. Antes de hablar de variables, funciones o estructuras de datos, tiene sentido familiarizarse con la forma en que Python interpreta y evalúa expresiones matemáticas. Por eso comenzamos aquí.</p>
-<p>Se pueden evaluar directamente expresiones como <span class="math display">\[3\times 4 \times 5 + 1,\]</span></p>
-<p>pero para ello es necesario escribirlas usando la sintaxis del lenguaje. En Python la multiplicación se escribe con <code>*</code>, la suma con <code>+</code>, la resta con <code>-</code> y la división con <code>/</code>. Así, la expresión anterior se introduce como:</p>
-<div id="b9514a1f" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="op">*</span> <span class="dv">4</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>61</code></pre>
+<section id="el-constructor-__init__" class="level2">
+<h2 class="anchored" data-anchor-id="el-constructor-__init__">El constructor <code>__init__</code></h2>
+<p>Una clase vacía no sirve de mucho: queremos que cada estudiante nazca con su nombre, su carrera y su calificación. Para eso existe un método especial llamado <code>__init__</code>, que Python ejecuta automáticamente cada vez que se crea una instancia. Su nombre viene de <em>initialize</em>, inicializar, y su trabajo es preparar el objeto recién creado con los datos que lo definen.</p>
+<div id="3a7cf861" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Estudiante:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, nombre, carrera, calificacion):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.nombre <span class="op">=</span> nombre</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.carrera <span class="op">=</span> carrera</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.calificacion <span class="op">=</span> calificacion</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-<p>Al ejecutar esta celda, Python evalúa la expresión y devuelve el resultado, que en este caso es <code>61</code>.</p>
-<p>Además de las operaciones básicas, Python permite calcular potencias. En matemáticas se emplea la notación <span class="math inline">\(a^n\)</span>, pero en Python se usa <code>a ** n</code>. Por ejemplo, <span class="math inline">\(2^3\)</span> se escribe así:</p>
-<div id="06278556" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">**</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>8</code></pre>
-</div>
-</div>
-<p>Al igual que en el álgebra, los paréntesis permiten agrupar términos y controlar el orden en que se realizan las operaciones. En las siguientes celdas se calculan respectivamente <span class="math inline">\((2^3)^2\)</span> y <span class="math inline">\(2^{3^2}\)</span>, dos expresiones que producen resultados muy distintos precisamente por cómo se agrupan las potencias:</p>
-<div id="ab2ae4dc" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span> <span class="op">**</span> <span class="dv">3</span>) <span class="op">**</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>64</code></pre>
-</div>
-</div>
-<div id="4b67b24d" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">**</span> (<span class="dv">3</span> <span class="op">**</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>512</code></pre>
-</div>
-</div>
-<p>Las últimas dos operaciones que veremos completan el repertorio aritmético básico, la <em>división entera</em> y el <em>módulo</em> o <em>residuo</em>. La división entera responde a la pregunta “¿cuántas veces cabe un número en otro sin pasarse?”, el módulo responde a “¿cuánto sobra?”. Juntas, estas dos operaciones describen completamente una división.</p>
-<p>La división entera entre 7 y 2 se calcula así:</p>
-<div id="df588c59" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> <span class="op">//</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>3</code></pre>
-</div>
-</div>
-<p>El resultado es 3, porque el 2 cabe 3 veces en 7. Y para saber cuánto sobra:</p>
-<div id="fc76c9b7" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> <span class="op">%</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>1</code></pre>
-</div>
-</div>
-<p>El resultado es 1, porque después de esas 3 veces, queda 1 sin dividir.</p>
-<p>Con las operaciones básicas ya cubiertas, conviene introducir una herramienta sencilla pero que se usará constantemente a lo largo de todos los notebooks, los <em>comentarios</em>. Un comentario es texto que se escribe dentro de una celda de código pero que Python ignora por completo al ejecutar. Su propósito es explicar qué hace el código, aclarar la intención detrás de una línea o dejar notas para quien lo lea más adelante.</p>
-<p>En Python, los comentarios se introducen con el símbolo <code>#</code>. Todo lo que aparece a la derecha de ese símbolo en la misma línea es ignorado al ejecutar la celda:</p>
-<div id="db6bfcef" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Este es un comentario, no afecta el resultado</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span>  <span class="co"># Esto también es un comentario, el resultado sigue siendo 4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>4</code></pre>
-</div>
-</div>
-<p>Usar comentarios es un hábito que conviene desarrollar desde el principio, sobre todo mientras se aprende. A lo largo de las lecciones se usarán con frecuencia, pero con lo que acabamos de ver es suficiente para reconocerlos y escribirlos.</p>
-<p>Volvamos ahora a los números. Hasta aquí hemos realizado operaciones sin preguntarnos sobre la naturaleza de los valores que manejamos. Sin embargo, no todos los números son iguales para Python, y entender esa diferencia es importante para evitar errores que a veces resultan desconcertantes.</p>
+<p>Hay dos elementos nuevos que conviene explicar con calma.</p>
+<p>El primero es <code>self</code>. Cuando creamos una instancia con <code>Estudiante("Ana", "Matemáticas", 9.2)</code>, Python crea un objeto vacío y se lo pasa a <code>__init__</code> como primer argumento. Ese objeto es <code>self</code>: una referencia al objeto que se está construyendo. La lección sobre objetos explicó que un método recibe su objeto como primer argumento implícito; en <code>__init__</code> ese argumento aparece explícito, y por convención universal se llama <code>self</code>. No es una palabra reservada de Python —podría llamarse de otro modo—, pero todo el mundo usa <code>self</code>, y apartarse de esa convención solo genera confusión.</p>
+<p>El segundo es la asignación <code>self.nombre = nombre</code>. El lado izquierdo, <code>self.nombre</code>, crea un <em>atributo</em> dentro del objeto: un dato que queda guardado en la instancia y vive mientras ella viva. El lado derecho, <code>nombre</code>, es el parámetro que recibió <code>__init__</code>. La línea dice “guarda dentro de este objeto, bajo el nombre <code>nombre</code>, el valor que me pasaron”. Los tres atributos —<code>nombre</code>, <code>carrera</code>, <code>calificacion</code>— quedan así grabados en cada instancia.</p>
+<p>Conviene notar que los parámetros de <code>__init__</code> (a la derecha) y los atributos (a la izquierda del punto) pueden llamarse igual o distinto; son cosas diferentes que coinciden en el nombre por claridad. <code>self.nombre</code> es el atributo permanente del objeto; <code>nombre</code> a secas es el parámetro temporal que desaparece cuando <code>__init__</code> termina, exactamente como las variables locales de cualquier función que vimos en la lección sobre funciones.</p>
 </section>
-<section id="tipos-de-números-en-python" class="level2">
-<h2 class="anchored" data-anchor-id="tipos-de-números-en-python">Tipos de números en Python</h2>
-<p>En matemáticas distinguimos con cuidado los números enteros de los reales. Los <em>enteros</em>, representados por el conjunto <span class="math inline">\(\mathbb{Z} = \{\dots, -2, -1, 0, 1, 2, \dots\}\)</span>, no tienen parte decimal. Los <em>reales</em> <span class="math inline">\(\mathbb{R}\)</span> sí pueden tenerla, y su definición matemática exige precisión infinita.</p>
-<p>Una computadora, sin embargo, trabaja con recursos finitos. No puede almacenar un número real con infinitos decimales, solo puede guardar una aproximación. Por eso Python no trabaja con números reales en sentido estricto, sino con representaciones finitas de ellos, que en programación se llaman <code>float</code>. Los enteros, en cambio, sí se representan de forma exacta y se llaman <code>int</code> (de <em>integer</em>).</p>
-<p>Esta distinción tiene consecuencias prácticas. Por ejemplo:</p>
-<div id="18ad7cc0" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>0.30000000000000004</code></pre>
+<section id="crear-y-usar-instancias" class="level2">
+<h2 class="anchored" data-anchor-id="crear-y-usar-instancias">Crear y usar instancias</h2>
+<p>Con <code>__init__</code> definido, crear un estudiante es directo. Los argumentos que pasamos entre paréntesis corresponden, en orden, a los parámetros de <code>__init__</code> después de <code>self</code> —que Python rellena solo:</p>
+<div id="e1cb332f" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Estudiante:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, nombre, carrera, calificacion):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.nombre <span class="op">=</span> nombre</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.carrera <span class="op">=</span> carrera</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.calificacion <span class="op">=</span> calificacion</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>ana <span class="op">=</span> Estudiante(<span class="st">"Ana"</span>, <span class="st">"Matemáticas"</span>, <span class="fl">9.2</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>luis <span class="op">=</span> Estudiante(<span class="st">"Luis"</span>, <span class="st">"Física"</span>, <span class="fl">7.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>No pasamos nada para <code>self</code>: Python se encarga de ese primer argumento automáticamente al crear la instancia. Por eso, aunque <code>__init__</code> declara cuatro parámetros, la llamada recibe solo tres.</p>
+<p>Para leer los atributos de una instancia usamos la notación de punto, la misma que usábamos para los métodos, pero ahora sin paréntesis porque accedemos a un dato, no invocamos una operación:</p>
+<div id="681b450c" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ana.nombre)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ana.calificacion)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(luis.carrera)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ana
+9.2
+Física</code></pre>
 </div>
 </div>
-<p>Desde el punto de vista matemático, esperaríamos exactamente <code>0.3</code>. Sin embargo, la computadora muestra un valor ligeramente distinto. Esto no es un error de Python, es la consecuencia inevitable de trabajar con representaciones finitas. Al operar sobre valores aproximados, las pequeñas diferencias en su representación pueden acumularse en el resultado.</p>
-<p>Entender esta distinción entre <code>int</code> (exacto) y <code>float</code> (aproximado) es fundamental para interpretar resultados correctamente y para elegir el tipo adecuado según el problema. Más adelante se verá que existen formas de trabajar con números reales de manera estricta cuando el problema requiere precisión absoluta.</p>
-<p>Python también maneja de forma nativa los <em>números complejos</em>, escritos en el formato <code>a + bj</code>, donde <code>a</code> es la parte real y <code>b</code> la imaginaria. Un detalle importante: Python usa la letra <code>j</code> para la unidad imaginaria, en lugar de la <span class="math inline">\(i\)</span> que es habitual en los libros de matemáticas. Por ejemplo, el número complejo <span class="math inline">\(3 + 4i\)</span> se representa en Python como:</p>
-<div id="dc14529f" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="op">+</span> <span class="ot">4j</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>(3+4j)</code></pre>
+<p><code>ana</code> y <code>luis</code> son objetos independientes. Cada uno guarda sus propios atributos: modificar uno no afecta al otro, igual que dos listas distintas son independientes entre sí.</p>
+<p>Los atributos también pueden modificarse después de crear el objeto, asignándoles un valor nuevo:</p>
+<div id="256ff64b" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ana.calificacion <span class="op">=</span> <span class="fl">9.5</span>   <span class="co"># Ana mejoró su calificación</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ana.calificacion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>9.5</code></pre>
 </div>
 </div>
+<p>Esto evidencia la ventaja sobre el diccionario. Con un diccionario, <code>ana["calificación"]</code> con tilde y <code>ana["calificacion"]</code> sin tilde serían dos claves distintas, y el error pasaría inadvertido hasta provocar un <code>KeyError</code> mucho después. Con una clase, los atributos están fijados por <code>__init__</code>: la estructura del objeto está garantizada desde su creación.</p>
 </section>
-<section id="variables" class="level2">
-<h2 class="anchored" data-anchor-id="variables">Variables</h2>
-<p>Las operaciones que hemos hecho hasta ahora tienen una limitación evidente, y es que cada resultado se pierde inmediatamente. Si calculamos <span class="math inline">\(2^{10}\)</span>, el valor aparece en pantalla, pero no podemos usarlo después. Para que un resultado sea reutilizable, necesitamos una forma de guardarlo y darle un nombre. A eso sirven las <em>variables</em>.</p>
-<p>Una variable es un nombre que queda asociado a un valor en la memoria de la computadora. La asignación sigue la forma:</p>
-<p><code>nombre = valor</code></p>
-<p>donde <code>nombre</code> es el identificador elegido y <code>valor</code> es el dato que se quiere almacenar. El símbolo <code>=</code> no expresa igualdad matemática, indica que el nombre de la izquierda quedará ligado al valor de la derecha. Por ejemplo:</p>
-<div id="a11d3b31" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>edad <span class="op">=</span> <span class="dv">25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Al ejecutar esta línea ocurren tres cosas:</p>
-<ol type="1">
-<li>El número <code>25</code> se almacena en algún lugar de la memoria de la computadora.</li>
-<li>Python registra el nombre <code>edad</code>.</li>
-<li>Ese nombre queda asociado al valor <code>25</code>.</li>
-</ol>
-<p>A partir de ese momento, escribir <code>edad</code> en cualquier parte del programa es equivalente a usar el valor <code>25</code>:</p>
-<div id="39d79e64" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>edad <span class="op">+</span> <span class="dv">25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>50</code></pre>
+<section id="comparación-directa-con-el-diccionario" class="level2">
+<h2 class="anchored" data-anchor-id="comparación-directa-con-el-diccionario">Comparación directa con el diccionario</h2>
+<p>Vale la pena ver lado a lado las dos formas de representar a un estudiante, la que usábamos y la nueva, para apreciar qué cambia:</p>
+<div id="29f1a2c6" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Antes: diccionario</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ana_dict <span class="op">=</span> {<span class="st">"nombre"</span>: <span class="st">"Ana"</span>, <span class="st">"carrera"</span>: <span class="st">"Matemáticas"</span>, <span class="st">"calificacion"</span>: <span class="fl">9.2</span>}</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ana_dict[<span class="st">"nombre"</span>])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ahora: instancia de una clase</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>ana_obj <span class="op">=</span> Estudiante(<span class="st">"Ana"</span>, <span class="st">"Matemáticas"</span>, <span class="fl">9.2</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ana_obj.nombre)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ana
+Ana</code></pre>
 </div>
 </div>
-<p>Ahora bien, las variables no son permanentes, pueden reasignarse. Si posteriormente se ejecuta:</p>
-<div id="b973aec7" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>edad <span class="op">=</span> <span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A primera vista la diferencia parece cosmética: <code>ana_dict["nombre"]</code> frente a <code>ana_obj.nombre</code>. Pero hay una distinción de fondo. El diccionario acepta cualquier clave: puedo escribir <code>ana_dict["edd"] = 20</code> y crear una clave mal escrita sin que nada proteste. La clase, en cambio, define una estructura: todo <code>Estudiante</code> tiene exactamente <code>nombre</code>, <code>carrera</code> y <code>calificacion</code> porque así lo establece <code>__init__</code>. La clase convierte una convención que había que recordar en una garantía que el código impone.</p>
+<p>Esa garantía es la primera ventaja. La segunda, que veremos en la lección siguiente, es aún mayor: una clase puede contener no solo datos, sino también las operaciones que tienen sentido sobre ellos.</p>
+</section>
+<section id="atributos-de-clase" class="level2">
+<h2 class="anchored" data-anchor-id="atributos-de-clase">Atributos de clase</h2>
+<p>Los atributos que hemos visto pertenecen a cada instancia: el nombre de Ana es suyo, el de Luis es suyo. Pero a veces hay datos que son comunes a todas las instancias de una clase, no propios de cada una. Para eso existen los <em>atributos de clase</em>, que se definen directamente en el cuerpo de la clase, fuera de cualquier método:</p>
+<div id="68806bec" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Estudiante:</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    institucion <span class="op">=</span> <span class="st">"Universidad Nacional"</span>   <span class="co"># atributo de clase: compartido por todos</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, nombre, carrera, calificacion):</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.nombre <span class="op">=</span> nombre</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.carrera <span class="op">=</span> carrera</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.calificacion <span class="op">=</span> calificacion</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>ana <span class="op">=</span> Estudiante(<span class="st">"Ana"</span>, <span class="st">"Matemáticas"</span>, <span class="fl">9.2</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>luis <span class="op">=</span> Estudiante(<span class="st">"Luis"</span>, <span class="st">"Física"</span>, <span class="fl">7.8</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ana.institucion)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(luis.institucion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Universidad Nacional
+Universidad Nacional</code></pre>
 </div>
-<p>la referencia <code>edad</code> se redirige hacia el nuevo valor <code>10</code>:</p>
-<pre><code>Antes:   edad  ──────►  25
-Después: edad  ──────►  10</code></pre>
-<p>El valor <code>25</code> queda sin ninguna variable que lo referencie, y Python lo descartará de la memoria.</p>
-<p>Es posible que dos nombres referencien simultáneamente el mismo objeto:</p>
-<div id="46060916" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a <span class="co"># Esta línea hace que el nombre "b" apunte también a 10</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<pre><code>20</code></pre>
+</div>
+<p><code>institucion</code> no se define dentro de <code>__init__</code> ni se asocia a <code>self</code>: es un único valor que todas las instancias comparten. Tiene sentido para datos que no varían de un estudiante a otro, como la institución a la que todos pertenecen. Si la institución cambiara, bastaría modificarla en un solo lugar en lugar de en cada instancia.</p>
+<p>La distinción es clara: un atributo de instancia, creado con <code>self.x</code> en <code>__init__</code>, es propio de cada objeto y puede ser distinto en cada uno. Un atributo de clase, definido en el cuerpo de la clase, es uno solo, compartido por todas las instancias.</p>
+</section>
+<section id="ejemplo-integrador" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-integrador">Ejemplo integrador</h2>
+<p>Construimos una clase para representar lecturas de un sensor de temperatura, el hilo de datos que nos ha acompañado desde el principio. Cada lectura tiene un valor, una hora y una ubicación; todas comparten la unidad de medida:</p>
+<div id="4c92d7ec" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Lectura:</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    unidad <span class="op">=</span> <span class="st">"°C"</span>   <span class="co"># atributo de clase: todas las lecturas usan Celsius</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, valor, hora, ubicacion):</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.valor <span class="op">=</span> valor</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.hora <span class="op">=</span> hora</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.ubicacion <span class="op">=</span> ubicacion</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creamos varias lecturas y las guardamos en una lista</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>lecturas <span class="op">=</span> [</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    Lectura(<span class="fl">23.5</span>, <span class="dv">8</span>, <span class="st">"Toluca"</span>),</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    Lectura(<span class="fl">24.0</span>, <span class="dv">9</span>, <span class="st">"Toluca"</span>),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    Lectura(<span class="fl">22.8</span>, <span class="dv">10</span>, <span class="st">"Toluca"</span>),</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    Lectura(<span class="fl">19.0</span>, <span class="dv">11</span>, <span class="st">"Toluca"</span>),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Las recorremos con un for y accedemos a sus atributos</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lectura <span class="kw">in</span> lecturas:</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>lectura<span class="sc">.</span>hora<span class="sc">}</span><span class="ss">:00 — </span><span class="sc">{</span>lectura<span class="sc">.</span>valor<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>Lectura<span class="sc">.</span>unidad<span class="sc">}</span><span class="ss"> en </span><span class="sc">{</span>lectura<span class="sc">.</span>ubicacion<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos el promedio usando los atributos de cada objeto</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>valores <span class="op">=</span> [lectura.valor <span class="cf">for</span> lectura <span class="kw">in</span> lecturas]</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Promedio: </span><span class="sc">{</span><span class="bu">sum</span>(valores) <span class="op">/</span> <span class="bu">len</span>(valores)<span class="sc">:.2f}</span><span class="ss"> </span><span class="sc">{</span>Lectura<span class="sc">.</span>unidad<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>8:00 — 23.5 °C en Toluca
+9:00 — 24.0 °C en Toluca
+10:00 — 22.8 °C en Toluca
+11:00 — 19.0 °C en Toluca
+
+Promedio: 22.32 °C</code></pre>
 </div>
 </div>
-<p>Si luego se reasigna <code>a</code>, la referencia <code>b</code> no se ve afectada; simplemente continúa apuntando al valor original:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b <span class="co"># Aquí "b" sigue apuntando a 10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Con esto, tenemos los ingredientes fundamentales: sabemos operar con números, distinguimos sus tipos y podemos guardar resultados para reutilizarlos. La siguiente lección parte de aquí para introducir una capacidad nueva: la de comparar valores y tomar decisiones en función de esas comparaciones.</p>
+<p>Cada <code>Lectura</code> es un objeto independiente con sus propios atributos, pero todas comparten la unidad. La lista de lecturas se recorre con un <code>for</code> exactamente como recorríamos listas de diccionarios, y la comprensión que extrae los valores es la misma que usábamos antes, ahora accediendo a <code>lectura.valor</code> en lugar de <code>lectura["valor"]</code>. La estructura del programa no cambia; lo que cambia es que los datos ahora tienen un tipo propio, con una forma garantizada.</p>
+</section>
+<section id="lo-que-sigue" class="level2">
+<h2 class="anchored" data-anchor-id="lo-que-sigue">Lo que sigue</h2>
+<p>Una clase nos permite agrupar datos bajo un tipo con estructura garantizada. Pero por ahora nuestras clases son contenedores pasivos: guardan información, y nada más. Cuando queremos hacer algo con un estudiante —clasificar su calificación, comprobar si aprobó— seguimos recurriendo a funciones externas, como la función <code>clasificar()</code> que arrastramos desde la lección sobre estructuras de control.</p>
+<p>Eso deja la operación separada del dato sobre el que actúa, cuando en realidad pertenecen juntos: clasificar es algo que un estudiante sabe hacer consigo mismo. La verdadera potencia de las clases aparece cuando los objetos no solo guardan datos, sino que llevan consigo las operaciones que tienen sentido sobre ellos, igual que una lista lleva su <code>append()</code> y una cadena su <code>split()</code>. Esas operaciones propias son los <em>métodos</em>, y construirlos para nuestras propias clases es el tema de la siguiente lección.</p>
 
 
 </section>
