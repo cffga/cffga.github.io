@@ -32,7 +32,7 @@ for t in temperaturas:
 
 En cada vuelta del bucle, la variable `t` toma el valor del siguiente elemento de la lista: primero `23.5`, luego `24.0`, y así hasta el último. Cuando se agotan los elementos, el bucle termina y Python continúa con lo que venga después.
 
-El nombre `t` es arbitrario; podría llamarse `temperatura`, `valor` o `x`. La convención es usar un nombre que describa lo que representa cada elemento dentro del bloque. Ese nombre solo existe dentro del bucle —aunque en Python, a diferencia de lo que ocurre con las funciones, la variable sigue siendo accesible después de que el bucle termina, con el valor que tenía en la última iteración.
+El nombre `t` es arbitrario; podría llamarse `temperatura`, `valor` o `x`. La convención es usar un nombre que describa lo que representa cada elemento dentro del bloque. Ese nombre solo existe dentro del bucle (aunque en Python, a diferencia de lo que ocurre con las funciones, la variable sigue siendo accesible después de que el bucle termina, con el valor que tenía en la última iteración).
 
 ### `for` sobre distintas colecciones
 

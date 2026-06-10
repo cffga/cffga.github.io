@@ -44,7 +44,7 @@ class Estudiante:
 
 Hay dos elementos nuevos que conviene explicar con calma.
 
-El primero es `self`. Cuando creamos una instancia con `Estudiante("Ana", "Matemáticas", 9.2)`, Python crea un objeto vacío y se lo pasa a `__init__` como primer argumento. Ese objeto es `self`: una referencia al objeto que se está construyendo. La lección sobre objetos explicó que un método recibe su objeto como primer argumento implícito; en `__init__` ese argumento aparece explícito, y por convención universal se llama `self`. No es una palabra reservada de Python  (podría llamarse de otro modo) , pero todo el mundo usa `self`, y apartarse de esa convención solo genera confusión.
+El primero es `self`. Cuando creamos una instancia con `Estudiante("Ana", "Matemáticas", 9.2)`, Python crea un objeto vacío y se lo pasa a `__init__` como primer argumento. Ese objeto es `self`: una referencia al objeto que se está construyendo. La lección sobre objetos explicó que un método recibe su objeto como primer argumento implícito; en `__init__` ese argumento aparece explícito, y por convención universal se llama `self`. No es una palabra reservada de Python (podría llamarse de otro modo), pero todo el mundo usa `self`, y apartarse de esa convención solo genera confusión.
 
 El segundo es la asignación `self.nombre = nombre`. El lado izquierdo, `self.nombre`, crea un *atributo* dentro del objeto: un dato que queda guardado en la instancia y vive mientras ella viva. El lado derecho, `nombre`, es el parámetro que recibió `__init__`. La línea dice "guarda dentro de este objeto, bajo el nombre `nombre`, el valor que me pasaron". Los tres atributos (`nombre`, `carrera`, `calificacion`) quedan así grabados en cada instancia.
 
@@ -52,7 +52,7 @@ Conviene notar que los parámetros de `__init__` (a la derecha) y los atributos 
 
 ## Crear y usar instancias
 
-Con `__init__` definido, crear un estudiante es directo. Los argumentos que pasamos entre paréntesis corresponden, en orden, a los parámetros de `__init__` después de `self` —que Python rellena solo:
+Con `__init__` definido, crear un estudiante es directo. Los argumentos que pasamos entre paréntesis corresponden, en orden, a los parámetros de `__init__` después de `self` (que Python rellena solo):
 
 ```{python}
 class Estudiante:

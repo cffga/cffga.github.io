@@ -403,7 +403,7 @@ window.Quarto = {
 <p>El punto de partida más natural para aprender a programar es también el más inmediato: hacer cuentas. Antes de hablar de variables, funciones o estructuras de datos, tiene sentido familiarizarse con la forma en que Python interpreta y evalúa expresiones matemáticas. Por eso comenzamos aquí.</p>
 <p>Se pueden evaluar directamente expresiones como <span class="math display">\[3\times 4 \times 5 + 1,\]</span></p>
 <p>pero para ello es necesario escribirlas usando la sintaxis del lenguaje. En Python la multiplicación se escribe con <code>*</code>, la suma con <code>+</code>, la resta con <code>-</code> y la división con <code>/</code>. Así, la expresión anterior se introduce como:</p>
-<div id="b9514a1f" class="cell" data-execution_count="1">
+<div id="301ea0fa" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="op">*</span> <span class="dv">4</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>61</code></pre>
@@ -411,20 +411,20 @@ window.Quarto = {
 </div>
 <p>Al ejecutar esta celda, Python evalúa la expresión y devuelve el resultado, que en este caso es <code>61</code>.</p>
 <p>Además de las operaciones básicas, Python permite calcular potencias. En matemáticas se emplea la notación <span class="math inline">\(a^n\)</span>, pero en Python se usa <code>a ** n</code>. Por ejemplo, <span class="math inline">\(2^3\)</span> se escribe así:</p>
-<div id="06278556" class="cell" data-execution_count="2">
+<div id="5187c08b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">**</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>8</code></pre>
 </div>
 </div>
 <p>Al igual que en el álgebra, los paréntesis permiten agrupar términos y controlar el orden en que se realizan las operaciones. En las siguientes celdas se calculan respectivamente <span class="math inline">\((2^3)^2\)</span> y <span class="math inline">\(2^{3^2}\)</span>, dos expresiones que producen resultados muy distintos precisamente por cómo se agrupan las potencias:</p>
-<div id="ab2ae4dc" class="cell" data-execution_count="3">
+<div id="e4469564" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span> <span class="op">**</span> <span class="dv">3</span>) <span class="op">**</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>64</code></pre>
 </div>
 </div>
-<div id="4b67b24d" class="cell" data-execution_count="4">
+<div id="7062835d" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">**</span> (<span class="dv">3</span> <span class="op">**</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>512</code></pre>
@@ -432,14 +432,14 @@ window.Quarto = {
 </div>
 <p>Las últimas dos operaciones que veremos completan el repertorio aritmético básico, la <em>división entera</em> y el <em>módulo</em> o <em>residuo</em>. La división entera responde a la pregunta “¿cuántas veces cabe un número en otro sin pasarse?”, el módulo responde a “¿cuánto sobra?”. Juntas, estas dos operaciones describen completamente una división.</p>
 <p>La división entera entre 7 y 2 se calcula así:</p>
-<div id="df588c59" class="cell" data-execution_count="5">
+<div id="65b3aa7d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> <span class="op">//</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>3</code></pre>
 </div>
 </div>
 <p>El resultado es 3, porque el 2 cabe 3 veces en 7. Y para saber cuánto sobra:</p>
-<div id="fc76c9b7" class="cell" data-execution_count="6">
+<div id="9e932160" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> <span class="op">%</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>1</code></pre>
@@ -448,7 +448,7 @@ window.Quarto = {
 <p>El resultado es 1, porque después de esas 3 veces, queda 1 sin dividir.</p>
 <p>Con las operaciones básicas ya cubiertas, conviene introducir una herramienta sencilla pero que se usará constantemente a lo largo de todos los notebooks, los <em>comentarios</em>. Un comentario es texto que se escribe dentro de una celda de código pero que Python ignora por completo al ejecutar. Su propósito es explicar qué hace el código, aclarar la intención detrás de una línea o dejar notas para quien lo lea más adelante.</p>
 <p>En Python, los comentarios se introducen con el símbolo <code>#</code>. Todo lo que aparece a la derecha de ese símbolo en la misma línea es ignorado al ejecutar la celda:</p>
-<div id="db6bfcef" class="cell" data-execution_count="7">
+<div id="27b8d257" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Este es un comentario, no afecta el resultado</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span>  <span class="co"># Esto también es un comentario, el resultado sigue siendo 4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
@@ -463,7 +463,7 @@ window.Quarto = {
 <p>En matemáticas distinguimos con cuidado los números enteros de los reales. Los <em>enteros</em>, representados por el conjunto <span class="math inline">\(\mathbb{Z} = \{\dots, -2, -1, 0, 1, 2, \dots\}\)</span>, no tienen parte decimal. Los <em>reales</em> <span class="math inline">\(\mathbb{R}\)</span> sí pueden tenerla, y su definición matemática exige precisión infinita.</p>
 <p>Una computadora, sin embargo, trabaja con recursos finitos. No puede almacenar un número real con infinitos decimales, solo puede guardar una aproximación. Por eso Python no trabaja con números reales en sentido estricto, sino con representaciones finitas de ellos, que en programación se llaman <code>float</code>. Los enteros, en cambio, sí se representan de forma exacta y se llaman <code>int</code> (de <em>integer</em>).</p>
 <p>Esta distinción tiene consecuencias prácticas. Por ejemplo:</p>
-<div id="18ad7cc0" class="cell" data-execution_count="8">
+<div id="37291bb3" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>0.30000000000000004</code></pre>
@@ -472,7 +472,7 @@ window.Quarto = {
 <p>Desde el punto de vista matemático, esperaríamos exactamente <code>0.3</code>. Sin embargo, la computadora muestra un valor ligeramente distinto. Esto no es un error de Python, es la consecuencia inevitable de trabajar con representaciones finitas. Al operar sobre valores aproximados, las pequeñas diferencias en su representación pueden acumularse en el resultado.</p>
 <p>Entender esta distinción entre <code>int</code> (exacto) y <code>float</code> (aproximado) es fundamental para interpretar resultados correctamente y para elegir el tipo adecuado según el problema. Más adelante se verá que existen formas de trabajar con números reales de manera estricta cuando el problema requiere precisión absoluta.</p>
 <p>Python también maneja de forma nativa los <em>números complejos</em>, escritos en el formato <code>a + bj</code>, donde <code>a</code> es la parte real y <code>b</code> la imaginaria. Un detalle importante: Python usa la letra <code>j</code> para la unidad imaginaria, en lugar de la <span class="math inline">\(i\)</span> que es habitual en los libros de matemáticas. Por ejemplo, el número complejo <span class="math inline">\(3 + 4i\)</span> se representa en Python como:</p>
-<div id="dc14529f" class="cell" data-execution_count="9">
+<div id="3c81ed96" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="op">+</span> <span class="ot">4j</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>(3+4j)</code></pre>
@@ -485,7 +485,7 @@ window.Quarto = {
 <p>Una variable es un nombre que queda asociado a un valor en la memoria de la computadora. La asignación sigue la forma:</p>
 <p><code>nombre = valor</code></p>
 <p>donde <code>nombre</code> es el identificador elegido y <code>valor</code> es el dato que se quiere almacenar. El símbolo <code>=</code> no expresa igualdad matemática, indica que el nombre de la izquierda quedará ligado al valor de la derecha. Por ejemplo:</p>
-<div id="a11d3b31" class="cell" data-execution_count="10">
+<div id="a039aa3f" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>edad <span class="op">=</span> <span class="dv">25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Al ejecutar esta línea ocurren tres cosas:</p>
@@ -495,14 +495,14 @@ window.Quarto = {
 <li>Ese nombre queda asociado al valor <code>25</code>.</li>
 </ol>
 <p>A partir de ese momento, escribir <code>edad</code> en cualquier parte del programa es equivalente a usar el valor <code>25</code>:</p>
-<div id="39d79e64" class="cell" data-execution_count="11">
+<div id="b04f088d" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>edad <span class="op">+</span> <span class="dv">25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>50</code></pre>
 </div>
 </div>
 <p>Ahora bien, las variables no son permanentes, pueden reasignarse. Si posteriormente se ejecuta:</p>
-<div id="b973aec7" class="cell" data-execution_count="12">
+<div id="d5e60f78" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>edad <span class="op">=</span> <span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>la referencia <code>edad</code> se redirige hacia el nuevo valor <code>10</code>:</p>
@@ -510,7 +510,7 @@ window.Quarto = {
 Después: edad  ──────►  10</code></pre>
 <p>El valor <code>25</code> queda sin ninguna variable que lo referencie, y Python lo descartará de la memoria.</p>
 <p>Es posible que dos nombres referencien simultáneamente el mismo objeto:</p>
-<div id="46060916" class="cell" data-execution_count="13">
+<div id="2d07c6a4" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a <span class="co"># Esta línea hace que el nombre "b" apunte también a 10</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

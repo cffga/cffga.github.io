@@ -109,7 +109,7 @@ La regla práctica es sencilla. Una lambda conviene cuando la función es muy co
 
 ## Ordenar con criterios más ricos
 
-El verdadero valor de pasar funciones aparece cuando el criterio de ordenamiento no es trivial. Como la lambda puede contener cualquier expresión, podemos ordenar por criterios compuestos. Por ejemplo, ordenar primero por carrera y, dentro de cada carrera, por calificación, devolviendo una tupla como clave —Python ordena las tuplas comparando primero el primer elemento, luego el segundo, como vimos en la lección sobre estructuras de datos:
+El verdadero valor de pasar funciones aparece cuando el criterio de ordenamiento no es trivial. Como la lambda puede contener cualquier expresión, podemos ordenar por criterios compuestos. Por ejemplo, ordenar primero por carrera y, dentro de cada carrera, por calificación, devolviendo una tupla como clave (Python ordena las tuplas comparando primero el primer elemento, luego el segundo, como vimos en la lección sobre estructuras de datos):
 
 ```{python}
 grupo = [
@@ -125,7 +125,7 @@ for e in ordenados:
     print(f"{e['carrera']:<12} {e['nombre']:<8} {e['calificacion']}")
 ```
 
-La clave `(e["carrera"], -e["calificacion"])` ordena alfabéticamente por carrera y, dentro de cada una, por calificación de mayor a menor —usando el truco de negar la calificación que ya empleamos en la lección sobre comprensiones, donde el menor valor negativo corresponde a la mayor calificación. Un criterio así, expresado en una sola lambda, sería tedioso de implementar a mano.
+La clave `(e["carrera"], -e["calificacion"])` ordena alfabéticamente por carrera y, dentro de cada una, por calificación de mayor a menor (usando el truco de negar la calificación que ya empleamos en la lección sobre comprensiones, donde el menor valor negativo corresponde a la mayor calificación). Un criterio así, expresado en una sola lambda, sería tedioso de implementar a mano.
 
 ## `map` y `filter`
 

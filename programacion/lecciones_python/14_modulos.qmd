@@ -103,7 +103,7 @@ print(statistics.variance(calificaciones)) # varianza muestral
 
 ## El módulo `random`
 
-`random` genera valores aleatorios, lo que abre la puerta a la simulación —una herramienta central en estadística, física y finanzas. Sus funciones más usadas:
+`random` genera valores aleatorios, lo que abre la puerta a la simulación (una herramienta central en estadística, física y finanzas). Sus funciones más usadas:
 
 ```{python}
 import random
@@ -117,7 +117,7 @@ print(random.choice(["cara", "cruz"]))   # un elemento al azar de una lista
 
 La función `random.seed()` merece una mención. Los números aleatorios de una computadora son en realidad *pseudoaleatorios*: se generan con una fórmula que parte de un valor inicial, la *semilla*. Fijar la semilla con `seed()` hace que la secuencia sea reproducible, lo que es indispensable en experimentos y simulaciones que deben poder repetirse con los mismos resultados.
 
-Otra función útil es `shuffle`, que desordena una lista en su lugar —es un método que modifica, en el sentido de la lección sobre objetos:
+Otra función útil es `shuffle`, que desordena una lista en su lugar (es un método que modifica, en el sentido de la lección sobre objetos):
 
 ```{python}
 import random
