@@ -1,0 +1,143 @@
+---
+title: "Modificar datos: INSERT, UPDATE y DELETE"
+author: "Carlos Flores"
+format: html
+---
+
+Todo lo que hemos hecho hasta ahora ha sido *leer*: consultar tablas que ya existían, sin cambiarlas nunca. La lección anterior cerró el repertorio de la lectura. Pero una base de datos viva no es fija. Los libros se adquieren, los lectores se registran, los préstamos se abren y se cierran, los errores se corrigen. Esta lección trata el otro lado de SQL: cómo añadir, modificar y eliminar datos.
+
+La distinción tiene un eco en Python. Las consultas de lectura eran como las comprensiones: producían un resultado nuevo sin tocar los datos originales. Las operaciones de esta lección son como los métodos que *mutaban* una lista —`append`, la asignación a un índice, `remove`—: cambian la estructura en su lugar. Y como toda mutación, exigen más cuidado, porque sus efectos son permanentes.
+
+## Añadir filas: INSERT
+
+Para agregar una fila a una tabla se usa `INSERT INTO`, indicando la tabla, las columnas que vas a rellenar y los valores correspondientes. Para registrar un autor nuevo:
+
+```sql
+INSERT INTO autores (nombre, nacionalidad, anio_nacimiento)
+VALUES ('Clarice Lispector', 'Brasil', 1920);
+```
+
+La lista entre paréntesis tras el nombre de la tabla son las columnas; la lista tras `VALUES` son los valores, en el mismo orden. La correspondencia es posicional: el primer valor va a la primera columna, el segundo al segundo, igual que los argumentos posicionales de una función de Python.
+
+Nota que no especificamos `id`, aunque la tabla lo tiene como clave primaria. Es porque la declaramos como `SERIAL` en la lección sobre diseño: la base de datos genera el `id` automáticamente. Las columnas que no nombras toman su valor por defecto —el `id` se autogenera, y una columna con `DEFAULT` usa su valor por defecto—. Esto conecta directamente con lo que diseñamos: `SERIAL` y `DEFAULT` existían precisamente para no tener que dar estos valores a mano en cada inserción.
+
+Puedes insertar varias filas de una vez, separando las listas de valores con comas:
+
+```sql
+INSERT INTO autores (nombre, nacionalidad, anio_nacimiento)
+VALUES ('Juan Rulfo',     'México',    1917),
+       ('Mario Vargas L.', 'Perú',     1936),
+       ('Isabel Allende',  'Chile',    1942);
+```
+
+Una sola instrucción añade tres autores. Insertar en bloque es más eficiente que tres instrucciones separadas, además de más conciso.
+
+## Ver lo insertado: RETURNING
+
+Como el `id` lo genera la base de datos, a veces necesitas saber qué valor le tocó a la fila recién insertada —por ejemplo, para usarlo como `autor_id` al insertar sus libros. PostgreSQL ofrece la cláusula `RETURNING`, que hace que el `INSERT` devuelva columnas de la fila creada:
+
+```sql
+INSERT INTO autores (nombre, nacionalidad, anio_nacimiento)
+VALUES ('Clarice Lispector', 'Brasil', 1920)
+RETURNING id;
+```
+
+| id |
+|----|
+| 7  |
+
+`RETURNING id` devuelve el `id` que la base de datos asignó. Puedes devolver varias columnas, o `RETURNING *` para la fila completa. Es una comodidad de PostgreSQL —no todos los motores la tienen— que evita una consulta adicional para averiguar qué se acaba de crear.
+
+## Modificar filas: UPDATE
+
+Para cambiar datos de filas existentes se usa `UPDATE`, con `SET` para indicar qué columnas cambian y a qué valor. La pieza crítica es el `WHERE`: determina *qué filas* se modifican, exactamente con la misma lógica de filtrado de la segunda lección.
+
+Para corregir la nacionalidad de un autor concreto:
+
+```sql
+UPDATE autores
+SET nacionalidad = 'Colombia'
+WHERE id = 1;
+```
+
+`SET nacionalidad = 'Colombia'` asigna el nuevo valor; `WHERE id = 1` restringe el cambio a la fila de clave primaria 1. Como el `id` es único, exactamente una fila cambia. Puedes modificar varias columnas a la vez, separándolas por comas en el `SET`:
+
+```sql
+UPDATE libros
+SET ejemplares = ejemplares + 2,
+    genero = 'Novela'
+WHERE id = 3;
+```
+
+Aquí `ejemplares = ejemplares + 2` muestra algo útil: el nuevo valor puede calcularse a partir del actual. Suma dos a los ejemplares que ya había, igual que `contador = contador + 1` en Python. El `UPDATE` lee el valor presente y escribe el nuevo en la misma operación.
+
+## La cláusula WHERE en UPDATE no es opcional en la práctica
+
+Aquí va la advertencia más importante de la lección, porque el error que previene es grave y silencioso. Si omites el `WHERE` en un `UPDATE`, el cambio se aplica a *todas las filas de la tabla*:
+
+```sql
+UPDATE libros SET genero = 'Novela';   -- ¡cambia el género de TODOS los libros!
+```
+
+Esta instrucción no da error: hace exactamente lo que dice, poner "Novela" como género de cada libro de la tabla, borrando los géneros reales de todos. Es válida, se ejecuta sin protesta, y deja la tabla dañada. La regla práctica es tratar el `WHERE` de un `UPDATE` como obligatorio salvo que de verdad quieras afectar toda la tabla, lo cual es raro. Antes de ejecutar un `UPDATE`, conviene preguntarse: ¿mi `WHERE` selecciona exactamente las filas que pretendo cambiar, y solo esas?
+
+Una técnica de seguridad común es escribir primero la condición como un `SELECT` —`SELECT * FROM libros WHERE id = 3`— para ver qué filas afecta, y solo cuando el resultado es el esperado, reemplazar el `SELECT *` por el `UPDATE ... SET`. Así compruebas el alcance antes de tocar nada.
+
+## Eliminar filas: DELETE
+
+`DELETE` elimina filas de una tabla. Como `UPDATE`, depende por completo del `WHERE` para decidir qué borra:
+
+```sql
+DELETE FROM libros WHERE id = 5;
+```
+
+Elimina el libro de clave primaria 5. Y como `UPDATE`, omitir el `WHERE` es catastrófico: `DELETE FROM libros` sin condición vacía la tabla entera, fila por fila, sin posibilidad fácil de deshacerlo. La misma disciplina se aplica: el `WHERE` de un `DELETE` se trata como obligatorio, y conviene verificar su alcance con un `SELECT` antes de ejecutar.
+
+`DELETE` interactúa con las claves foráneas que diseñamos en la lección sobre tablas. Si intentas borrar un autor que todavía tiene libros apuntando a él, la base de datos lo rechazará: eliminarlo dejaría esos libros con un `autor_id` que no corresponde a ningún autor, una referencia rota. Esa protección es la restricción de clave foránea cumpliendo su función. Para borrar el autor habría que decidir primero qué hacer con sus libros: borrarlos también, o reasignarlos. La base de datos te obliga a resolver esa coherencia en lugar de dejar datos huérfanos.
+
+## Cuando varios cambios deben ocurrir juntos: transacciones
+
+Hay situaciones en las que varias modificaciones forman una sola operación lógica que no puede quedar a medias. El ejemplo clásico es un préstamo: registrar el préstamo en la tabla `prestamos` y descontar un ejemplar disponible del libro son dos cambios que deben ocurrir ambos o ninguno. Si el primero se ejecuta y el segundo falla —por un corte de energía, un error—, la base de datos quedaría en un estado incoherente: un préstamo registrado sin haber descontado el ejemplar.
+
+SQL resuelve esto con las *transacciones*. Una transacción agrupa varias instrucciones en una unidad atómica: o se aplican todas, o no se aplica ninguna. Se delimita con `BEGIN` al inicio y `COMMIT` al final:
+
+```sql
+BEGIN;
+
+INSERT INTO prestamos (libro_id, lector_id, fecha_prestamo)
+VALUES (1, 5, '2024-03-10');
+
+UPDATE libros SET ejemplares = ejemplares - 1 WHERE id = 1;
+
+COMMIT;
+```
+
+Entre `BEGIN` y `COMMIT`, los cambios están en curso pero no son definitivos. `COMMIT` los confirma todos a la vez. Si algo sale mal antes del `COMMIT`, puedes ejecutar `ROLLBACK` en lugar de `COMMIT`, y la base de datos deshace todo lo hecho desde el `BEGIN`, como si la transacción nunca hubiera ocurrido. Esta propiedad de "todo o nada" es una de las garantías más valiosas de las bases de datos relacionales, y no tenía equivalente en las listas de diccionarios de Python: si tu programa fallaba a mitad de modificar una estructura, la dejaba a medias sin remedio.
+
+## Ejemplo integrador
+
+Registremos un autor nuevo y uno de sus libros, usando `RETURNING` para enlazar las dos inserciones, todo dentro de una transacción para que ocurra como una unidad:
+
+```sql
+BEGIN;
+
+-- Insertamos el autor y capturamos el id que la base de datos le asigna
+INSERT INTO autores (nombre, nacionalidad, anio_nacimiento)
+VALUES ('José Saramago', 'Portugal', 1922)
+RETURNING id;
+-- supongamos que devuelve id = 8
+
+-- Insertamos su libro usando ese id como clave foránea
+INSERT INTO libros (titulo, autor_id, anio, genero, ejemplares)
+VALUES ('Ensayo sobre la ceguera', 8, 1995, 'Novela', 3);
+
+COMMIT;
+```
+
+La transacción garantiza que el autor y su libro se registren juntos: si la segunda inserción fallara —por ejemplo, por violar alguna restricción—, el `ROLLBACK` correspondiente desharía también la primera, evitando un autor a medio registrar. `RETURNING` provee el `id` del autor que la segunda inserción necesita como `autor_id`. Las dos operaciones, que individualmente ya conoces, se combinan en una unidad coherente gracias a la transacción.
+
+## Lo que sigue
+
+Ahora puedes leer y modificar una base de datos: el ciclo completo. Con `INSERT`, `UPDATE` y `DELETE`, junto con todo lo aprendido sobre consultas, tienes las herramientas para trabajar con datos reales de principio a fin.
+
+Quedan dos necesidades que aparecen cuando una base de datos crece y se usa de verdad. La primera: ciertas consultas complejas —un `JOIN` con filtros y agregaciones que escribes una y otra vez— convendría guardarlas con un nombre y reutilizarlas, como guardabas una operación repetida en una función de Python. La segunda: cuando las tablas tienen millones de filas, incluso una consulta bien escrita puede volverse lenta, y hace falta una forma de acelerarla. Las *vistas*, que dan nombre a una consulta para reutilizarla, y los *índices*, que aceleran la búsqueda, son el tema de la última lección.

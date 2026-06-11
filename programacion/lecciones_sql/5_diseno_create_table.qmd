@@ -1,0 +1,110 @@
+---
+title: "Diseño de tablas: claves, tipos y CREATE TABLE"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior terminó con una observación incómoda: la tabla `libros` guarda `autor_id`, un número, en lugar del nombre del autor. Para mostrar "García Márquez" en vez de "1" hay que ir a otra tabla, `autores`. Antes de aprender a combinar tablas, esta lección responde la pregunta de fondo: ¿por qué los datos están repartidos así? ¿Por qué no guardar simplemente el nombre del autor en cada libro?
+
+La respuesta a esa pregunta es el principio que organiza toda base de datos bien diseñada, y entenderlo hace que los `JOIN` de la próxima lección dejen de parecer una complicación y se revelen como la consecuencia natural de un buen diseño.
+
+## El problema de la redundancia
+
+Imagina que guardáramos toda la información en una sola tabla, repitiendo los datos del autor en cada uno de sus libros:
+
+| titulo     | autor             | autor_nacionalidad | autor_nacimiento | anio |
+|------------|-------------------|--------------------|------------------|------|
+| Ficciones  | Jorge Luis Borges | Argentina          | 1899             | 1944 |
+| El Aleph   | Jorge Luis Borges | Argentina          | 1899             | 1949 |
+| El informe | Jorge Luis Borges | Argentina          | 1899             | 1970 |
+
+Borges aparece tres veces, y con él su nacionalidad y su año de nacimiento, idénticos en cada fila. Esta repetición —llamada *redundancia*— trae tres problemas concretos.
+
+El primero es el desperdicio: la misma información ocupa espacio una y otra vez. Con tres libros es trivial; con un autor que tiene cincuenta obras y una biblioteca de millones de registros, deja de serlo.
+
+El segundo, más grave, es el riesgo de inconsistencia. Si la nacionalidad de Borges se escribió "Argentina" en una fila y "argentina" en otra, ¿cuál es la correcta? Si hay que corregir su año de nacimiento, hay que hacerlo en todas las filas donde aparece, y basta olvidar una para que la base de datos se contradiga a sí misma. Un dato que existe en un solo lugar no puede contradecirse; uno repetido, sí.
+
+El tercero es la imposibilidad de registrar ciertas cosas. ¿Cómo guardas un autor que todavía no tiene libros en la biblioteca? En esta tabla no puedes: sin un libro, no hay fila, y sin fila, el autor no existe. La información del autor está atrapada dentro de la información del libro.
+
+## La solución: separar en tablas relacionadas
+
+La forma de eliminar la redundancia es guardar cada cosa una sola vez, en su propia tabla. Los datos del autor van en una tabla `autores`, donde Borges aparece exactamente una vez:
+
+| id | nombre            | nacionalidad | anio_nacimiento |
+|----|-------------------|--------------|-----------------|
+| 1  | Gabriel García M. | Colombia     | 1927            |
+| 2  | Julio Cortázar    | Argentina    | 1914            |
+| 4  | Jorge Luis Borges | Argentina    | 1899            |
+
+Y la tabla `libros` no repite los datos del autor: guarda solo una *referencia* a la fila correspondiente de `autores`, mediante el número de su `id`:
+
+| id | titulo     | autor_id | anio |
+|----|------------|----------|------|
+| 4  | Ficciones  | 4        | 1944 |
+| 5  | El Aleph   | 4        | 1949 |
+
+Ahora Borges existe una sola vez. Sus dos libros apuntan a su fila con `autor_id = 4`. Si hay que corregir su año de nacimiento, se corrige en un único lugar. Y un autor sin libros puede existir en `autores` sin problema. La información de cada entidad —autores por un lado, libros por otro— vive en su propia tabla, y las tablas se conectan por referencias. Este proceso de separar los datos para eliminar la redundancia se llama *normalización*.
+
+## Claves primarias
+
+Para que una referencia funcione, cada fila debe poder identificarse sin ambigüedad. Ese es el papel de la columna `id` que ha aparecido en todas las tablas desde la primera lección: es la *clave primaria*, un valor único que identifica cada fila de forma inequívoca.
+
+Una clave primaria tiene dos propiedades obligatorias. Es *única*: no puede haber dos filas con la misma clave, igual que no puede haber dos claves iguales en un diccionario de Python. Y no puede ser `NULL`: toda fila debe tener su identificador, porque una fila sin identidad no podría ser referenciada. La clave primaria es, en esencia, lo que hace de cada fila un objeto distinguible de los demás.
+
+Aunque cualquier columna única podría servir de clave —el correo de un lector, por ejemplo—, lo habitual es usar una columna `id` numérica creada solo para eso. Es compacta, nunca cambia, y no depende de datos del mundo real que podrían repetirse o modificarse.
+
+## Claves foráneas
+
+La columna `autor_id` de la tabla `libros` es el otro lado de la relación: una *clave foránea*. Una clave foránea es una columna que contiene valores de la clave primaria de otra tabla, estableciendo un vínculo entre ambas. `libros.autor_id = 4` significa "el autor de este libro es la fila de `autores` cuya clave primaria es 4".
+
+La clave foránea es la que hace posible la separación sin pérdida. Los datos del autor están en `autores`, los del libro en `libros`, y la clave foránea es el hilo que permite reconstruir la conexión cuando se necesita. Declarar una columna como clave foránea, además, le pide a la base de datos que vigile la coherencia: el motor puede rechazar un libro cuyo `autor_id` no corresponda a ningún autor existente, evitando referencias rotas. Esa vigilancia es una garantía que una lista de diccionarios en Python nunca te daba: nada te impedía poner un `autor_id` inexistente.
+
+## Crear una tabla: CREATE TABLE
+
+Hasta ahora hemos consultado tablas que ya existían. Crearlas es el trabajo de la instrucción `CREATE TABLE`, donde se declara el nombre de cada columna, su tipo de dato y sus restricciones. La tabla `autores` se crearía así:
+
+```sql
+CREATE TABLE autores (
+    id              SERIAL PRIMARY KEY,
+    nombre          TEXT NOT NULL,
+    nacionalidad    TEXT,
+    anio_nacimiento INTEGER
+);
+```
+
+Cada línea declara una columna con su tipo. Conviene leerla con calma, porque introduce varias ideas a la vez.
+
+Los *tipos de datos* fijan qué clase de valor admite cada columna, y son más estrictos que en Python, donde una variable podía contener cualquier cosa. `TEXT` es para cadenas de texto; `INTEGER` para enteros; hay además `NUMERIC` para decimales exactos, `BOOLEAN` para verdadero o falso, y `DATE` para fechas, que veremos cuando aparezcan los préstamos. Una columna `INTEGER` rechazará un texto: el tipo es una garantía sobre el contenido, parecida a lo que conseguías definiendo una clase con atributos fijos en lugar de un diccionario abierto.
+
+`SERIAL` es un tipo especial de PostgreSQL para claves primarias: genera automáticamente un número entero nuevo y creciente cada vez que insertas una fila, de modo que no tienes que asignar los `id` a mano. `PRIMARY KEY` declara que esa columna es la clave primaria, con sus garantías de unicidad y no-nulidad.
+
+`NOT NULL` es una *restricción*: prohíbe que la columna quede vacía. `nombre TEXT NOT NULL` significa que todo autor debe tener nombre. Las columnas sin `NOT NULL`, como `nacionalidad`, sí admiten `NULL`: un autor del que no conocemos la nacionalidad puede registrarse igualmente.
+
+## Declarar la clave foránea
+
+La tabla `libros` añade, sobre lo anterior, la declaración de su clave foránea hacia `autores`:
+
+```sql
+CREATE TABLE libros (
+    id         SERIAL PRIMARY KEY,
+    titulo     TEXT NOT NULL,
+    autor_id   INTEGER REFERENCES autores(id),
+    anio       INTEGER,
+    genero     TEXT,
+    ejemplares INTEGER DEFAULT 1
+);
+```
+
+La línea `autor_id INTEGER REFERENCES autores(id)` declara que `autor_id` es un entero que debe corresponder a un `id` existente en la tabla `autores`. Esa es la restricción de clave foránea: el motor rechazará cualquier intento de poner en `autor_id` un valor que no exista como clave primaria en `autores`. Así la base de datos protege por sí misma la coherencia de las relaciones.
+
+Aparece también `DEFAULT 1` en la columna `ejemplares`: un *valor por defecto*. Si al insertar un libro no especificas cuántos ejemplares hay, la base de datos pone 1 automáticamente. Es el mismo concepto que los argumentos por defecto de las funciones de Python: un valor que se usa cuando no se proporciona otro.
+
+## El orden de creación importa
+
+Un detalle práctico que se deduce de lo anterior: `libros` hace referencia a `autores`, así que `autores` debe existir antes de crear `libros`. No puedes declarar una clave foránea hacia una tabla que aún no existe. El orden de creación sigue la dirección de las referencias: primero las tablas referenciadas, después las que las referencian. Es la misma lógica por la que en Python definías una función antes de llamarla.
+
+## Lo que sigue
+
+Ahora entiendes por qué la biblioteca reparte sus datos en varias tablas: para que cada hecho se almacene una sola vez, sin redundancia ni riesgo de contradicción. Los autores en `autores`, los libros en `libros`, conectados por la clave foránea `autor_id`. El diseño es limpio y consistente.
+
+Pero ese diseño tiene un costo que llevamos arrastrando desde la lección anterior: la información que antes estaba junta ahora está separada. Para mostrar un libro con el nombre de su autor, necesitamos datos de las dos tablas a la vez, y todas nuestras consultas han trabajado con una sola. Lo que el diseño separó por buenas razones, las consultas necesitan volver a reunirlo. La operación que reconstruye la conexión entre tablas relacionadas —que sigue la clave foránea para traer los datos del otro lado— es el `JOIN`, y es el tema de la siguiente lección. Es, probablemente, la operación más importante de SQL.

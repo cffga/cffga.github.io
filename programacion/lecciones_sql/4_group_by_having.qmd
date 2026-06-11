@@ -1,0 +1,139 @@
+---
+title: "Agrupar: GROUP BY y HAVING"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior cerró con una pregunta concreta: sabemos calcular el promedio de todos los libros, pero queremos el promedio *por género*; el número de libros *de cada autor*; el tiraje *por década*. La agregación global resume la tabla entera en un solo valor, y eso pierde justo el detalle que nos interesa.
+
+En Python resolvías esto con un patrón que repetías constantemente: recorrer los datos y acumular en un diccionario, una clave por grupo.
+
+```python
+conteos = {}
+for libro in libros:
+    g = libro["genero"]
+    conteos[g] = conteos.get(g, 0) + 1
+```
+
+Recorrías fila por fila, identificabas a qué grupo pertenecía cada una, y acumulabas en la entrada correspondiente. SQL hace exactamente esto con una sola cláusula, `GROUP BY`, que parte la tabla en grupos según los valores de una columna y aplica la agregación a cada grupo por separado. Todo el andamiaje del bucle y el diccionario desaparece.
+
+## La cláusula GROUP BY
+
+`GROUP BY` va después del `WHERE` (si lo hay) e indica la columna por la que agrupar. La idea es: todas las filas que comparten el mismo valor en esa columna forman un grupo, y cada función de agregación se calcula dentro de cada grupo, no sobre toda la tabla.
+
+Para contar cuántos libros hay de cada género:
+
+```sql
+SELECT genero, COUNT(*) AS cantidad
+FROM libros
+GROUP BY genero;
+```
+
+| genero | cantidad |
+|--------|----------|
+| Novela | 3        |
+| Cuento | 2        |
+
+El resultado tiene una fila por género, no una por libro. SQL juntó las tres novelas en un grupo y los dos cuentos en otro, y aplicó `COUNT(*)` a cada grupo. Compáralo con el diccionario de Python: las claves del diccionario son los valores de `genero`, y cada valor del diccionario es el `COUNT`. La consulta produce el mismo resultado que el bucle, en tres líneas y sin describir el procedimiento.
+
+## Por qué ahora sí conviven columna y agregación
+
+La lección anterior advertía que `SELECT titulo, AVG(anio)` daba error, porque un promedio único no podía convivir con un título por fila. Con `GROUP BY` esa tensión desaparece, y vale la pena entender por qué, porque es la clave de toda la lección.
+
+Cuando agrupas por `genero`, cada grupo tiene un único valor de género —es lo que lo define como grupo— y un único valor agregado. Por eso `SELECT genero, COUNT(*)` sí tiene sentido: cada fila del resultado corresponde a un grupo, y para cada grupo hay un género y un conteo, ambos bien definidos.
+
+De aquí sale la regla fundamental de `GROUP BY`, y conviene fijarla porque es la fuente de error más común al aprenderla: **toda columna que aparezca en el `SELECT` junto a una agregación debe estar en el `GROUP BY`**. Si agrupas por `genero`, puedes seleccionar `genero` y cualquier agregación, pero no `titulo`, porque dentro de un grupo hay muchos títulos distintos y el motor no sabría cuál mostrar. La columna por la que agrupas es la única "normal" que puede aparecer, porque es constante dentro de cada grupo.
+
+## Varias agregaciones por grupo
+
+Dentro de cada grupo puedes calcular tantos resúmenes como quieras. Para cada género, su cantidad de libros, su año promedio y su total de ejemplares:
+
+```sql
+SELECT genero,
+       COUNT(*)        AS cantidad,
+       AVG(anio)       AS anio_promedio,
+       SUM(ejemplares) AS total_ejemplares
+FROM libros
+GROUP BY genero;
+```
+
+| genero | cantidad | anio_promedio | total_ejemplares |
+|--------|----------|---------------|------------------|
+| Novela | 3        | 1961.7        | 9                |
+| Cuento | 2        | 1946.5        | 6                |
+
+Cada función se evalúa de forma independiente dentro de cada grupo. Esto es lo que en Python te habría obligado a mantener varios diccionarios en paralelo —uno para los conteos, otro para las sumas, otro para los promedios— actualizándolos todos en el mismo bucle. SQL los calcula juntos sin esfuerzo adicional.
+
+## Agrupar por varias columnas
+
+Puedes agrupar por más de una columna, separándolas por comas. Entonces un grupo lo forman las filas que coinciden en *todas* las columnas del `GROUP BY`. Si la tabla tuviera, por ejemplo, libros de varios géneros y varias décadas, agrupar por ambos daría el conteo de cada combinación género-década:
+
+```sql
+SELECT genero, (anio / 10) * 10 AS decada, COUNT(*) AS cantidad
+FROM libros
+GROUP BY genero, (anio / 10) * 10;
+```
+
+La expresión `(anio / 10) * 10` redondea el año a su década usando división entera —en PostgreSQL, la división entre dos enteros es entera, igual que el operador `//` de Python—. El resultado tiene una fila por cada combinación de género y década presente en los datos. Agrupar por varias columnas es como usar una tupla de claves en el diccionario de Python: el grupo se identifica por la combinación, no por un solo valor.
+
+## Filtrar grupos: HAVING
+
+Aquí aparece una limitación sutil. Supongamos que solo te interesan los géneros con más de dos libros. Tu primer instinto sería usar `WHERE`, pero `WHERE` no sirve para esto, y la razón revela cómo funciona SQL por dentro.
+
+`WHERE` filtra *filas individuales*, y lo hace *antes* de agrupar. En el momento en que `WHERE` actúa, los grupos todavía no existen y `COUNT(*)` aún no se ha calculado. No puedes filtrar por el resultado de una agregación que aún no ha ocurrido. Para filtrar *grupos* según su valor agregado, SQL tiene una cláusula distinta: `HAVING`, que actúa *después* de agrupar.
+
+```sql
+SELECT genero, COUNT(*) AS cantidad
+FROM libros
+GROUP BY genero
+HAVING COUNT(*) > 2;
+```
+
+| genero | cantidad |
+|--------|----------|
+| Novela | 3        |
+
+`HAVING COUNT(*) > 2` descarta los grupos cuyo conteo no supera dos: el grupo "Cuento", con dos libros, queda fuera; "Novela", con tres, pasa. La diferencia entre `WHERE` y `HAVING` es de momento: `WHERE` filtra filas antes de agrupar; `HAVING` filtra grupos después de agregar. Una forma de recordarlo: `WHERE` no puede mencionar funciones de agregación, porque actúa cuando aún no existen; `HAVING` existe precisamente para mencionarlas.
+
+## El orden completo de una consulta
+
+Con `HAVING` ya hemos visto casi todas las cláusulas que componen una consulta de lectura, y conviene fijar el orden en que se escriben, porque es obligatorio y siempre el mismo:
+
+```sql
+SELECT   columnas y agregaciones
+FROM     tabla
+WHERE    condición sobre filas
+GROUP BY columnas de agrupación
+HAVING   condición sobre grupos
+ORDER BY columnas de ordenamiento
+LIMIT    número;
+```
+
+No todas las cláusulas son obligatorias, pero las que aparezcan deben ir en este orden. Y hay una sutileza valiosa: el orden en que SQL las *ejecuta* no es el orden en que las *escribes*. El motor aplica primero `FROM`, luego `WHERE`, luego `GROUP BY`, luego `HAVING`, después calcula el `SELECT`, y al final `ORDER BY` y `LIMIT`. Por eso `WHERE` no puede usar agregaciones (se ejecuta antes que ellas) y `HAVING` sí (se ejecuta después). Entender este orden de ejecución explica casi todas las reglas que parecen arbitrarias al principio.
+
+## Ejemplo integrador
+
+Reunamos todo en una consulta que responde una pregunta compuesta: de los libros publicados a partir de 1940, ¿qué géneros tienen un promedio de año posterior a 1950, ordenados del más reciente al más antiguo en promedio?
+
+```sql
+SELECT genero,
+       COUNT(*)  AS cantidad,
+       AVG(anio) AS anio_promedio
+FROM libros
+WHERE anio >= 1940
+GROUP BY genero
+HAVING AVG(anio) > 1950
+ORDER BY anio_promedio DESC;
+```
+
+| genero | cantidad | anio_promedio |
+|--------|----------|---------------|
+| Novela | 3        | 1961.7        |
+
+La consulta encadena todas las herramientas en su orden lógico. `WHERE` descarta los libros anteriores a 1940. `GROUP BY` arma los grupos por género. `HAVING` conserva solo los grupos cuyo promedio supera 1950. `ORDER BY` los ordena por ese promedio. Cada cláusula opera sobre el resultado de la anterior, y juntas convierten una pregunta que en Python habría sido un bucle con varios diccionarios y un filtrado final en una consulta que se lee casi como su enunciado.
+
+## Lo que sigue
+
+Hasta ahora hemos trabajado siempre con una sola tabla, `libros`. Y habrás notado algo incómodo: la tabla guarda `autor_id`, un número, en lugar del nombre del autor. Si queremos mostrar "García Márquez" en vez de "1", esa información no está en `libros`; está en otra tabla, `autores`. Los datos de la biblioteca viven repartidos en varias tablas relacionadas, y hasta ahora no hemos podido tocar más de una a la vez.
+
+Antes de aprender a combinarlas, conviene entender *por qué* están separadas: por qué el nombre del autor no está simplemente repetido en cada libro suyo. Esa pregunta —cómo se diseña una base de datos, y por qué la repetición de información es un problema que el diseño busca evitar— es el tema de la siguiente lección, y es el cimiento sobre el que descansa todo lo que vendrá después.

@@ -1,0 +1,127 @@
+---
+title: "Combinar tablas: JOIN"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior explicó por qué la biblioteca separa sus datos: los autores en una tabla, los libros en otra, conectados por la clave foránea `autor_id`. Ese diseño elimina la redundancia, pero deja un trabajo pendiente. Para mostrar un libro junto al nombre de su autor, los datos de las dos tablas tienen que reunirse, y todas nuestras consultas han tocado una sola tabla a la vez.
+
+Pensemos cómo lo habrías hecho en Python, con dos listas de diccionarios. Para cada libro, buscarías en la lista de autores el que tuviera el `id` igual al `autor_id` del libro:
+
+```python
+for libro in libros:
+    for autor in autores:
+        if autor["id"] == libro["autor_id"]:
+            print(libro["titulo"], autor["nombre"])
+```
+
+Un bucle dentro de otro, emparejando filas por la coincidencia entre clave foránea y clave primaria. Ese emparejamiento es justo lo que hace el `JOIN`, pero declarativo: describes qué tablas combinar y por qué columna se corresponden, y el motor arma los pares.
+
+## El INNER JOIN
+
+La forma más común de combinar dos tablas es el `INNER JOIN`. Se escribe en el `FROM`: nombras la primera tabla, luego `JOIN` y la segunda, y luego `ON` con la condición que empareja sus filas.
+
+```sql
+SELECT libros.titulo, autores.nombre
+FROM libros
+JOIN autores ON libros.autor_id = autores.id;
+```
+
+| titulo               | nombre            |
+|----------------------|-------------------|
+| Cien años de soledad | Gabriel García M. |
+| Rayuela              | Julio Cortázar    |
+| Ficciones            | Jorge Luis Borges |
+| El Aleph             | Jorge Luis Borges |
+
+La condición `ON libros.autor_id = autores.id` es la traducción exacta del `if autor["id"] == libro["autor_id"]` del bucle: empareja cada libro con el autor cuya clave primaria coincide con la clave foránea del libro. Para cada par que cumple la condición, el resultado tiene una fila que combina columnas de ambas tablas. Borges aparece dos veces en el resultado, una por cada libro suyo, pero su información sigue guardada una sola vez en `autores`: el `JOIN` la trae cuando hace falta, sin reintroducir la redundancia que el diseño eliminó.
+
+## Nombres calificados y por qué importan
+
+Habrás notado que las columnas se escriben `libros.titulo`, `autores.nombre`: el nombre de la tabla, un punto, y el nombre de la columna. Esto se llama *nombre calificado*, y cuando una consulta combina varias tablas a menudo es obligatorio.
+
+La razón es la ambigüedad. Tanto `libros` como `autores` tienen una columna `id`. Si escribieras solo `id` en una consulta con `JOIN`, el motor no sabría a cuál de las dos te refieres y daría error. Calificar el nombre con la tabla —`libros.id` frente a `autores.id`— elimina la ambigüedad. Para columnas que existen en una sola de las tablas, como `titulo`, calificar no es estrictamente necesario, pero es buena costumbre hacerlo siempre en consultas con `JOIN`: la consulta se lee mejor cuando queda claro de qué tabla viene cada columna.
+
+## Alias de tabla
+
+Escribir el nombre completo de la tabla ante cada columna se vuelve tedioso cuando los nombres son largos o las tablas son varias. Igual que `AS` daba un alias a una columna en la primera lección, también puede dar un alias a una tabla, normalmente una o dos letras:
+
+```sql
+SELECT l.titulo, a.nombre, a.nacionalidad
+FROM libros AS l
+JOIN autores AS a ON l.autor_id = a.id;
+```
+
+`libros AS l` y `autores AS a` rebautizan las tablas como `l` y `a` durante la consulta, y a partir de ahí se usan esos alias para calificar las columnas. La palabra `AS` es opcional también aquí —`FROM libros l` funciona igual—, pero escribirla hace la intención explícita. Los alias de tabla son casi obligatorios en consultas con varios `JOIN`, donde escribir los nombres completos haría la consulta ilegible.
+
+## El JOIN combinado con todo lo demás
+
+El `JOIN` no reemplaza a las cláusulas que ya conoces: convive con ellas. Una consulta puede combinar tablas, filtrar el resultado, agruparlo y ordenarlo, todo a la vez. Las cláusulas se aplican sobre la tabla combinada como si fuera una sola.
+
+Para contar cuántos libros tiene cada autor, ordenados de más a menos:
+
+```sql
+SELECT a.nombre, COUNT(*) AS cantidad_libros
+FROM libros AS l
+JOIN autores AS a ON l.autor_id = a.id
+GROUP BY a.nombre
+ORDER BY cantidad_libros DESC;
+```
+
+| nombre            | cantidad_libros |
+|-------------------|-----------------|
+| Jorge Luis Borges | 2               |
+| Gabriel García M. | 1               |
+| Julio Cortázar    | 1               |
+
+El `JOIN` une libros con autores; el `GROUP BY` agrupa las filas combinadas por nombre de autor; `COUNT(*)` cuenta los libros de cada grupo; `ORDER BY` los ordena. Es una pregunta —"¿cuántos libros tiene cada autor?"— que necesita las dos tablas y todo el aparato de agregación de las lecciones previas, y que se resuelve encadenando lo conocido con la única pieza nueva.
+
+## El problema del INNER JOIN: las filas sin pareja
+
+El `INNER JOIN` tiene una característica que a veces es exactamente lo que quieres y a veces un problema: solo incluye las filas que tienen pareja en la otra tabla. Si un autor no tiene ningún libro registrado, no aparece en ningún par, y por tanto desaparece del resultado.
+
+Supongamos que en `autores` hay una autora, Clarice Lispector, de la que la biblioteca todavía no tiene libros. La consulta anterior, con `INNER JOIN`, no la mostrará en absoluto: como no tiene libros, no hay ninguna fila de `libros` que se empareje con ella, y queda fuera. Para la pregunta "¿cuántos libros tiene cada autor?", eso es un problema: la respuesta correcta para Clarice es "cero", pero el `INNER JOIN` la omite en lugar de mostrar el cero.
+
+El `INNER JOIN` responde a la pregunta "¿qué pares existen?". Pero a veces la pregunta es "¿qué hay en esta tabla, tenga o no pareja en la otra?". Para eso existe otro tipo de `JOIN`.
+
+## El LEFT JOIN
+
+El `LEFT JOIN` conserva *todas* las filas de la tabla de la izquierda —la que va antes de `JOIN`—, tengan o no pareja en la derecha. Cuando una fila de la izquierda no tiene pareja, el resultado la incluye igualmente, rellenando con `NULL` las columnas de la tabla derecha.
+
+```sql
+SELECT a.nombre, l.titulo
+FROM autores AS a
+LEFT JOIN libros AS l ON l.autor_id = a.id;
+```
+
+| nombre            | titulo               |
+|-------------------|----------------------|
+| Gabriel García M. | Cien años de soledad |
+| Julio Cortázar    | Rayuela              |
+| Jorge Luis Borges | Ficciones            |
+| Jorge Luis Borges | El Aleph             |
+| Clarice Lispector | NULL                 |
+
+Ahora `autores` está a la izquierda, y todos sus autores aparecen. Clarice, que no tiene libros, sale con `NULL` en la columna `titulo`: el `LEFT JOIN` no la descarta, sino que indica con `NULL` que no hay libro asociado. Aquí reaparece el `NULL` de la segunda lección, ahora generado por el propio `JOIN` para señalar la ausencia de pareja.
+
+Esto permite responder correctamente "¿cuántos libros tiene cada autor, incluidos los que no tienen ninguno?". La clave está en usar `COUNT(l.id)` en lugar de `COUNT(*)`: como `COUNT` de una columna ignora los `NULL` —lo vimos en la lección sobre agregación—, cuenta cero para los autores sin libros, en vez de contar la fila de relleno.
+
+```sql
+SELECT a.nombre, COUNT(l.id) AS cantidad_libros
+FROM autores AS a
+LEFT JOIN libros AS l ON l.autor_id = a.id
+GROUP BY a.nombre
+ORDER BY cantidad_libros DESC;
+```
+
+Clarice aparece ahora con `cantidad_libros = 0`, que es la respuesta correcta. La elección entre `INNER` y `LEFT JOIN` depende de la pregunta: si solo te interesan las filas con pareja, `INNER`; si quieres conservar todas las de una tabla aunque no la tengan, `LEFT`.
+
+## Una nota sobre RIGHT y FULL
+
+Por simetría, existe el `RIGHT JOIN`, que conserva todas las filas de la tabla *derecha* en lugar de la izquierda. En la práctica casi no se usa, porque cualquier `RIGHT JOIN` puede reescribirse como `LEFT JOIN` intercambiando el orden de las tablas, y `LEFT` resulta más natural de leer. Existe también el `FULL JOIN`, que conserva las filas sin pareja de *ambas* tablas. Son menos frecuentes, pero responden a la misma lógica: cada tipo de `JOIN` decide qué hacer con las filas que no encuentran pareja. Conociendo `INNER` y `LEFT` tienes cubierto el grueso del trabajo real.
+
+## Lo que sigue
+
+Con el `JOIN` puedes reunir lo que el diseño separó, y responder preguntas que abarcan varias tablas a la vez. Junto con el filtrado, la agregación y el agrupamiento, tienes ya un repertorio capaz de resolver la mayoría de las consultas que surgen en la práctica.
+
+Pero hay un tipo de pregunta que todavía se nos resiste: las que necesitan el resultado de *otra* consulta para formularse. "¿Qué libros son más recientes que el promedio?" requiere primero calcular ese promedio, y luego usarlo como criterio de filtrado. "¿Qué autores no tienen ningún libro?" requiere primero saber qué autores sí tienen libros. Son preguntas que se construyen sobre el resultado de una consulta previa, anidando una dentro de otra. Esa capacidad de usar una consulta como parte de otra son las *subconsultas*, y es el tema de la siguiente lección.

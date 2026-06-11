@@ -1,0 +1,127 @@
+---
+title: "Ordenar, acotar y resumir: ORDER BY, LIMIT y agregación"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior dejó dos limitaciones planteadas. La primera: el resultado de una consulta llega en un orden que no controlamos, y siempre completo. La segunda: todas nuestras preguntas han sido sobre filas individuales, pero muchas preguntas son sobre el conjunto entero —cuántos libros hay, cuál es el año promedio—. Esta lección resuelve ambas. Primero ordenamos y acotamos; después aprendemos a resumir.
+
+## Ordenar el resultado: ORDER BY
+
+En Python ordenabas una lista con `sorted`, indicando opcionalmente una clave. SQL ordena el resultado de una consulta con `ORDER BY`, seguido de la columna por la que quieres ordenar. Va al final de la consulta, después del `WHERE`:
+
+```sql
+SELECT titulo, anio FROM libros ORDER BY anio;
+```
+
+| titulo               | anio |
+|----------------------|------|
+| Ficciones            | 1944 |
+| El Aleph             | 1949 |
+| Pedro Páramo         | 1955 |
+| Rayuela              | 1963 |
+| Cien años de soledad | 1967 |
+
+Las filas salen ordenadas por año, de menor a mayor. Ese es el orden por defecto, *ascendente*, que puedes hacer explícito con `ASC`. Para ordenar de mayor a menor, añades `DESC`:
+
+```sql
+SELECT titulo, anio FROM libros ORDER BY anio DESC;
+```
+
+Esto invierte el orden: primero el libro más reciente. En Python lograbas lo mismo con `sorted(..., reverse=True)` o negando la clave; en SQL basta con la palabra `DESC`, que se lee directamente como "descendente".
+
+Puedes ordenar por varias columnas, separándolas por comas. SQL ordena primero por la primera columna y, en caso de empate, por la segunda, exactamente como cuando en Python usabas una tupla como clave de ordenamiento:
+
+```sql
+SELECT titulo, genero, anio FROM libros ORDER BY genero, anio DESC;
+```
+
+Esto agrupa los libros por género en orden alfabético y, dentro de cada género, los ordena del más reciente al más antiguo. Cada columna del `ORDER BY` puede llevar su propio `ASC` o `DESC`.
+
+## Acotar el resultado: LIMIT y OFFSET
+
+Ordenar suele ser el paso previo a quedarse con unos pocos. Las preguntas "el libro más reciente" o "los tres más antiguos" son, en realidad, "ordena y toma los primeros". Para tomar solo las primeras filas, SQL usa `LIMIT`:
+
+```sql
+SELECT titulo, anio FROM libros ORDER BY anio DESC LIMIT 3;
+```
+
+| titulo               | anio |
+|----------------------|------|
+| Cien años de soledad | 1967 |
+| Rayuela              | 1963 |
+| Pedro Páramo         | 1955 |
+
+`LIMIT 3` devuelve las tres primeras filas del resultado ordenado: los tres libros más recientes. Esto es el slicing `[:3]` de Python, pero con una diferencia conceptual importante. El `ORDER BY` debe ir *antes* del `LIMIT` y es imprescindible: sin un orden definido, "las primeras tres" no significa nada, porque SQL no garantiza ningún orden por sí mismo. En Python la lista ya tenía un orden; aquí tienes que imponerlo antes de recortar.
+
+Para saltarte algunas filas antes de empezar a tomar, existe `OFFSET`. La combinación de `LIMIT` y `OFFSET` permite recorrer el resultado por bloques, lo que es la base de la *paginación*: mostrar los resultados de diez en diez, por ejemplo.
+
+```sql
+SELECT titulo, anio FROM libros ORDER BY anio DESC LIMIT 2 OFFSET 2;
+```
+
+`OFFSET 2` salta las dos primeras filas y `LIMIT 2` toma las dos siguientes: el tercero y el cuarto libro más recientes. Es el equivalente al slicing `[2:4]`. El `OFFSET` cuenta desde cero, igual que los índices de Python.
+
+## Resumir el conjunto: funciones de agregación
+
+Hasta aquí, cada fila del resultado correspondía a una fila de la tabla: filtrábamos, ordenábamos, recortábamos, pero seguíamos viendo libros individuales. Hay otro tipo de pregunta completamente distinto: ¿*cuántos* libros hay? ¿Cuál es el año *promedio* de publicación? ¿El total de ejemplares? Estas preguntas no devuelven filas de la tabla; devuelven un único valor que resume todas las filas.
+
+En Python las respondías con funciones que recibían una lista y devolvían un número: `len(libros)`, `sum(ejemplares)`, `sum(anios)/len(anios)`. SQL tiene las suyas, llamadas *funciones de agregación*, porque agregan muchas filas en un solo valor.
+
+`COUNT(*)` cuenta las filas:
+
+```sql
+SELECT COUNT(*) FROM libros;
+```
+
+| count |
+|-------|
+| 5     |
+
+Es el `len()` de la tabla. `COUNT(*)` cuenta todas las filas; si en cambio escribes `COUNT(anio)`, cuenta solo las filas donde `anio` no es `NULL`, lo que permite saber cuántos valores hay realmente registrados en una columna. Esta distinción conecta con lo que vimos sobre `NULL`: la ausencia de valor no se cuenta.
+
+`SUM` suma los valores de una columna numérica, `AVG` calcula el promedio, y `MIN` y `MAX` devuelven el menor y el mayor:
+
+```sql
+SELECT SUM(ejemplares) AS total_ejemplares,
+       AVG(anio)       AS anio_promedio,
+       MIN(anio)       AS mas_antiguo,
+       MAX(anio)       AS mas_reciente
+FROM libros;
+```
+
+| total_ejemplares | anio_promedio | mas_antiguo | mas_reciente |
+|------------------|---------------|-------------|--------------|
+| 15               | 1955.6        | 1944        | 1967         |
+
+Una sola consulta calcula cuatro resúmenes a la vez. Cada función recorre todas las filas y devuelve un valor; el resultado es una única fila con cuatro columnas. Nota que cada agregación lleva su alias `AS`: igual que con las columnas calculadas de la primera lección, sin alias el motor pondría nombres poco útiles, porque ninguna de estas columnas existe en la tabla original. `MIN` y `MAX` son los mismos `min()` y `max()` de Python; `SUM` es `sum()`; `AVG` es lo que escribías como `sum()/len()`, ahora con nombre propio.
+
+## Agregación con filtro
+
+Las funciones de agregación se combinan naturalmente con `WHERE`. El filtro se aplica primero, y la agregación resume solo las filas que pasaron. Para el año promedio de las novelas, no de todos los libros:
+
+```sql
+SELECT AVG(anio) AS promedio_novelas
+FROM libros
+WHERE genero = 'Novela';
+```
+
+El `WHERE genero = 'Novela'` selecciona las tres novelas, y `AVG` promedia solo sus años. El orden de las operaciones es el natural: primero se eligen las filas, luego se resumen. Esto refleja exactamente lo que hacías en Python cuando promediabas una lista filtrada por comprensión: `anios = [l["anio"] for l in libros if l["genero"]=="Novela"]` y luego `sum(anios)/len(anios)`. SQL une las dos operaciones en una consulta.
+
+## Una advertencia sobre mezclar columnas y agregaciones
+
+Hay un error tentador que conviene anticipar. Podrías querer ver, en la misma consulta, el título de cada libro junto al promedio de todos:
+
+```sql
+SELECT titulo, AVG(anio) FROM libros;   -- esto da error
+```
+
+PostgreSQL rechaza esta consulta. La razón es que `AVG(anio)` produce un solo valor para toda la tabla, mientras que `titulo` tiene un valor distinto por fila: el motor no sabe cómo conciliar cinco títulos con un único promedio. Una agregación colapsa muchas filas en una; no puede convivir con una columna que sigue teniendo una por fila.
+
+Esto tiene una excepción importante: cuando agrupas las filas en subconjuntos y pides una agregación *por grupo*. Entonces sí tiene sentido ver una columna junto a una agregación, porque cada grupo tiene un valor de esa columna y un valor agregado. Pero esa capacidad —agregar por grupo en lugar de sobre toda la tabla— es justamente lo que todavía no tenemos.
+
+## Lo que sigue
+
+Ahora puedes ordenar, acotar y resumir. Pero el resumen es siempre global: el promedio de *todos* los libros, el total de *todos* los ejemplares. La pregunta que el último ejemplo dejó abierta es la verdaderamente interesante: ¿y si quiero el promedio *por género*? ¿El número de libros *de cada autor*? ¿El tiraje total *por década*?
+
+En Python resolvías esto recorriendo los datos y acumulando en un diccionario, una clave por grupo: sumabas en `totales[genero]` y contabas en `conteos[genero]`. Era un patrón que escribías a mano una y otra vez. SQL lo expresa en una sola cláusula, `GROUP BY`, que parte la tabla en grupos y aplica la agregación a cada uno por separado. Agrupar es el tema de la siguiente lección, y es donde el poder de resumir se vuelve realmente expresivo.

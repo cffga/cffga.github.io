@@ -1,0 +1,127 @@
+---
+title: "Subconsultas"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior dejó planteado un tipo de pregunta que aún no podemos responder: las que necesitan el resultado de otra consulta para formularse. "¿Qué libros son más recientes que el promedio?" exige calcular primero ese promedio. "¿Qué autores no tienen ningún libro?" exige saber primero cuáles sí tienen. Son preguntas de dos pasos, donde el segundo depende del primero.
+
+En Python esto era natural: calculabas un valor, lo guardabas en una variable, y lo usabas en el paso siguiente.
+
+```python
+promedio = sum(l["anio"] for l in libros) / len(libros)
+recientes = [l for l in libros if l["anio"] > promedio]
+```
+
+Dos instrucciones: una calcula el promedio, la otra lo usa. SQL permite hacer ambas cosas en una sola consulta, escribiendo una consulta *dentro* de otra. La consulta interior se llama *subconsulta*, y su resultado alimenta a la exterior. Es el equivalente de anidar el cálculo del promedio directamente donde lo necesitas, sin variable intermedia.
+
+## Subconsultas que devuelven un solo valor
+
+El caso más simple es una subconsulta que produce un único valor, como un promedio. Se escribe entre paréntesis, en el lugar donde iría ese valor. Para los libros más recientes que el promedio:
+
+```sql
+SELECT titulo, anio
+FROM libros
+WHERE anio > (SELECT AVG(anio) FROM libros);
+```
+
+| titulo               | anio |
+|----------------------|------|
+| Cien años de soledad | 1967 |
+| Rayuela              | 1963 |
+
+La subconsulta `(SELECT AVG(anio) FROM libros)` calcula el año promedio —un solo número— y la consulta exterior lo usa como si lo hubieras escrito a mano. SQL ejecuta primero la interior, obtiene el promedio, y luego filtra con él. Es exactamente la secuencia de dos pasos de Python, comprimida en una consulta. La diferencia es que no tienes que conocer el promedio de antemano ni guardarlo: la subconsulta lo calcula en el momento.
+
+Una subconsulta así, que devuelve un único valor, se llama *escalar*, y puede aparecer en cualquier lugar donde cabría un valor: en un `WHERE`, en un `SELECT`, en un `HAVING`. Por ejemplo, mostrar cada libro junto a cuántos años se aparta del promedio:
+
+```sql
+SELECT titulo, anio - (SELECT AVG(anio) FROM libros) AS desviacion
+FROM libros;
+```
+
+Aquí la subconsulta aparece dentro del `SELECT`, en una columna calculada. Se evalúa una vez y su valor se usa para cada fila.
+
+## Subconsultas que devuelven una columna: IN
+
+Las subconsultas no se limitan a un solo valor. Pueden devolver una columna entera —una lista de valores—, y entonces se combinan con el operador `IN` que vimos en la lección sobre `WHERE`. Recuerda que `IN` comprobaba la pertenencia a una lista escrita a mano; ahora esa lista puede ser el resultado de una consulta.
+
+Supongamos que quieres los títulos de los libros escritos por autores argentinos. Los autores argentinos están en la tabla `autores`; sus libros, en `libros`. Una forma de resolverlo es con una subconsulta que obtenga los `id` de los autores argentinos, y luego filtrar los libros cuyo `autor_id` esté en esa lista:
+
+```sql
+SELECT titulo
+FROM libros
+WHERE autor_id IN (SELECT id FROM autores WHERE nacionalidad = 'Argentina');
+```
+
+| titulo    |
+|-----------|
+| Rayuela   |
+| Ficciones |
+| El Aleph  |
+
+La subconsulta `(SELECT id FROM autores WHERE nacionalidad = 'Argentina')` devuelve los `id` de Cortázar y Borges. La consulta exterior conserva los libros cuyo `autor_id` esté entre ellos. Se lee directamente: "los libros cuyo autor está en el conjunto de autores argentinos".
+
+Habrás notado que esta pregunta también podría resolverse con un `JOIN`: combinar las tablas y filtrar por nacionalidad. A menudo hay más de una forma de escribir la misma consulta, y tanto el `JOIN` como la subconsulta son válidos. La elección depende de cuál exprese mejor la intención: el `JOIN` cuando quieres datos de ambas tablas en el resultado; la subconsulta cuando solo quieres filtrar una tabla usando información de otra, sin mostrar esa otra.
+
+## Negación: NOT IN y los autores sin libros
+
+`IN` tiene su negación, `NOT IN`, que conserva las filas cuyo valor *no* está en el resultado de la subconsulta. Esto resuelve la otra pregunta que quedó pendiente: los autores sin ningún libro.
+
+La idea: obtener los `id` de todos los autores que sí aparecen como `autor_id` en `libros`, y quedarse con los autores que *no* están en esa lista.
+
+```sql
+SELECT nombre
+FROM autores
+WHERE id NOT IN (SELECT autor_id FROM libros WHERE autor_id IS NOT NULL);
+```
+
+| nombre            |
+|-------------------|
+| Clarice Lispector |
+
+La subconsulta devuelve los `id` de autores que tienen al menos un libro; `NOT IN` conserva los que no están entre ellos, es decir, los autores sin libros. En la lección sobre `JOIN` resolvimos esta misma pregunta con un `LEFT JOIN` y un conteo; aquí la resolvemos con una subconsulta. Son dos caminos al mismo destino, y conviene conocer ambos porque cada uno se lee con más naturalidad según el caso.
+
+Hay una sutileza en el `WHERE autor_id IS NOT NULL` dentro de la subconsulta, y vale la pena detenerse porque es una trampa clásica. Si algún libro tuviera `autor_id` nulo, `NOT IN` se comportaría de forma inesperada: la presencia de un `NULL` en la lista hace que `NOT IN` no devuelva ninguna fila, por la misma lógica de que nada es comparable con `NULL` que vimos en su momento. Filtrar los `NULL` dentro de la subconsulta evita ese problema. Es el tipo de detalle que `NULL` introduce una y otra vez, y la razón por la que conviene tenerlo siempre presente.
+
+## Subconsultas correlacionadas y EXISTS
+
+Las subconsultas que hemos visto se ejecutan una sola vez, independientemente de la consulta exterior. Hay una variante más potente en la que la subconsulta se evalúa *una vez por cada fila* de la exterior, usando valores de esa fila. Se llama *subconsulta correlacionada*, porque está correlacionada con la fila que se está examinando.
+
+El operador `EXISTS` es su compañero natural. `EXISTS (subconsulta)` devuelve verdadero si la subconsulta produce al menos una fila, y falso si no produce ninguna. No importa qué devuelva; solo si devuelve algo. Para encontrar los autores que tienen al menos un libro —la pregunta inversa a la anterior—:
+
+```sql
+SELECT nombre
+FROM autores AS a
+WHERE EXISTS (SELECT 1 FROM libros AS l WHERE l.autor_id = a.id);
+```
+
+| nombre            |
+|-------------------|
+| Gabriel García M. |
+| Julio Cortázar    |
+| Jorge Luis Borges |
+
+La correlación está en `l.autor_id = a.id`: la subconsulta interior usa `a.id`, un valor que viene de la fila que la consulta exterior está examinando en ese momento. Para cada autor, SQL comprueba si existe algún libro suyo; si existe, el autor pasa. El `SELECT 1` de la subconsulta es una convención: como `EXISTS` solo mira si hay filas, no qué contienen, se selecciona un valor cualquiera —el número 1— en lugar de una columna real, para dejar claro que el contenido no importa.
+
+`EXISTS` suele ser más eficiente que `IN` para esta clase de comprobación, porque puede detenerse en cuanto encuentra la primera fila que cumple, sin construir la lista completa. Para preguntas de "¿existe al menos uno que...?", es la herramienta más directa.
+
+## Subconsultas en FROM
+
+Una subconsulta también puede aparecer en el `FROM`, ocupando el lugar de una tabla. Tiene sentido cuando necesitas consultar sobre un resultado ya resumido: primero produces una tabla intermedia con una subconsulta, y luego consultas sobre ella. Por ejemplo, para obtener el promedio de libros por autor, primero cuentas los libros de cada autor, y luego promedias esos conteos:
+
+```sql
+SELECT AVG(cantidad) AS promedio_libros_por_autor
+FROM (
+    SELECT autor_id, COUNT(*) AS cantidad
+    FROM libros
+    GROUP BY autor_id
+) AS conteos;
+```
+
+La subconsulta interior produce una tabla con un conteo por autor; la exterior promedia esos conteos. La subconsulta en el `FROM` debe llevar un alias —aquí `AS conteos`—, porque la consulta exterior necesita un nombre para referirse a esa tabla intermedia. Esta anidación permite encadenar agregaciones: agregar, y luego agregar sobre el resultado, algo que una sola consulta plana no puede hacer.
+
+## Lo que sigue
+
+Con las subconsultas cierras el repertorio de la *lectura* de datos. Entre `SELECT`, `WHERE`, `ORDER BY`, las agregaciones, `GROUP BY`, los `JOIN` y las subconsultas, puedes formular casi cualquier pregunta sobre una base de datos existente, por compleja que sea. Has aprendido a *consultar*.
+
+Pero una base de datos no es solo para leerla. Los libros se adquieren, los lectores se registran, los préstamos se crean y se cierran, los datos erróneos se corrigen. Hasta ahora hemos tratado las tablas como si fueran fijas, dadas de antemano; en realidad cambian constantemente. Las instrucciones para añadir filas nuevas, modificar las existentes y eliminar las que sobran —el lado de la *escritura* de SQL— son el tema de la siguiente lección.

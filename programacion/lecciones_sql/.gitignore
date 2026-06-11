@@ -1,0 +1,5 @@
+/.quarto/
+**/*.quarto_ipynb
+leccion_*
+reporte.json
+*.db

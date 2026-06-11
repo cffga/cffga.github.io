@@ -1,0 +1,121 @@
+---
+title: "Vistas e índices"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior cerró el ciclo de leer y modificar datos, y dejó planteadas las dos necesidades que aparecen cuando una base de datos se usa de verdad. La primera es de reutilización: hay consultas complejas —un `JOIN` con sus filtros y agregaciones— que escribes una y otra vez, y convendría guardarlas con un nombre, como hacías con una operación repetida al convertirla en función de Python. La segunda es de rendimiento: cuando una tabla tiene millones de filas, hasta una consulta bien escrita puede tardar demasiado. Esta última lección resuelve ambas: las *vistas* para reutilizar, los *índices* para acelerar.
+
+## El problema de las consultas repetidas
+
+Supón que a lo largo de tu trabajo con la biblioteca consultas constantemente los libros junto al nombre y la nacionalidad de su autor. Cada vez escribes el mismo `JOIN`:
+
+```sql
+SELECT l.titulo, l.anio, l.genero, a.nombre, a.nacionalidad
+FROM libros AS l
+JOIN autores AS a ON l.autor_id = a.id;
+```
+
+Repetir esta consulta en cada análisis es tedioso y propenso a errores, igual que repetir el mismo bloque de código en Python lo era antes de aprender a definir funciones. Y la solución es análoga: dar un nombre a la consulta para invocarla por ese nombre cuantas veces haga falta.
+
+## Vistas: dar nombre a una consulta
+
+Una *vista* es una consulta guardada bajo un nombre. Una vez creada, se usa como si fuera una tabla: consultas sobre ella con `SELECT`, le aplicas `WHERE`, `ORDER BY`, lo que quieras. Pero no almacena datos propios; es la consulta la que queda guardada, y cada vez que usas la vista, el motor ejecuta esa consulta por debajo sobre los datos actuales.
+
+Se crea con `CREATE VIEW`, seguido del nombre y la consulta que define la vista:
+
+```sql
+CREATE VIEW libros_con_autor AS
+SELECT l.titulo, l.anio, l.genero, a.nombre AS autor, a.nacionalidad
+FROM libros AS l
+JOIN autores AS a ON l.autor_id = a.id;
+```
+
+A partir de ahora, `libros_con_autor` se comporta como una tabla que tuviera ya combinados los libros con sus autores. Consultarla es directo:
+
+```sql
+SELECT titulo, autor FROM libros_con_autor WHERE nacionalidad = 'Argentina';
+```
+
+| titulo    | autor             |
+|-----------|-------------------|
+| Rayuela   | Julio Cortázar    |
+| Ficciones | Jorge Luis Borges |
+| El Aleph  | Jorge Luis Borges |
+
+La consulta sobre la vista es simple y legible: el `JOIN` quedó escondido tras el nombre `libros_con_autor`, y solo escribes el filtro que te interesa. Esto es exactamente lo que ganabas al encapsular lógica en una función: el detalle complejo se define una vez, y después se invoca por su nombre. La vista cumple para las consultas el mismo papel que la función cumplía para el código.
+
+## Qué es y qué no es una vista
+
+Conviene fijar una idea para evitar un malentendido común. Una vista no guarda una copia de los datos: guarda la *consulta*. Cuando consultas `libros_con_autor`, el motor ejecuta en ese momento el `JOIN` que la define, sobre el contenido actual de `libros` y `autores`. Esto tiene una consecuencia valiosa: la vista siempre está actualizada. Si insertas un libro nuevo, aparece en la vista de inmediato la próxima vez que la consultes, sin que tengas que hacer nada, porque la vista no es una foto de los datos sino una receta para obtenerlos.
+
+Las vistas sirven, entonces, para dar nombres legibles a consultas frecuentes, para esconder la complejidad de un `JOIN` o una agregación tras una interfaz simple, y para ofrecer a distintos usuarios visiones distintas de los mismos datos. Una vista puede definirse sobre cualquier consulta, por compleja que sea: con `GROUP BY`, con subconsultas, con varios `JOIN`. Todo lo que aprendiste a consultar puede empaquetarse en una vista.
+
+Para eliminar una vista que ya no necesitas, `DROP VIEW libros_con_autor`. Como la vista no contiene datos, borrarla no afecta a las tablas subyacentes: solo elimina el nombre y la consulta guardada.
+
+## El problema del rendimiento
+
+Pasemos a la segunda necesidad. Imagina que la tabla `libros` tiene un millón de filas, y consultas con frecuencia por título:
+
+```sql
+SELECT * FROM libros WHERE titulo = 'Rayuela';
+```
+
+¿Cómo encuentra el motor esa fila? Sin ninguna ayuda, no le queda más remedio que recorrer la tabla entera, fila por fila, comparando el título de cada una con 'Rayuela' hasta encontrarla —o hasta agotar el millón de filas si no está. Es exactamente el bucle de búsqueda lineal que escribirías en Python recorriendo una lista: en el peor caso, examina todos los elementos. Para un millón de filas, eso es lento, y si la consulta se repite muchas veces, intolerable.
+
+En Python, cuando necesitabas búsquedas rápidas por una clave, no usabas una lista: usabas un diccionario, que encuentra un valor por su clave casi instantáneamente, sin recorrer todo. Un *índice* en SQL es, en esencia, esa misma idea aplicada a una columna de una tabla.
+
+## Índices: acelerar la búsqueda
+
+Un *índice* es una estructura auxiliar que el motor mantiene aparte de la tabla, organizada para localizar valores de una columna sin recorrerla entera. Funciona como el índice alfabético al final de un libro: en lugar de leer todas las páginas buscando un tema, vas al índice, encuentras el tema ordenado y saltas directo a la página. El motor hace lo mismo con las filas.
+
+Se crea con `CREATE INDEX`, dándole un nombre, la tabla y la columna que indexa:
+
+```sql
+CREATE INDEX idx_libros_titulo ON libros (titulo);
+```
+
+Tras crearlo, la consulta `WHERE titulo = 'Rayuela'` ya no recorre la tabla: el motor usa el índice para ir directamente a las filas con ese título. La diferencia con un millón de filas es enorme —de examinar un millón a examinar un puñado—, y lo mejor es que no cambias la consulta en absoluto. El índice trabaja por detrás; el motor decide usarlo automáticamente cuando le conviene. Escribes la misma consulta de siempre, y simplemente corre más rápido.
+
+## El costo de los índices y cuándo usarlos
+
+Si los índices aceleran las búsquedas, surge la pregunta natural: ¿por qué no indexar todas las columnas? La respuesta revela que un índice no es gratis, y entender su costo es lo que distingue usarlos bien de abusar de ellos.
+
+Un índice ocupa espacio en disco, porque es una estructura adicional que se guarda junto a la tabla. Y, más importante, hay que mantenerlo: cada vez que insertas, modificas o eliminas una fila, el motor debe actualizar también los índices de esa tabla para que sigan reflejando los datos. Un índice acelera las lecturas, pero ralentiza las escrituras, porque cada `INSERT`, `UPDATE` o `DELETE` tiene trabajo extra que hacer.
+
+De ahí la regla práctica. Conviene indexar las columnas por las que filtras o haces `JOIN` con frecuencia: las claves foráneas como `autor_id`, las columnas que aparecen mucho en `WHERE`. No conviene indexar columnas que casi nunca se consultan, ni tablas pequeñas —donde recorrer todo ya es rápido y el índice no compensa—, ni tablas que se modifican constantemente pero se leen poco. Como casi todo en el diseño de bases de datos, es un equilibrio: se paga en velocidad de escritura y espacio lo que se gana en velocidad de lectura.
+
+Las claves primarias, conviene saberlo, vienen indexadas automáticamente: cuando declaraste `id SERIAL PRIMARY KEY` en la lección sobre diseño, PostgreSQL creó por su cuenta un índice sobre `id`. Por eso las búsquedas y los `JOIN` por clave primaria ya eran rápidos sin que hicieras nada. Lo que `CREATE INDEX` te permite es extender esa ventaja a otras columnas que también consultas mucho.
+
+## Ejemplo integrador
+
+Reunamos las dos ideas de la lección en un escenario realista. Tienes una consulta frecuente y costosa: el número de préstamos por libro, mostrando el título. La defines como vista para reutilizarla, y creas un índice sobre la clave foránea que el `JOIN` usa, para que sea rápida:
+
+```sql
+-- Índice sobre la clave foránea por la que se hace el JOIN y el agrupamiento
+CREATE INDEX idx_prestamos_libro ON prestamos (libro_id);
+
+-- Vista que encapsula la consulta de préstamos por libro
+CREATE VIEW prestamos_por_libro AS
+SELECT l.titulo, COUNT(p.id) AS total_prestamos
+FROM libros AS l
+LEFT JOIN prestamos AS p ON p.libro_id = l.id
+GROUP BY l.titulo;
+```
+
+Una vez definidas ambas cosas, responder preguntas sobre préstamos se vuelve simple y eficiente:
+
+```sql
+SELECT titulo, total_prestamos
+FROM prestamos_por_libro
+WHERE total_prestamos > 0
+ORDER BY total_prestamos DESC;
+```
+
+La vista esconde el `LEFT JOIN` y la agregación tras un nombre claro; el índice sobre `prestamos.libro_id` acelera el `JOIN` y el `GROUP BY` que la vista ejecuta por debajo. El `LEFT JOIN` —en lugar de `INNER`— asegura que aparezcan también los libros sin préstamos, con un conteo de cero, por la misma razón que vimos en la lección sobre `JOIN`. La consulta final reúne, en pocas líneas, vistas, índices, `JOIN`, agregación, filtrado y ordenamiento: casi todo el curso convergiendo en una pregunta práctica, escrita con claridad y resuelta con eficiencia.
+
+## Lo que sigue
+
+Con las vistas y los índices se cierra el repertorio del lenguaje SQL. Has ido construyendo, lección a lección, un conjunto completo de herramientas para trabajar con datos relacionales: empezaste leyendo una tabla con `SELECT`, aprendiste a filtrarla, a ordenarla y resumirla, a agruparla, a diseñar las tablas y entender por qué se separan, a reunirlas con `JOIN`, a anidar consultas, a modificar los datos, y finalmente a reutilizar consultas y acelerarlas. Cada herramienta apareció porque la anterior se quedaba corta, y cada una se apoyó en lo que ya sabías de Python.
+
+Pero queda una pregunta práctica que el curso ha esquivado hasta ahora. Hemos escrito muchas consultas, mostrando para cada una su resultado, pero nunca hemos dicho *dónde* se escriben ni *cómo* se ejecutan. ¿Cómo llega una consulta desde tu programa hasta la base de datos, y cómo vuelve el resultado? SQL y Python son las dos mitades del trabajo con datos —SQL vive donde viven los datos y los filtra y resume; Python los recibe para analizarlos—, pero falta el puente concreto que las une. Esa conexión, cómo ejecutar SQL desde un programa de Python y recibir los resultados para seguir trabajando con ellos, es el tema de la última lección, y es la que convierte todo lo aprendido en algo que puedes usar de verdad.

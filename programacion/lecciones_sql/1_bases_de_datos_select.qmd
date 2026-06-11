@@ -1,0 +1,148 @@
+---
+title: "Bases de datos relacionales y SELECT"
+author: "Carlos Flores"
+format: html
+---
+
+En el curso de Python aprendiste a representar conjuntos de datos como listas de diccionarios. Un grupo de libros, por ejemplo, podía verse así:
+
+```python
+libros = [
+    {"titulo": "Cien años de soledad", "autor": "García Márquez", "anio": 1967},
+    {"titulo": "Rayuela",              "autor": "Cortázar",       "anio": 1963},
+    {"titulo": "Pedro Páramo",         "autor": "Rulfo",          "anio": 1955},
+]
+```
+
+Cada diccionario es una fila; cada clave, una columna. Esta estructura ya es, en esencia, una tabla. Y todo lo que hacías con ella —filtrar con comprensiones, ordenar con `sorted`, contar con `len`— eran operaciones sobre una tabla, aunque no la llamaras así.
+
+Esa representación tiene un límite. Funciona mientras los datos quepan en memoria y el programa esté corriendo. Pero una biblioteca real tiene cientos de miles de libros, millones de préstamos acumulados durante años, y esos datos deben sobrevivir a que el programa termine, ser consultados por muchas personas a la vez, y poder recorrerse en milisegundos aunque sean enormes. Una lista de diccionarios en memoria no puede con nada de eso.
+
+Para esos casos existe la *base de datos*, y el lenguaje para hablar con ella es *SQL*. Este curso es sobre ese lenguaje. La buena noticia es que no partes de cero: ya sabes pensar en términos de tablas, filas y columnas. Lo que cambia es cómo le pides a la computadora que opere sobre ellas.
+
+## De imperativo a declarativo
+
+Hay una diferencia de fondo entre Python y SQL que conviene entender desde el principio, porque tiñe todo lo demás.
+
+En Python, cuando querías los títulos de todos los libros, escribías *cómo* obtenerlos paso a paso:
+
+```python
+titulos = []
+for libro in libros:
+    titulos.append(libro["titulo"])
+```
+
+Le decías a la computadora que recorriera la lista y, en cada vuelta, fuera acumulando un título. Eso es programación *imperativa*: describes el procedimiento, paso a paso.
+
+SQL funciona al revés. No describes el procedimiento; describes el *resultado que quieres*, y el motor de la base de datos decide cómo obtenerlo. La misma operación en SQL se lee casi como una frase en inglés:
+
+```sql
+SELECT titulo FROM libros;
+```
+
+"Selecciona el título, de la tabla libros." No hay bucle, no hay acumulador, no hay `append`. Dices qué quieres y el motor se encarga del cómo. Eso es programación *declarativa*, y es la idea central de SQL. Tu trabajo deja de ser escribir el procedimiento y pasa a ser describir con precisión el resultado.
+
+Esta lección se concentra en la pieza más básica de esa descripción: `SELECT`, la instrucción para leer datos de una tabla.
+
+## Una tabla de verdad
+
+Antes de consultar, conviene fijar cómo se ve una tabla en una base de datos. No es muy distinta de la lista de diccionarios, solo más formal. La tabla `libros` de nuestra biblioteca podría tener estas filas:
+
+| id | titulo               | autor_id | anio | genero    | ejemplares |
+|----|----------------------|----------|------|-----------|------------|
+| 1  | Cien años de soledad | 1        | 1967 | Novela    | 4          |
+| 2  | Rayuela              | 2        | 1963 | Novela    | 2          |
+| 3  | Pedro Páramo         | 3        | 1955 | Novela    | 3          |
+| 4  | Ficciones            | 4        | 1944 | Cuento    | 5          |
+| 5  | El Aleph             | 4        | 1949 | Cuento    | 1          |
+
+Cada columna tiene un nombre y contiene un solo tipo de dato: `titulo` siempre es texto, `anio` siempre es un número entero. Cada fila es un libro. La columna `id` da a cada libro un número único que lo identifica sin ambigüedad; volveremos sobre su importancia más adelante. La columna `autor_id` guarda un número en lugar del nombre del autor, un detalle que tendrá sentido en su momento. Por ahora, basta con leer la tabla.
+
+## La instrucción SELECT
+
+La forma mínima de una consulta es `SELECT` seguido de las columnas que quieres, `FROM` y el nombre de la tabla. Para obtener el título y el año de todos los libros:
+
+```sql
+SELECT titulo, anio FROM libros;
+```
+
+El resultado es una tabla nueva, con solo las columnas pedidas y todas las filas:
+
+| titulo               | anio |
+|----------------------|------|
+| Cien años de soledad | 1967 |
+| Rayuela              | 1963 |
+| Pedro Páramo         | 1955 |
+| Ficciones            | 1944 |
+| El Aleph             | 1949 |
+
+Esto es exactamente la comprensión de lista que conoces, `[(l["titulo"], l["anio"]) for l in libros]`, pero declarativa: nombras las columnas y la tabla, y el motor produce el resultado. El punto y coma al final marca el fin de la instrucción; PostgreSQL lo exige cuando se envían varias consultas seguidas, y es buena costumbre escribirlo siempre.
+
+Las columnas aparecen en el orden en que las pides, no en el orden en que están en la tabla. `SELECT anio, titulo` pondría el año primero. El orden de las filas, en cambio, no está garantizado: SQL no promete ningún orden particular a menos que lo pidas explícitamente, igual que un conjunto en Python no garantizaba el orden de sus elementos. Ordenar será el tema de una lección próxima.
+
+## Todas las columnas: el asterisco
+
+Cuando quieres todas las columnas, en lugar de enumerarlas una por una, usas un asterisco:
+
+```sql
+SELECT * FROM libros;
+```
+
+El `*` significa "todas las columnas". Devuelve la tabla completa tal como está. Es cómodo para explorar una tabla que no conoces, pero en código de verdad conviene evitarlo y nombrar las columnas que realmente necesitas: así la consulta es más clara, más rápida, y no se rompe si alguien añade columnas nuevas a la tabla. Es el equivalente a pedir solo los campos que vas a usar en lugar de arrastrar el diccionario entero.
+
+## Renombrar columnas con AS
+
+A veces el nombre de una columna en la tabla no es el más adecuado para el resultado. La palabra `AS` permite darle un nombre distinto a una columna en la salida, sin cambiar nada en la tabla:
+
+```sql
+SELECT titulo AS obra, anio AS publicacion FROM libros;
+```
+
+| obra                 | publicacion |
+|----------------------|-------------|
+| Cien años de soledad | 1967        |
+| Rayuela              | 1963        |
+| ...                  | ...         |
+
+El resultado tiene las mismas columnas, pero con los encabezados `obra` y `publicacion`. Este renombramiento se llama *alias*. De momento parece un detalle cosmético, pero se volverá indispensable cuando una consulta combine varias tablas o calcule valores nuevos, porque entonces las columnas necesitarán nombres que el motor no puede inventar por sí solo.
+
+## Columnas calculadas
+
+`SELECT` no se limita a devolver columnas tal cual: puede calcular valores nuevos a partir de ellas. Si quisieras saber cuántos años tiene cada libro respecto a 2024, lo calculas dentro de la consulta:
+
+```sql
+SELECT titulo, 2024 - anio AS antiguedad FROM libros;
+```
+
+| titulo               | antiguedad |
+|----------------------|------------|
+| Cien años de soledad | 57         |
+| Rayuela              | 61         |
+| Pedro Páramo         | 69         |
+| Ficciones            | 80         |
+| El Aleph             | 75         |
+
+La expresión `2024 - anio` se evalúa para cada fila, igual que una operación dentro de una comprensión de Python. La columna resultante no existe en la tabla; se calcula al vuelo y solo vive en el resultado. Aquí el alias `AS antiguedad` deja de ser opcional en la práctica: sin él, el motor pondría a la columna un nombre poco útil como `?column?`, porque no hay ninguna columna original de donde tomarlo. Por eso toda columna calculada lleva casi siempre su alias.
+
+Las operaciones aritméticas son las mismas que en Python: `+`, `-`, `*`, `/`. El texto también puede manipularse, aunque eso lo veremos cuando haga falta.
+
+## Valores únicos con DISTINCT
+
+Una última operación frecuente al explorar datos: obtener los valores distintos de una columna, sin repeticiones. ¿Qué géneros hay en la biblioteca? La columna `genero` repite "Novela" varias veces; queremos cada género una sola vez. Para eso existe `DISTINCT`:
+
+```sql
+SELECT DISTINCT genero FROM libros;
+```
+
+| genero |
+|--------|
+| Novela |
+| Cuento |
+
+`DISTINCT` elimina las filas duplicadas del resultado, dejando cada combinación una sola vez. Es exactamente lo que hacías al convertir una lista en un `set` en Python para quedarte con los valores únicos. La diferencia es que aquí lo pides como parte de la consulta, y el motor se encarga.
+
+## Lo que sigue
+
+Con `SELECT` ya puedes leer una tabla, elegir columnas, calcular valores y eliminar duplicados. Pero hay una limitación evidente en todo lo que hemos hecho: cada consulta devuelve *todas* las filas de la tabla. Pedimos los títulos de todos los libros, el género de todos, la antigüedad de todos.
+
+Casi nunca queremos todo. Queremos los libros de un autor concreto, los publicados en cierta década, los que tienen pocos ejemplares disponibles. En Python, eso lo resolvías con un `if` dentro de la comprensión: filtrar las filas que cumplen una condición. SQL tiene su propia forma de filtrar, declarativa como todo lo demás, y es la herramienta que convierte una consulta general en una pregunta precisa. Esa es la cláusula `WHERE`, y es el tema de la siguiente lección.

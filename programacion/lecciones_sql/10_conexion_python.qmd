@@ -1,0 +1,235 @@
+---
+title: "Conectarse a una base de datos desde Python"
+author: "Carlos Flores"
+format: html
+---
+
+A lo largo de todo el curso hemos escrito consultas y mostrado su resultado, pero nunca dijimos dónde se escriben ni cómo se ejecutan. La lección anterior cerró con esa pregunta: SQL y Python son las dos mitades del trabajo con datos, pero falta el puente concreto que las une. Esta última lección lo construye. Aquí aprenderás cómo un programa de Python se conecta a una base de datos, le envía consultas y recibe los resultados para seguir trabajando con ellos.
+
+Hasta ahora, una consulta era texto que producía una tabla por arte de magia. En la práctica, ese texto viaja desde tu programa hasta un servidor de base de datos, que lo ejecuta y devuelve los resultados. El programa necesita tres cosas: una forma de *conectarse* al servidor, una forma de *enviar* la consulta, y una forma de *recibir* las filas que vuelven. Veremos las tres, y al final tendrás un programa de Python completo que consulta una base de datos real.
+
+## Qué se necesita para conectarse
+
+Conectarse a una base de datos requiere un *driver*: una biblioteca de Python que sabe hablar el protocolo del motor concreto. Para PostgreSQL, el driver más usado es `psycopg`; se instala con `pip`, la herramienta que conociste en la lección sobre módulos del curso de Python:
+
+```bash
+pip install psycopg
+```
+
+Para conectarte necesitas, además, los datos del servidor: en qué máquina está (el *host*), en qué puerto escucha, el nombre de la base de datos, y un usuario con su contraseña. Son las credenciales que identifican quién se conecta y a qué. Con `psycopg`, una conexión a PostgreSQL se abre así:
+
+```python
+import psycopg
+
+conexion = psycopg.connect(
+    host="localhost",
+    port=5432,
+    dbname="biblioteca",
+    user="lector",
+    password="...",
+)
+```
+
+`psycopg.connect()` devuelve un objeto *conexión* que representa el canal abierto con la base de datos. A través de él se envían todas las consultas. El puerto `5432` es el predeterminado de PostgreSQL; `localhost` indica que el servidor está en la misma máquina, pero podría ser la dirección de un servidor remoto.
+
+Para que esta lección sea ejecutable sin instalar ni configurar un servidor, usaremos a partir de aquí `sqlite3`, un motor que viene *incluido* en la biblioteca estándar de Python —no hay que instalar nada— y que guarda toda la base de datos en un único archivo. Su SQL es casi idéntico al de PostgreSQL para todo lo que aprendimos, y la mecánica de conexión es la misma; señalaré las diferencias donde importen. Lo que aprendas aquí se traslada a `psycopg` cambiando muy poco.
+
+## Abrir una conexión y crear la base
+
+Con `sqlite3`, conectarse es aún más simple, porque no hay servidor ni credenciales: basta el nombre del archivo donde vivirá la base de datos. Si el archivo no existe, se crea.
+
+```{python}
+import sqlite3
+
+# Conexión a una base de datos en un archivo (se crea si no existe)
+conexion = sqlite3.connect("biblioteca.db")
+print("Conexión abierta:", conexion)
+```
+
+El objeto `conexion` es el mismo concepto que con `psycopg`: el canal hacia la base de datos. Recuerda la lección sobre archivos del curso de Python, donde abrir un archivo devolvía un objeto que había que cerrar al terminar. Una conexión a base de datos es análoga: es un recurso que se abre, se usa y se cierra. Más adelante veremos la forma cuidadosa de garantizar ese cierre.
+
+Antes de consultar necesitamos tablas con datos. Usaremos lo que aprendimos en la lección sobre diseño para crear la tabla `autores` y `libros`, y la instrucción `INSERT` de la lección sobre modificación para poblarlas. Esto reúne, ya ejecutándose de verdad, el SQL que hasta ahora solo describíamos.
+
+## El cursor: enviar consultas y recibir resultados
+
+Para ejecutar una consulta no se usa la conexión directamente, sino un objeto intermedio llamado *cursor*. El cursor es quien envía el SQL y por quien llegan las filas del resultado; puedes pensarlo como el lector que recorre el resultado fila por fila, de forma parecida a como un objeto archivo recorría las líneas de un texto.
+
+Se obtiene con el método `cursor()` de la conexión, y se ejecuta SQL con su método `execute()`:
+
+```{python}
+import sqlite3
+
+conexion = sqlite3.connect("biblioteca.db")
+cursor = conexion.cursor()
+
+# Empezamos limpio por si la base ya existía de una ejecución anterior
+cursor.execute("DROP TABLE IF EXISTS libros")
+cursor.execute("DROP TABLE IF EXISTS autores")
+
+# Creamos las tablas (sintaxis de la lección sobre diseño)
+cursor.execute("""
+    CREATE TABLE autores (
+        id              INTEGER PRIMARY KEY,
+        nombre          TEXT NOT NULL,
+        nacionalidad    TEXT,
+        anio_nacimiento INTEGER
+    )
+""")
+
+cursor.execute("""
+    CREATE TABLE libros (
+        id         INTEGER PRIMARY KEY,
+        titulo     TEXT NOT NULL,
+        autor_id   INTEGER REFERENCES autores(id),
+        anio       INTEGER,
+        genero     TEXT,
+        ejemplares INTEGER DEFAULT 1
+    )
+""")
+
+print("Tablas creadas.")
+```
+
+Cada `execute()` envía una instrucción SQL a la base de datos. Las consultas largas se escriben cómodamente entre triples comillas, los f-strings multilínea que ya usabas en Python. Una diferencia menor de dialecto: en PostgreSQL la clave primaria autoincremental era `SERIAL`; en SQLite, una columna `INTEGER PRIMARY KEY` ya se autoincrementa. El resto del `CREATE TABLE` es idéntico a lo que diseñamos.
+
+## Insertar datos y el papel del commit
+
+Poblamos las tablas con `INSERT`. Aquí aparece una pieza nueva e importante: tras modificar la base de datos, hay que *confirmar* los cambios con el método `commit()` de la conexión. Esto es la transacción de la lección sobre modificación, ahora desde Python: los `INSERT` quedan pendientes hasta que `commit()` los hace permanentes.
+
+```{python}
+autores = [
+    (1, "Gabriel García Márquez", "Colombia", 1927),
+    (2, "Julio Cortázar",         "Argentina", 1914),
+    (3, "Juan Rulfo",             "México",    1917),
+    (4, "Jorge Luis Borges",      "Argentina", 1899),
+]
+
+# executemany ejecuta el mismo INSERT para cada tupla de la lista
+cursor.executemany(
+    "INSERT INTO autores (id, nombre, nacionalidad, anio_nacimiento) VALUES (?, ?, ?, ?)",
+    autores,
+)
+
+libros = [
+    (1, "Cien años de soledad", 1, 1967, "Novela", 4),
+    (2, "Rayuela",              2, 1963, "Novela", 2),
+    (3, "Pedro Páramo",         3, 1955, "Novela", 3),
+    (4, "Ficciones",            4, 1944, "Cuento", 5),
+    (5, "El Aleph",             4, 1949, "Cuento", 1),
+]
+
+cursor.executemany(
+    "INSERT INTO libros (id, titulo, autor_id, anio, genero, ejemplares) VALUES (?, ?, ?, ?, ?, ?)",
+    libros,
+)
+
+conexion.commit()   # confirma los cambios: ahora son permanentes
+print("Datos insertados.")
+```
+
+Dos cosas merecen atención. La primera es `executemany()`: en lugar de un `execute()` por fila, ejecuta la misma instrucción para cada tupla de una lista, como un bucle optimizado. La segunda son los signos de interrogación `?` en el SQL, que explicamos a continuación, porque son la parte más importante de toda la lección.
+
+## Parámetros: nunca insertes valores con f-strings
+
+Observa que el `INSERT` no contiene los valores directamente, sino marcadores `?`, y los valores reales van aparte, en la tupla. Esto se llama *consulta parametrizada*, y es la forma correcta —la única correcta— de meter datos en una consulta.
+
+La tentación, sabiendo Python, sería construir el SQL con un f-string:
+
+```python
+# NUNCA hagas esto
+cursor.execute(f"INSERT INTO autores (nombre) VALUES ('{nombre}')")
+```
+
+Esto parece funcionar, pero es peligroso por dos razones. La primera es práctica: si `nombre` contiene una comilla simple —como en "O'Brien"—, el SQL resultante queda mal formado y la consulta falla. La segunda es de seguridad: si el valor viene de un usuario, alguien podría escribir texto diseñado para alterar la consulta y, por ejemplo, borrar una tabla. Este ataque tiene nombre, *inyección SQL*, y es una de las vulnerabilidades más explotadas de la historia del software.
+
+Los marcadores `?` lo evitan por completo. Al pasar los valores separados del SQL, el driver se encarga de insertarlos de forma segura: los escapa correctamente y nunca los interpreta como parte de la instrucción, solo como datos. La regla es absoluta y no admite excepciones: los valores variables entran siempre como parámetros, jamás interpolados en el texto del SQL. PostgreSQL usa `%s` en lugar de `?` como marcador, pero el principio es idéntico.
+
+## Leer resultados: fetchall y recorrer filas
+
+Para una consulta de lectura, tras el `execute()` se recuperan las filas del cursor. El método `fetchall()` devuelve todas las filas como una lista de tuplas; cada tupla es una fila, y sus elementos son las columnas en el orden del `SELECT`.
+
+```{python}
+cursor.execute("SELECT titulo, anio FROM libros WHERE genero = 'Novela' ORDER BY anio")
+
+filas = cursor.fetchall()
+print(type(filas))
+print(filas)
+```
+
+El resultado es una lista de tuplas de Python: exactamente la estructura con la que empezó el curso de Python. El círculo se cierra: la consulta SQL que filtra y ordena entrega su resultado como datos de Python, listos para recorrerse con un `for`, procesarse con una comprensión o lo que necesites.
+
+```{python}
+cursor.execute("""
+    SELECT a.nombre, COUNT(*) AS cantidad
+    FROM libros AS l
+    JOIN autores AS a ON l.autor_id = a.id
+    GROUP BY a.nombre
+    ORDER BY cantidad DESC
+""")
+
+for nombre, cantidad in cursor.fetchall():
+    print(f"{nombre}: {cantidad} libro(s)")
+```
+
+Aquí el `JOIN` con agregación de la lección correspondiente se ejecuta de verdad, y cada fila del resultado se desempaqueta en `nombre` y `cantidad` con el desempaquetado de tuplas que conoces de Python. Toda la potencia de SQL para combinar y resumir, entregada en una forma que Python procesa con naturalidad.
+
+Cuando solo esperas una fila —una agregación global, por ejemplo— `fetchone()` devuelve una sola en lugar de la lista completa:
+
+```{python}
+cursor.execute("SELECT COUNT(*), AVG(anio) FROM libros")
+total, promedio = cursor.fetchone()
+print(f"Hay {total} libros, con año promedio {promedio:.1f}")
+```
+
+## Cerrar la conexión de forma segura
+
+Como toda conexión es un recurso abierto, debe cerrarse al terminar. Podrías llamar a `conexion.close()` a mano, pero igual que con los archivos en Python, lo correcto es usar un bloque `with`, que cierra la conexión automáticamente aunque ocurra un error. Reunimos en un solo programa autónomo todo lo de la lección, usando `with` para gestionar la conexión:
+
+```{python}
+import sqlite3
+
+def consultar_biblioteca(ruta_db):
+    with sqlite3.connect(ruta_db) as conexion:
+        cursor = conexion.cursor()
+        cursor.execute("""
+            SELECT a.nombre, a.nacionalidad, COUNT(*) AS libros
+            FROM libros AS l
+            JOIN autores AS a ON l.autor_id = a.id
+            GROUP BY a.nombre, a.nacionalidad
+            HAVING COUNT(*) >= 1
+            ORDER BY libros DESC, a.nombre
+        """)
+        return cursor.fetchall()
+    # al salir del with, la conexión se cierra sola
+
+
+resultados = consultar_biblioteca("biblioteca.db")
+
+print(f"{'Autor':<25} {'País':<12} {'Libros'}")
+print("-" * 45)
+for nombre, pais, libros in resultados:
+    print(f"{nombre:<25} {pais:<12} {libros}")
+```
+
+La función abre la conexión, ejecuta una consulta que reúne `JOIN`, `GROUP BY`, `HAVING` y `ORDER BY` —media docena de lecciones en una sola instrucción—, recupera las filas y las devuelve como datos de Python. La presentación final, con f-strings y alineación, es Python puro operando sobre lo que SQL entregó. Esta separación es el patrón real de trabajo: SQL hace el trabajo pesado de filtrar y combinar dentro de la base de datos, y Python recibe un resultado ya reducido para darle la forma final.
+
+## El puente con pandas
+
+Hay un último paso que conviene conocer, aunque pertenezca ya al territorio de la ciencia de datos. La biblioteca pandas —que se mencionó al cerrar el curso de Python— puede ejecutar una consulta SQL y entregar el resultado directamente como un *DataFrame*, su estructura de tabla, sin que tengas que recorrer filas a mano:
+
+```python
+import pandas as pd
+import sqlite3
+
+conexion = sqlite3.connect("biblioteca.db")
+df = pd.read_sql_query("SELECT * FROM libros WHERE genero = 'Novela'", conexion)
+# df es ahora una tabla de pandas, lista para analizar
+```
+
+`pd.read_sql_query()` toma la consulta y la conexión, ejecuta el SQL y devuelve un DataFrame con columnas nombradas, tipos inferidos y todo el instrumental de pandas disponible encima. Es la forma en que, en la práctica, SQL y el análisis de datos se encuentran: la consulta selecciona y resume lo que importa dentro de la base de datos, y pandas lo recibe para el trabajo estadístico, los gráficos y los modelos. No lo desarrollamos aquí —es el comienzo de otra etapa— pero quería que vieras dónde desemboca todo lo aprendido.
+
+## El final del camino
+
+Aquí termina el curso. Empezaste viendo una tabla como una lista de diccionarios y has llegado a ejecutar, desde un programa de Python, consultas que filtran, combinan y resumen datos en un motor de base de datos, recibiendo los resultados listos para seguir trabajando. Tienes las dos mitades del trabajo con datos y, ahora, el puente que las une.
+
+Lo que sigue ya no es aprender SQL ni aprender Python, sino usarlos juntos sobre datos reales. Cuando trabajes en ciencia de datos, el patrón será el de esta última lección, a mayor escala: una consulta SQL extrae de una base enorme justo el subconjunto que necesitas, y Python —con pandas, con bibliotecas de estadística y de visualización— lo analiza. Cada consulta que escribas se apoyará en las nueve lecciones anteriores; cada línea de Python que la rodee, en el curso que la precedió. Las dos piezas encajan, y con ellas estás listo para empezar a hacer ciencia de datos de verdad.

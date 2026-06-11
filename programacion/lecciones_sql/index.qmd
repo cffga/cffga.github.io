@@ -1,0 +1,34 @@
+---
+title: "Curso de SQL"
+author: "Carlos Flores"
+---
+
+## Prólogo
+
+Este curso de SQL es una continuación directa del [Curso introductorio de Python](../lecciones_python/_site/index.html). Asume que el lector ya programa en Python con soltura: conoce tipos, estructuras de datos, funciones, control de flujo y objetos. SQL se presenta aquí como la contraparte declarativa de operaciones que el lector ya sabe hacer imperativamente en Python.
+
+Cada concepto nuevo de SQL se introduce como respuesta a una limitación concreta del estado anterior, siguiendo el mismo principio pedagógico del curso de Python. La intuición precede al formalismo, y cada construcción de SQL se ancla en su equivalente en Python.
+
+El curso solo alcanza su propósito *si se lee en orden y de manera completa*. Las ideas se introducen y reaparecen más adelante bajo una nueva luz.
+
+## Lecciones
+
+### [1. Bases de datos relacionales y SELECT](1_bases_de_datos_select.qmd)
+
+### [2. Filtrar filas: WHERE](2_where.qmd)
+
+### [3. Ordenar, acotar y resumir: ORDER BY, LIMIT y agregación](3_order_limit_agregacion.qmd)
+
+### [4. Agrupar: GROUP BY y HAVING](4_group_by_having.qmd)
+
+### [5. Diseño de tablas: claves, tipos y CREATE TABLE](5_diseno_create_table.qmd)
+
+### [6. Combinar tablas: JOIN](6_join.qmd)
+
+### [7. Subconsultas](7_subconsultas.qmd)
+
+### [8. Modificar datos: INSERT, UPDATE y DELETE](8_insert_update_delete.qmd)
+
+### [9. Vistas e índices](9_vistas_indices.qmd)
+
+### [10. Conectarse a una base de datos desde Python](10_conexion_python.qmd)

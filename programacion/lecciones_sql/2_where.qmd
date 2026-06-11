@@ -1,0 +1,175 @@
+---
+title: "Filtrar filas: WHERE"
+author: "Carlos Flores"
+format: html
+---
+
+La lección anterior terminó con una limitación clara: toda consulta `SELECT` devuelve todas las filas de la tabla. Pedíamos los títulos de *todos* los libros, la antigüedad de *todos*. Pero las preguntas reales son más específicas: los libros de cierto género, los publicados después de un año, los que tienen un solo ejemplar disponible.
+
+En Python resolvías esto con un `if` dentro de la comprensión, conservando solo las filas que cumplían una condición:
+
+```python
+recientes = [l for l in libros if l["anio"] > 1960]
+```
+
+SQL hace lo mismo con la cláusula `WHERE`. Va después del `FROM` y filtra las filas: solo las que cumplen la condición pasan al resultado. La estructura imperativa "recorre y comprueba" desaparece; queda solo la condición.
+
+```sql
+SELECT titulo, anio FROM libros WHERE anio > 1960;
+```
+
+| titulo               | anio |
+|----------------------|------|
+| Cien años de soledad | 1967 |
+| Rayuela              | 1963 |
+
+De las cinco filas de la tabla, solo dos cumplen `anio > 1960`, y solo esas aparecen. El `WHERE` es la traducción declarativa del `if` del filtro: tú escribes la condición, el motor decide cómo aplicarla.
+
+## Operadores de comparación
+
+Las condiciones de `WHERE` se construyen con operadores de comparación, los mismos que conoces de Python, con una sola diferencia notable. Para *mayor*, *menor*, *mayor o igual* y *menor o igual* se usan `>`, `<`, `>=`, `<=`, idénticos a Python. Para la *igualdad*, sin embargo, SQL usa un solo signo `=`, no el doble `==` de Python:
+
+```sql
+SELECT titulo FROM libros WHERE genero = 'Cuento';
+```
+
+| titulo     |
+|------------|
+| Ficciones  |
+| El Aleph   |
+
+Dos detalles importantes en esta consulta. El primero: el texto va entre comillas *simples*, no dobles. En SQL las comillas simples delimitan cadenas de texto; las dobles tienen otro uso (nombres de columnas con caracteres especiales), así que conviene acostumbrarse a la comilla simple para todo texto. El segundo: `=` con un solo signo es la comparación de igualdad. En SQL no hay riesgo de confundirlo con la asignación, porque dentro de un `WHERE` nunca se asigna nada; siempre se compara.
+
+Para *distinto de*, SQL acepta `<>` (el operador estándar) y también `!=`, que reconocerás de Python. Ambos funcionan en PostgreSQL:
+
+```sql
+SELECT titulo, genero FROM libros WHERE genero <> 'Novela';
+```
+
+Devuelve los libros que no son novelas: los dos cuentos.
+
+## Combinar condiciones: AND, OR, NOT
+
+Una sola comparación rara vez basta. En Python combinabas condiciones con `and`, `or` y `not`; SQL usa las mismas palabras, en mayúsculas por convención. `AND` exige que se cumplan ambas condiciones:
+
+```sql
+SELECT titulo FROM libros WHERE genero = 'Novela' AND anio > 1960;
+```
+
+Devuelve las novelas posteriores a 1960: "Cien años de soledad" y "Rayuela". "Pedro Páramo" es novela pero de 1955, así que no pasa el segundo filtro.
+
+`OR` exige que se cumpla al menos una:
+
+```sql
+SELECT titulo FROM libros WHERE genero = 'Cuento' OR anio < 1960;
+```
+
+Devuelve los cuentos *más* las obras anteriores a 1960, sin repetir las que cumplan ambas cosas. `NOT` invierte una condición, igual que en Python:
+
+```sql
+SELECT titulo FROM libros WHERE NOT genero = 'Novela';
+```
+
+Que equivale a `genero <> 'Novela'`. Como en Python, cuando se mezclan `AND` y `OR` conviene usar paréntesis para fijar el orden de evaluación sin ambigüedad: `WHERE (a OR b) AND c` no significa lo mismo que `WHERE a OR (b AND c)`.
+
+## Rangos con BETWEEN
+
+Filtrar por un rango de valores —los libros de cierta década, por ejemplo— se puede hacer con dos comparaciones unidas por `AND`:
+
+```sql
+SELECT titulo, anio FROM libros WHERE anio >= 1960 AND anio <= 1969;
+```
+
+Pero el patrón "entre dos valores" es tan común que SQL ofrece una forma más legible, `BETWEEN`, que incluye ambos extremos:
+
+```sql
+SELECT titulo, anio FROM libros WHERE anio BETWEEN 1960 AND 1969;
+```
+
+Las dos consultas son equivalentes. `BETWEEN a AND b` significa "mayor o igual que `a` y menor o igual que `b`", con ambos límites incluidos. Conviene recordar que incluye los extremos, porque en Python el slicing `[a:b]` excluía el extremo superior; aquí la convención es la contraria.
+
+## Pertenencia a un conjunto: IN
+
+Cuando quieres filas cuya columna coincida con cualquiera de varios valores, podrías encadenar `OR`:
+
+```sql
+SELECT titulo, genero FROM libros WHERE genero = 'Novela' OR genero = 'Cuento';
+```
+
+Pero si los valores son muchos, esto se vuelve largo. SQL ofrece `IN`, que comprueba si un valor pertenece a una lista, exactamente como el operador `in` de Python sobre una lista o un conjunto:
+
+```sql
+SELECT titulo, genero FROM libros WHERE genero IN ('Novela', 'Cuento', 'Poesía');
+```
+
+Devuelve las filas cuyo género sea cualquiera de los tres. La lista va entre paréntesis, con los valores separados por comas. `IN` es más corto y más claro que la cadena de `OR` equivalente, y se lee igual que su contraparte de Python: "donde el género esté en este conjunto de opciones".
+
+## Búsqueda de texto: LIKE
+
+Las comparaciones con `=` exigen coincidencia exacta. Pero a menudo queremos buscar por un fragmento: los libros cuyo título empieza por cierta palabra, o que contienen cierta cadena. Para eso SQL ofrece `LIKE`, que compara texto contra un *patrón*.
+
+El patrón usa dos caracteres especiales. El símbolo de porcentaje `%` representa cualquier secuencia de caracteres (incluida la vacía), y el guion bajo `_` representa un único carácter cualquiera. Para buscar los libros cuyo título contiene la palabra "años":
+
+```sql
+SELECT titulo FROM libros WHERE titulo LIKE '%años%';
+```
+
+| titulo               |
+|----------------------|
+| Cien años de soledad |
+
+El patrón `'%años%'` significa "cualquier cosa, luego 'años', luego cualquier cosa". Para los títulos que *empiezan* con "El", el patrón sería `'El%'`; para los que *terminan* en "o", `'%o'`. Esta búsqueda por fragmentos no tenía un equivalente directo en las comprensiones simples de Python; te habría obligado a usar métodos de cadena como `startswith` o el operador `in` sobre la cadena. `LIKE` lo expresa como parte de la condición.
+
+`LIKE` distingue mayúsculas de minúsculas. PostgreSQL ofrece `ILIKE`, una variante que las ignora, útil cuando no sabes cómo está capitalizado el texto:
+
+```sql
+SELECT titulo FROM libros WHERE titulo ILIKE '%ALEPH%';
+```
+
+Encuentra "El Aleph" aunque el patrón esté en mayúsculas.
+
+## La ausencia de valor: NULL
+
+Hay una situación que no aparecía en las listas de diccionarios bien formadas pero que es central en las bases de datos: la *ausencia de valor*. En una tabla de libros, un libro recién adquirido podría no tener todavía registrado su año, o un préstamo aún activo no tener fecha de devolución. Ese "no hay dato" se representa con `NULL`.
+
+`NULL` no es cero ni una cadena vacía: es la ausencia de cualquier valor, parecida al `None` de Python pero con una particularidad que sorprende. No puedes compararlo con `=`, porque `NULL` no es igual a nada, ni siquiera a otro `NULL` —la lógica es que "un dato desconocido" no puede afirmarse igual a nada. Por eso SQL tiene operadores propios: `IS NULL` e `IS NOT NULL`.
+
+Supongamos que algún libro no tiene año registrado. Para encontrarlo:
+
+```sql
+SELECT titulo FROM libros WHERE anio IS NULL;
+```
+
+Y para excluir esos casos, quedándote solo con los libros que sí tienen año:
+
+```sql
+SELECT titulo, anio FROM libros WHERE anio IS NOT NULL;
+```
+
+Escribir `WHERE anio = NULL` no produce un error, pero tampoco funciona: no devuelve ninguna fila, porque nada es "igual" a `NULL`. Esta es una de las fuentes de confusión más habituales al empezar con SQL, y la regla para evitarla es simple: para preguntar por la ausencia de valor, siempre `IS NULL` o `IS NOT NULL`, nunca `=`.
+
+## Ejemplo integrador
+
+Combinemos varios filtros en una sola consulta realista. Queremos los títulos y años de las novelas publicadas entre 1950 y 1970 que además tengan año registrado, ordenadas mentalmente como aparezcan:
+
+```sql
+SELECT titulo, anio
+FROM libros
+WHERE genero = 'Novela'
+  AND anio BETWEEN 1950 AND 1970
+  AND anio IS NOT NULL;
+```
+
+| titulo               | anio |
+|----------------------|------|
+| Cien años de soledad | 1967 |
+| Rayuela              | 1963 |
+| Pedro Páramo         | 1955 |
+
+La consulta encadena tres condiciones con `AND`: el género exacto, el rango de años, y la presencia de valor. Cada una recorta el conjunto un poco más, y solo las filas que superan las tres llegan al resultado. Escrita en varias líneas se lee con claridad, y SQL ignora los saltos de línea y la indentación: puedes dar a una consulta la forma que la haga más legible.
+
+## Lo que sigue
+
+Con `WHERE` ya puedes hacer preguntas precisas: filtrar por valor, por rango, por pertenencia, por patrón de texto, por presencia o ausencia de dato. Pero el resultado sigue llegando en un orden que no controlas, y siempre completo. Si la consulta devuelve quinientos libros, los recibes los quinientos, en el orden en que el motor los encuentre.
+
+Muchas preguntas, sin embargo, son sobre los *primeros* o los *últimos* según algún criterio: los diez libros más recientes, el más antiguo, los de mayor tiraje. Para responderlas hace falta ordenar el resultado y quedarse con una parte. En Python eso era `sorted` seguido de un slicing. Y hay otro tipo de pregunta que ninguna de nuestras herramientas alcanza todavía: las que no son sobre filas individuales sino sobre el conjunto entero —cuántos libros hay, cuál es el año promedio, el tiraje total—. Ordenar, acotar y resumir es el tema de la siguiente lección.
