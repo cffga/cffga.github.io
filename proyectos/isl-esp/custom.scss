@@ -55,6 +55,27 @@ pre code {
   display: none !important;
 }
 
+/* En pantallas grandes, eliminar el `5fr` desperdiciado a la derecha */
+@media (min-width: 992px) {
+  body.docked.fullcontent .page-columns {
+    grid-template-columns:
+      [screen-start] 1.5em
+      [screen-start-inset] 5fr
+      [page-start] 50px
+      [page-start-inset] minmax(50px, 150px)
+      [body-start-outset] 50px
+      [body-start] 1.5em
+      [body-content-start]
+      minmax(500px, calc(100vw - 420px))
+      [body-content-end]
+      1.5em
+      [body-end] 0px
+      [body-end-outset page-end-inset page-end screen-end-inset]
+      1.5em
+      [screen-end] !important;
+  }
+}
+
 /* Botón flotante de cambio de tema */
 #theme-toggle-btn:hover {
   transform: scale(1.1) !important;
