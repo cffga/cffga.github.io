@@ -120,7 +120,6 @@ $$
 
 2. Después de que se ha seleccionado un modelo, necesitamos un procedimiento que utilice los datos de entrenamiento para *ajustar* (*fit*) o *entrenar* (*train*) el modelo. En el caso del modelo lineal <a href="#eq-2-4" class="quarto-xref">(2.4)</a>, necesitamos estimar los parámetros $\beta_0, \beta_1, \dots, \beta_p$. Es decir, queremos encontrar valores de estos parámetros tales que
 
-   <div id="eq-2-5">
 $$
 Y \approx \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p.
    $$
@@ -208,6 +207,7 @@ En esta sección, discutimos algunos de los conceptos más importantes que surge
 
 Para evaluar el rendimiento de un método de aprendizaje estadístico en un conjunto de datos dado, necesitamos alguna forma de medir qué tan bien sus predicciones coinciden realmente con los datos observados. Es decir, necesitamos cuantificar el grado en que el valor de respuesta predicho para una observación dada está cerca del valor de respuesta verdadero para esa observación. En el contexto de regresión, la medida más comúnmente utilizada es el *error cuadrático medio* (*mean squared error*, MSE), dado por
 
+<div id="eq-2-5">
 $$
 \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}(x_i))^2, \tag{2.5}
 $$
